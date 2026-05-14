@@ -8,6 +8,7 @@ import DirectorDashboard from './pages/director/DirectorDashboard';
 import ManageTeachers from './pages/director/ManageTeachers';
 import ManageClasses from './pages/director/ManageClasses';
 import ManageStudents from './pages/director/ManageStudents';
+import ManageParents from './pages/director/ManageParents';
 import Reports from './pages/director/Reports';
 import Announcements from './pages/director/Announcements';
 
@@ -30,27 +31,16 @@ import ChildAttendance from './pages/parent/ChildAttendance';
 import MessagesPage from './pages/shared/MessagesPage';
 
 import {
-  LayoutDashboard,
-  Users,
-  GraduationCap,
-  Layers,
-  BarChart3,
-  Megaphone,
-  BookOpen,
-  ClipboardCheck,
-  CalendarCheck,
-  Award,
-  Calendar,
-  Clock,
-  Star,
-  MessageSquare,
-  Library,
+  LayoutDashboard, Users, GraduationCap, Layers, BarChart3,
+  Megaphone, BookOpen, ClipboardCheck, CalendarCheck, Award,
+  Calendar, Clock, Star, MessageSquare, Library, UserCog,
 } from 'lucide-react';
 
 const directorNav: NavItem[] = [
   { label: 'Paneli Kryesor', path: '/drejtor', icon: LayoutDashboard },
   { label: 'Mesuesit', path: '/drejtor/mesues', icon: GraduationCap },
   { label: 'Nxenesit', path: '/drejtor/nxenes', icon: Users },
+  { label: 'Prinderit', path: '/drejtor/prinder', icon: UserCog },
   { label: 'Klasat', path: '/drejtor/klasa', icon: Layers },
   { label: 'Raportet', path: '/drejtor/raporte', icon: BarChart3 },
   { label: 'Njoftimet', path: '/drejtor/njoftime', icon: Megaphone },
@@ -112,6 +102,7 @@ function AppRoutes() {
           <Route path="/drejtor" element={<DirectorDashboard />} />
           <Route path="/drejtor/mesues" element={<ManageTeachers />} />
           <Route path="/drejtor/nxenes" element={<ManageStudents />} />
+          <Route path="/drejtor/prinder" element={<ManageParents />} />
           <Route path="/drejtor/klasa" element={<ManageClasses />} />
           <Route path="/drejtor/raporte" element={<Reports />} />
           <Route path="/drejtor/njoftime" element={<Announcements />} />
