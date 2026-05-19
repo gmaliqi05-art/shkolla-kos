@@ -83,6 +83,77 @@ export interface ProfessionalDevelopment {
   created_at: string;
 }
 
+// === Paketa 7: Aktivitetet Jashtëmësimore & Takimet me Prindër ===
+
+export type ActivityCategory =
+  | 'sport' | 'art' | 'shkence' | 'muzike' | 'gjuhe'
+  | 'teknologji' | 'kulturore' | 'sociale' | 'mjedis' | 'olimpiada' | 'tjeter';
+
+export const ACTIVITY_CATEGORY_LABELS: Record<ActivityCategory, string> = {
+  sport: 'Sport',
+  art: 'Art pamor',
+  shkence: 'Shkencë',
+  muzike: 'Muzikë',
+  gjuhe: 'Gjuhë',
+  teknologji: 'Teknologji / TIK',
+  kulturore: 'Kulturore',
+  sociale: 'Sociale',
+  mjedis: 'Mjedisi',
+  olimpiada: 'Olimpiada / Garat',
+  tjeter: 'Tjetër',
+};
+
+export interface ExtracurricularActivity {
+  id: string;
+  name: string;
+  description: string;
+  category: ActivityCategory;
+  coordinator_id: string | null;
+  schedule: string;
+  location: string;
+  max_participants: number | null;
+  academic_year_id: string | null;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface ActivityParticipant {
+  id: string;
+  activity_id: string;
+  student_id: string;
+  joined_at: string;
+  left_at: string | null;
+  parent_consent: boolean;
+  parent_consent_at: string | null;
+  notes: string;
+  created_at: string;
+}
+
+export type ParentMeetingType = 'klase' | 'individuale' | 'pergjithshme';
+
+export const PARENT_MEETING_TYPE_LABELS: Record<ParentMeetingType, string> = {
+  klase: 'Takim klase',
+  individuale: 'Takim individual',
+  pergjithshme: 'Takim i përgjithshëm',
+};
+
+export interface ParentMeeting {
+  id: string;
+  meeting_type: ParentMeetingType;
+  class_id: string | null;
+  student_id: string | null;
+  title: string;
+  meeting_date: string;
+  start_time: string | null;
+  end_time: string | null;
+  location: string;
+  agenda: string;
+  notes: string;
+  status: MeetingStatus;
+  organized_by: string;
+  created_at: string;
+}
+
 export const GENDER_LABELS: Record<Gender, string> = {
   M: 'Mashkull',
   F: 'Femër',

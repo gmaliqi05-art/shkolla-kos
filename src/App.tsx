@@ -19,6 +19,7 @@ import SchoolSettings from './pages/director/SchoolSettings';
 import ReportCards from './pages/director/ReportCards';
 import ReportCardView from './pages/director/ReportCardView';
 import TeacherLicensing from './pages/director/TeacherLicensing';
+import Activities from './pages/director/Activities';
 
 import TeacherDashboard from './pages/teacher/TeacherDashboard';
 import MyClasses from './pages/teacher/MyClasses';
@@ -30,6 +31,7 @@ import BehaviorPage from './pages/teacher/BehaviorPage';
 import DisciplinePage from './pages/teacher/DisciplinePage';
 import StudentAccommodations from './pages/teacher/StudentAccommodations';
 import MyLicense from './pages/teacher/MyLicense';
+import ParentMeetings from './pages/teacher/ParentMeetings';
 
 import StudentDashboard from './pages/student/StudentDashboard';
 import MyGrades from './pages/student/MyGrades';
@@ -51,6 +53,7 @@ import {
   Megaphone, BookOpen, ClipboardCheck, CalendarCheck, Award,
   Calendar, Clock, Star, MessageSquare, Library, UserCog, Shield,
   Activity, Trash2, Lock, Heart, Sparkles, Briefcase, FileCheck, Building2,
+  Trophy,
 } from 'lucide-react';
 
 const directorNav: NavItem[] = [
@@ -65,6 +68,8 @@ const directorNav: NavItem[] = [
   { label: 'Disiplina', path: '/drejtor/disiplina', icon: Shield },
   { label: 'NVA & PIA', path: '/drejtor/nva', icon: Heart },
   { label: 'Organet Shkollore', path: '/drejtor/keshillat', icon: Briefcase },
+  { label: 'Aktivitetet', path: '/drejtor/aktivitete', icon: Trophy },
+  { label: 'Takimet me Prindër', path: '/drejtor/takimet', icon: Users },
   { label: 'Audit Log', path: '/drejtor/audit', icon: Activity },
   { label: 'Kërkesat Fshirje', path: '/drejtor/kerkesa-fshirje', icon: Trash2 },
   { label: 'Cilësimet', path: '/drejtor/cilesime', icon: Building2 },
@@ -85,6 +90,8 @@ const teacherNav: NavItem[] = [
   { label: 'Orari Mësimor', path: '/mesues/orari', icon: Clock },
   { label: 'Mesazhet', path: '/mesues/mesazhet', icon: MessageSquare },
   { label: 'Licenca Ime', path: '/mesues/licenca', icon: Award },
+  { label: 'Aktivitetet', path: '/mesues/aktivitete', icon: Trophy },
+  { label: 'Takimet me Prindër', path: '/mesues/takimet', icon: Users },
 ];
 
 const studentNav: NavItem[] = [
@@ -102,6 +109,8 @@ const parentNav: NavItem[] = [
   { label: 'Frekuentimi', path: '/prind/frekuentimi', icon: Calendar },
   { label: 'Mesazhet', path: '/prind/mesazhet', icon: MessageSquare },
   { label: 'PIA i Fëmijës', path: '/prind/pia', icon: Heart },
+  { label: 'Aktivitetet', path: '/prind/aktivitete', icon: Trophy },
+  { label: 'Takimet', path: '/prind/takimet', icon: Users },
   { label: 'Këshillat e Mi', path: '/prind/keshillat', icon: Briefcase },
   { label: 'Privatësia', path: '/prind/privatesia', icon: Lock },
 ];
@@ -147,6 +156,8 @@ function AppRoutes() {
           <Route path="/drejtor/disiplina" element={<DisciplinePage />} />
           <Route path="/drejtor/nva" element={<SpecialNeedsManagement />} />
           <Route path="/drejtor/keshillat" element={<SchoolCouncils />} />
+          <Route path="/drejtor/aktivitete" element={<Activities />} />
+          <Route path="/drejtor/takimet" element={<ParentMeetings />} />
           <Route path="/drejtor/audit" element={<AuditLogs />} />
           <Route path="/drejtor/kerkesa-fshirje" element={<DeletionRequests />} />
           <Route path="/drejtor/njoftime" element={<Announcements />} />
@@ -170,6 +181,8 @@ function AppRoutes() {
           <Route path="/mesues/akomodimet" element={<StudentAccommodations />} />
           <Route path="/mesues/keshillat" element={<MyCouncils />} />
           <Route path="/mesues/licenca" element={<MyLicense />} />
+          <Route path="/mesues/aktivitete" element={<Activities />} />
+          <Route path="/mesues/takimet" element={<ParentMeetings />} />
           <Route path="/mesues/frekuentimi" element={<AttendancePage />} />
           <Route path="/mesues/lendet" element={<SubjectsPage />} />
           <Route path="/mesues/orari" element={<TeacherSchedule />} />
@@ -207,6 +220,8 @@ function AppRoutes() {
           <Route path="/prind/frekuentimi" element={<ChildAttendance />} />
           <Route path="/prind/mesazhet" element={<MessagesPage />} />
           <Route path="/prind/pia" element={<ChildIEP />} />
+          <Route path="/prind/aktivitete" element={<Activities />} />
+          <Route path="/prind/takimet" element={<ParentMeetings />} />
           <Route path="/prind/keshillat" element={<MyCouncils />} />
           <Route path="/prind/privatesia" element={<PrivacySettings />} />
         </Route>
