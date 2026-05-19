@@ -67,6 +67,13 @@ const DEMO_PROFILES: Record<UserRole, Profile> = {
     full_name: 'Driton Krasniqi',
     role: 'prind',
   },
+  pedagog: {
+    ...DEMO_PROFILE_DEFAULTS,
+    id: 'demo-pedagog',
+    email: 'pedagog@shkolla.ks',
+    full_name: 'Elira Berisha',
+    role: 'pedagog',
+  },
 };
 
 export function AuthProvider({ children }: { children: ReactNode }) {
