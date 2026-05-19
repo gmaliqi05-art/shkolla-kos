@@ -15,6 +15,9 @@ import AuditLogs from './pages/director/AuditLogs';
 import DeletionRequests from './pages/director/DeletionRequests';
 import SpecialNeedsManagement from './pages/director/SpecialNeedsManagement';
 import SchoolCouncils from './pages/director/SchoolCouncils';
+import SchoolSettings from './pages/director/SchoolSettings';
+import ReportCards from './pages/director/ReportCards';
+import ReportCardView from './pages/director/ReportCardView';
 
 import TeacherDashboard from './pages/teacher/TeacherDashboard';
 import MyClasses from './pages/teacher/MyClasses';
@@ -45,7 +48,7 @@ import {
   LayoutDashboard, Users, GraduationCap, Layers, BarChart3,
   Megaphone, BookOpen, ClipboardCheck, CalendarCheck, Award,
   Calendar, Clock, Star, MessageSquare, Library, UserCog, Shield,
-  Activity, Trash2, Lock, Heart, Sparkles, Briefcase,
+  Activity, Trash2, Lock, Heart, Sparkles, Briefcase, FileCheck, Building2,
 } from 'lucide-react';
 
 const directorNav: NavItem[] = [
@@ -55,11 +58,13 @@ const directorNav: NavItem[] = [
   { label: 'Prinderit', path: '/drejtor/prinder', icon: UserCog },
   { label: 'Klasat', path: '/drejtor/klasa', icon: Layers },
   { label: 'Raportet', path: '/drejtor/raporte', icon: BarChart3 },
+  { label: 'Dëftesat', path: '/drejtor/deftesat', icon: FileCheck },
   { label: 'Disiplina', path: '/drejtor/disiplina', icon: Shield },
   { label: 'NVA & PIA', path: '/drejtor/nva', icon: Heart },
   { label: 'Organet Shkollore', path: '/drejtor/keshillat', icon: Briefcase },
   { label: 'Audit Log', path: '/drejtor/audit', icon: Activity },
   { label: 'Kërkesat Fshirje', path: '/drejtor/kerkesa-fshirje', icon: Trash2 },
+  { label: 'Cilësimet', path: '/drejtor/cilesime', icon: Building2 },
   { label: 'Njoftimet', path: '/drejtor/njoftime', icon: Megaphone },
   { label: 'Mesazhet', path: '/drejtor/mesazhet', icon: MessageSquare },
 ];
@@ -131,6 +136,9 @@ function AppRoutes() {
           <Route path="/drejtor/prinder" element={<ManageParents />} />
           <Route path="/drejtor/klasa" element={<ManageClasses />} />
           <Route path="/drejtor/raporte" element={<Reports />} />
+          <Route path="/drejtor/deftesat" element={<ReportCards />} />
+          <Route path="/drejtor/deftesat/:studentId/:classId/:period/:type" element={<ReportCardView />} />
+          <Route path="/drejtor/cilesime" element={<SchoolSettings />} />
           <Route path="/drejtor/disiplina" element={<DisciplinePage />} />
           <Route path="/drejtor/nva" element={<SpecialNeedsManagement />} />
           <Route path="/drejtor/keshillat" element={<SchoolCouncils />} />
