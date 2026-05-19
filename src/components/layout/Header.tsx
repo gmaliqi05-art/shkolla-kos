@@ -5,6 +5,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { ROLE_LABELS } from '../../types/database';
 import type { UserRole } from '../../types/database';
+import LanguageSwitcher from '../LanguageSwitcher';
 
 interface HeaderProps {
   onMenuToggle: () => void;
@@ -168,6 +169,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
       </div>
 
       <div className="flex items-center gap-2">
+        <LanguageSwitcher compact />
         <button
           onClick={() => navigate(getMessagePath())}
           className="relative p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors"
