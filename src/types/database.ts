@@ -1,4 +1,4 @@
-export type UserRole = 'drejtor' | 'mesues' | 'nxenes' | 'prind';
+export type UserRole = 'drejtor' | 'mesues' | 'nxenes' | 'prind' | 'pedagog';
 
 export type Gender = 'M' | 'F' | 'tjeter';
 
@@ -175,6 +175,7 @@ export const ROLE_LABELS: Record<UserRole, string> = {
   mesues: 'Mesues/e',
   nxenes: 'Nxenes/e',
   prind: 'Prind',
+  pedagog: 'Pedagog/e (Psikolog/Logoped)',
 };
 
 export const ASSESSMENT_TYPE_LABELS: Record<AssessmentType, string> = {
@@ -426,5 +427,191 @@ export interface AuditLog {
   metadata: Record<string, unknown>;
   ip_address: string | null;
   user_agent: string | null;
+  created_at: string;
+}
+
+// === Paketa 3: NVA & PIA (Ligji 04/L-032 Neni 40) ===
+
+export type SpecialNeedCategory =
+  | 'gjuhesore'
+  | 'fizike'
+  | 'shqisore'
+  | 'intelektuale'
+  | 'sjellore'
+  | 'emocionale'
+  | 'specifike_te_nxenit'
+  | 'autizem'
+  | 'shumefishte'
+  | 'tjeter';
+
+export const SPECIAL_NEED_LABELS: Record<SpecialNeedCategory, string> = {
+  gjuhesore: 'Vështirësi gjuhësore / të folurit',
+  fizike: 'Aftësi të kufizuara fizike',
+  shqisore: 'Vështirësi shqisore (shikim/dëgjim)',
+  intelektuale: 'Aftësi të kufizuara intelektuale',
+  sjellore: 'Vështirësi sjellore',
+  emocionale: 'Vështirësi emocionale',
+  specifike_te_nxenit: 'Vështirësi specifike të të nxënit (disleksi, etj.)',
+  autizem: 'Spektri i autizmit',
+  shumefishte: 'Aftësi të kufizuara të shumëfishta',
+  tjeter: 'Tjetër',
+};
+
+export type SpecialNeedSeverity = 'lehte' | 'mesatare' | 'rende' | 'shume_rende';
+
+export const SEVERITY_LABELS: Record<SpecialNeedSeverity, string> = {
+  lehte: 'E lehtë',
+  mesatare: 'Mesatare',
+  rende: 'E rëndë',
+  shume_rende: 'Shumë e rëndë',
+};
+
+export interface SpecialNeed {
+  id: string;
+  student_id: string;
+  category: SpecialNeedCategory;
+  severity: SpecialNeedSeverity | null;
+  diagnosis: string;
+  diagnosed_at: string | null;
+  diagnosed_by: string;
+  is_active: boolean;
+  notes: string;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export type IEPStatus = 'draft' | 'aktiv' | 'pezulluar' | 'perfunduar';
+
+export const IEP_STATUS_LABELS: Record<IEPStatus, string> = {
+  draft: 'Draft',
+  aktiv: 'Aktiv',
+  pezulluar: 'I pezulluar',
+  perfunduar: 'I përfunduar',
+};
+
+export interface IndividualEducationPlan {
+  id: string;
+  student_id: string;
+  academic_year_id: string | null;
+  title: string;
+  description: string;
+  start_date: string;
+  end_date: string | null;
+  status: IEPStatus;
+  coordinator_id: string | null;
+  parent_consent: boolean;
+  parent_consent_at: string | null;
+  parent_consent_by: string | null;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export type IEPGoalArea =
+  | 'akademik'
+  | 'gjuhesor'
+  | 'sjellor'
+  | 'social'
+  | 'emocional'
+  | 'motorik'
+  | 'pavaresi'
+  | 'tjeter';
+
+export const IEP_GOAL_AREA_LABELS: Record<IEPGoalArea, string> = {
+  akademik: 'Akademik',
+  gjuhesor: 'Gjuhësor',
+  sjellor: 'Sjellor',
+  social: 'Social',
+  emocional: 'Emocional',
+  motorik: 'Motorik',
+  pavaresi: 'Pavarësi',
+  tjeter: 'Tjetër',
+};
+
+export type IEPGoalStatus = 'ne_proces' | 'arritur' | 'pjeserisht_arritur' | 'nuk_eshte_arritur' | 'shtyer';
+
+export const IEP_GOAL_STATUS_LABELS: Record<IEPGoalStatus, string> = {
+  ne_proces: 'Në proces',
+  arritur: 'I arritur',
+  pjeserisht_arritur: 'Pjesërisht i arritur',
+  nuk_eshte_arritur: 'Nuk është arritur',
+  shtyer: 'I shtyrë',
+};
+
+export interface IEPGoal {
+  id: string;
+  iep_id: string;
+  goal_area: IEPGoalArea;
+  description: string;
+  target_date: string | null;
+  achievement_criteria: string;
+  status: IEPGoalStatus;
+  notes: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export type IEPAccommodationType =
+  | 'kohe_shtese_provim'
+  | 'mjedis_qete'
+  | 'mjete_ndihmese'
+  | 'asistent_personal'
+  | 'materiale_te_pershtatura'
+  | 'vlerasim_alternativ'
+  | 'pushim_shtese'
+  | 'ulja_e_pershtatur'
+  | 'teknollogji_ndihmese'
+  | 'gjuha_shenjave'
+  | 'libra_shkronja_te_medha'
+  | 'tjeter';
+
+export const IEP_ACCOMMODATION_LABELS: Record<IEPAccommodationType, string> = {
+  kohe_shtese_provim: 'Kohë shtesë gjatë provimeve',
+  mjedis_qete: 'Mjedis i qetë për provime',
+  mjete_ndihmese: 'Mjete ndihmëse mësimore',
+  asistent_personal: 'Asistent personal',
+  materiale_te_pershtatura: 'Materiale të përshtatura',
+  vlerasim_alternativ: 'Vlerësim alternativ',
+  pushim_shtese: 'Pushime shtesë',
+  ulja_e_pershtatur: 'Ulje e përshtatur në klasë',
+  teknollogji_ndihmese: 'Teknologji ndihmëse',
+  gjuha_shenjave: 'Gjuha e shenjave',
+  libra_shkronja_te_medha: 'Libra me shkronja të mëdha',
+  tjeter: 'Tjetër',
+};
+
+export interface IEPAccommodation {
+  id: string;
+  iep_id: string;
+  accommodation_type: IEPAccommodationType;
+  description: string;
+  applies_to_subject_id: string | null;
+  is_active: boolean;
+  notes: string;
+  created_at: string;
+}
+
+export type SupportStaffRole = 'asistent' | 'pedagog' | 'psikolog' | 'logoped' | 'mesues_mbeshtetes' | 'tjeter';
+
+export const SUPPORT_STAFF_ROLE_LABELS: Record<SupportStaffRole, string> = {
+  asistent: 'Asistent',
+  pedagog: 'Pedagog',
+  psikolog: 'Psikolog',
+  logoped: 'Logoped',
+  mesues_mbeshtetes: 'Mësues mbështetës',
+  tjeter: 'Tjetër',
+};
+
+export interface SupportStaffAssignment {
+  id: string;
+  student_id: string;
+  support_staff_id: string;
+  role: SupportStaffRole;
+  start_date: string;
+  end_date: string | null;
+  hours_per_week: number | null;
+  notes: string;
+  is_active: boolean;
   created_at: string;
 }

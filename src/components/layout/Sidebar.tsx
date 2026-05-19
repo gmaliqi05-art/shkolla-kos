@@ -21,6 +21,7 @@ const ROLE_COLORS: Record<UserRole, { bg: string; accent: string; text: string }
   mesues: { bg: 'from-teal-900 to-teal-800', accent: 'bg-teal-700', text: 'text-teal-200' },
   nxenes: { bg: 'from-cyan-900 to-cyan-800', accent: 'bg-cyan-700', text: 'text-cyan-200' },
   prind: { bg: 'from-slate-900 to-slate-800', accent: 'bg-slate-700', text: 'text-slate-300' },
+  pedagog: { bg: 'from-pink-900 to-pink-800', accent: 'bg-pink-700', text: 'text-pink-200' },
 };
 
 const ROLE_LABELS: Record<UserRole, string> = {
@@ -28,6 +29,7 @@ const ROLE_LABELS: Record<UserRole, string> = {
   mesues: 'Paneli i Mesuesit',
   nxenes: 'Paneli i Nxenesit',
   prind: 'Paneli i Prindit',
+  pedagog: 'Paneli i Pedagogut',
 };
 
 export default function Sidebar({ items, role, isOpen, onClose }: SidebarProps) {
