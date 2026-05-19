@@ -38,6 +38,7 @@ import MyLicense from './pages/teacher/MyLicense';
 import ParentMeetings from './pages/teacher/ParentMeetings';
 import ClassDiary from './pages/teacher/ClassDiary';
 import HomeworkPage from './pages/teacher/HomeworkPage';
+import DiagnosticAssessments from './pages/teacher/DiagnosticAssessments';
 
 import StudentDashboard from './pages/student/StudentDashboard';
 import MyGrades from './pages/student/MyGrades';
@@ -54,13 +55,15 @@ import MessagesPage from './pages/shared/MessagesPage';
 import PrivacyPolicy from './pages/shared/PrivacyPolicy';
 import MyCouncils from './pages/shared/MyCouncils';
 import MyTestResults from './pages/shared/MyTestResults';
+import Portfolio from './pages/shared/Portfolio';
+import SelfAssessmentPage from './pages/student/SelfAssessment';
 
 import {
   LayoutDashboard, Users, GraduationCap, Layers, BarChart3,
   Megaphone, BookOpen, ClipboardCheck, CalendarCheck, Award,
   Calendar, Clock, Star, MessageSquare, Library, UserCog, Shield,
   Activity, Trash2, Lock, Heart, Sparkles, Briefcase, FileCheck, Building2,
-  Trophy, MapPin, NotebookPen, FileText,
+  Trophy, MapPin, NotebookPen, FileText, Stethoscope, FolderOpen,
 } from 'lucide-react';
 
 const directorNav: NavItem[] = [
@@ -104,6 +107,8 @@ const teacherNav: NavItem[] = [
   { label: 'Takimet me Prindër', path: '/mesues/takimet', icon: Users },
   { label: 'Ditari i Klasës', path: '/mesues/ditari', icon: NotebookPen },
   { label: 'Detyrat e Shtëpisë', path: '/mesues/detyrat', icon: FileText },
+  { label: 'Vlerësimi Diagnostikues', path: '/mesues/diagnostik', icon: Stethoscope },
+  { label: 'Portofoli', path: '/mesues/portofoli', icon: FolderOpen },
 ];
 
 const studentNav: NavItem[] = [
@@ -114,6 +119,8 @@ const studentNav: NavItem[] = [
   { label: 'Mesazhet', path: '/nxenes/mesazhet', icon: MessageSquare },
   { label: 'Këshillat e Mi', path: '/nxenes/keshillat', icon: Briefcase },
   { label: 'Testet Kombëtare', path: '/nxenes/testet-kombetare', icon: GraduationCap },
+  { label: 'Portofoli Im', path: '/nxenes/portofoli', icon: FolderOpen },
+  { label: 'Vetëvlerësimi', path: '/nxenes/vetevleresimi', icon: Heart },
 ];
 
 const parentNav: NavItem[] = [
@@ -126,6 +133,7 @@ const parentNav: NavItem[] = [
   { label: 'Takimet', path: '/prind/takimet', icon: Users },
   { label: 'Këshillat e Mi', path: '/prind/keshillat', icon: Briefcase },
   { label: 'Testet Kombëtare', path: '/prind/testet-kombetare', icon: GraduationCap },
+  { label: 'Portofoli', path: '/prind/portofoli', icon: FolderOpen },
   { label: 'Privatësia', path: '/prind/privatesia', icon: Lock },
 ];
 
@@ -202,6 +210,8 @@ function AppRoutes() {
           <Route path="/mesues/takimet" element={<ParentMeetings />} />
           <Route path="/mesues/ditari" element={<ClassDiary />} />
           <Route path="/mesues/detyrat" element={<HomeworkPage />} />
+          <Route path="/mesues/diagnostik" element={<DiagnosticAssessments />} />
+          <Route path="/mesues/portofoli" element={<Portfolio />} />
           <Route path="/mesues/frekuentimi" element={<AttendancePage />} />
           <Route path="/mesues/lendet" element={<SubjectsPage />} />
           <Route path="/mesues/orari" element={<TeacherSchedule />} />
@@ -224,6 +234,8 @@ function AppRoutes() {
           <Route path="/nxenes/mesazhet" element={<MessagesPage />} />
           <Route path="/nxenes/keshillat" element={<MyCouncils />} />
           <Route path="/nxenes/testet-kombetare" element={<MyTestResults />} />
+          <Route path="/nxenes/portofoli" element={<Portfolio />} />
+          <Route path="/nxenes/vetevleresimi" element={<SelfAssessmentPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/nxenes" replace />} />
       </Routes>
@@ -244,6 +256,7 @@ function AppRoutes() {
           <Route path="/prind/takimet" element={<ParentMeetings />} />
           <Route path="/prind/keshillat" element={<MyCouncils />} />
           <Route path="/prind/testet-kombetare" element={<MyTestResults />} />
+          <Route path="/prind/portofoli" element={<Portfolio />} />
           <Route path="/prind/privatesia" element={<PrivacySettings />} />
         </Route>
         <Route path="*" element={<Navigate to="/prind" replace />} />

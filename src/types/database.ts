@@ -318,6 +318,120 @@ export interface SchoolCalendarEvent {
   created_at: string;
 }
 
+// === Paketa 12: Vlerësimi Diagnostikues & Portofoli (UA 06/2022) ===
+
+export type StartingLevel = 'shume_i_dobet' | 'i_dobet' | 'mesatar' | 'i_mire' | 'shkelqyer';
+
+export const STARTING_LEVEL_LABELS: Record<StartingLevel, string> = {
+  shume_i_dobet: 'Shumë i/e dobët',
+  i_dobet: 'I/E dobët',
+  mesatar: 'Mesatar/e',
+  i_mire: 'I/E mirë',
+  shkelqyer: 'Shkëlqyer',
+};
+
+export const STARTING_LEVEL_COLORS: Record<StartingLevel, string> = {
+  shume_i_dobet: 'bg-rose-100 text-rose-700',
+  i_dobet: 'bg-amber-100 text-amber-700',
+  mesatar: 'bg-cyan-100 text-cyan-700',
+  i_mire: 'bg-blue-100 text-blue-700',
+  shkelqyer: 'bg-emerald-100 text-emerald-700',
+};
+
+export interface DiagnosticAssessment {
+  id: string;
+  student_id: string;
+  class_id: string;
+  subject_id: string | null;
+  teacher_id: string;
+  academic_year_id: string | null;
+  assessment_date: string;
+  starting_level: StartingLevel | null;
+  strengths: string;
+  weaknesses: string;
+  recommended_actions: string;
+  created_at: string;
+}
+
+export interface StudentPortfolio {
+  id: string;
+  student_id: string;
+  academic_year_id: string | null;
+  title: string;
+  description: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export type PortfolioItemType = 'punim' | 'projekt' | 'detyre' | 'foto' | 'video' | 'vetevleresim' | 'reflektim' | 'tjeter';
+
+export const PORTFOLIO_ITEM_TYPE_LABELS: Record<PortfolioItemType, string> = {
+  punim: 'Punim me shkrim',
+  projekt: 'Projekt',
+  detyre: 'Detyrë',
+  foto: 'Foto',
+  video: 'Video',
+  vetevleresim: 'Vetëvlerësim',
+  reflektim: 'Reflektim',
+  tjeter: 'Tjetër',
+};
+
+export const PORTFOLIO_ITEM_COLORS: Record<PortfolioItemType, string> = {
+  punim: 'bg-blue-100 text-blue-700',
+  projekt: 'bg-purple-100 text-purple-700',
+  detyre: 'bg-cyan-100 text-cyan-700',
+  foto: 'bg-pink-100 text-pink-700',
+  video: 'bg-rose-100 text-rose-700',
+  vetevleresim: 'bg-emerald-100 text-emerald-700',
+  reflektim: 'bg-amber-100 text-amber-700',
+  tjeter: 'bg-slate-100 text-slate-700',
+};
+
+export interface PortfolioItem {
+  id: string;
+  portfolio_id: string;
+  subject_id: string | null;
+  item_type: PortfolioItemType;
+  title: string;
+  description: string;
+  content: string;
+  attachment_url: string | null;
+  added_by: string | null;
+  added_by_role: string | null;
+  added_at: string;
+}
+
+export type SelfAssessmentLevel = 'shkelqyeshem' | 'shume_mire' | 'mire' | 'kenaqshem' | 'duhet_permiresuar';
+
+export const SELF_ASSESS_LEVEL_LABELS: Record<SelfAssessmentLevel, string> = {
+  shkelqyeshem: 'Shkëlqyeshëm',
+  shume_mire: 'Shumë mirë',
+  mire: 'Mirë',
+  kenaqshem: 'I/E kënaqshëm',
+  duhet_permiresuar: 'Duhet të përmirësohem',
+};
+
+export const SELF_ASSESS_LEVEL_COLORS: Record<SelfAssessmentLevel, string> = {
+  shkelqyeshem: 'bg-emerald-100 text-emerald-700',
+  shume_mire: 'bg-blue-100 text-blue-700',
+  mire: 'bg-cyan-100 text-cyan-700',
+  kenaqshem: 'bg-amber-100 text-amber-700',
+  duhet_permiresuar: 'bg-rose-100 text-rose-700',
+};
+
+export interface SelfAssessment {
+  id: string;
+  student_id: string;
+  subject_id: string | null;
+  class_id: string | null;
+  period: number | null;
+  level: SelfAssessmentLevel;
+  what_learned: string;
+  what_to_improve: string;
+  goals: string;
+  created_at: string;
+}
+
 export const GENDER_LABELS: Record<Gender, string> = {
   M: 'Mashkull',
   F: 'Femër',
