@@ -235,6 +235,89 @@ export const SCHOOL_TYPE_LABELS: Record<SchoolType, string> = {
   private: 'Shkollë Private',
 };
 
+// === Paketa 11: Ditari, Detyrat, Kalendari ===
+
+export interface ClassJournalEntry {
+  id: string;
+  class_id: string;
+  subject_id: string;
+  teacher_id: string;
+  date: string;
+  lesson_number: number | null;
+  topic: string;
+  homework: string;
+  notes: string;
+  created_at: string;
+}
+
+export interface Homework {
+  id: string;
+  class_id: string;
+  subject_id: string;
+  teacher_id: string;
+  title: string;
+  description: string;
+  assigned_date: string;
+  due_date: string | null;
+  attachment_url: string | null;
+  created_at: string;
+}
+
+export type HomeworkSubmissionStatus = 'pa_dorezuar' | 'dorezuar' | 'vleresuar' | 'me_vonese';
+
+export const HOMEWORK_SUBMISSION_STATUS_LABELS: Record<HomeworkSubmissionStatus, string> = {
+  pa_dorezuar: 'Pa dorëzuar',
+  dorezuar: 'Dorëzuar',
+  vleresuar: 'Vlerësuar',
+  me_vonese: 'Me vonesë',
+};
+
+export interface HomeworkSubmission {
+  id: string;
+  homework_id: string;
+  student_id: string;
+  status: HomeworkSubmissionStatus;
+  submission_text: string;
+  attachment_url: string | null;
+  submitted_at: string | null;
+  grade: number | null;
+  teacher_feedback: string;
+  reviewed_at: string | null;
+}
+
+export type SchoolEventType = 'pushim' | 'feste' | 'provim' | 'aktivitet' | 'mbledhje' | 'tjeter';
+
+export const SCHOOL_EVENT_LABELS: Record<SchoolEventType, string> = {
+  pushim: 'Pushim',
+  feste: 'Festë zyrtare',
+  provim: 'Periudhë provimi',
+  aktivitet: 'Aktivitet shkollor',
+  mbledhje: 'Mbledhje',
+  tjeter: 'Tjetër',
+};
+
+export const SCHOOL_EVENT_COLORS: Record<SchoolEventType, string> = {
+  pushim: 'bg-blue-100 text-blue-700',
+  feste: 'bg-rose-100 text-rose-700',
+  provim: 'bg-purple-100 text-purple-700',
+  aktivitet: 'bg-emerald-100 text-emerald-700',
+  mbledhje: 'bg-amber-100 text-amber-700',
+  tjeter: 'bg-slate-100 text-slate-700',
+};
+
+export interface SchoolCalendarEvent {
+  id: string;
+  academic_year_id: string | null;
+  date: string;
+  event_type: SchoolEventType;
+  title: string;
+  description: string;
+  is_school_day: boolean;
+  target_grade_levels: number[] | null;
+  created_by: string | null;
+  created_at: string;
+}
+
 export const GENDER_LABELS: Record<Gender, string> = {
   M: 'Mashkull',
   F: 'Femër',
