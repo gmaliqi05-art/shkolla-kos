@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
-import type { Profile } from '../../types/database';
+import type { Profile, Gender, EnrollmentStatus } from '../../types/database';
+import { GENDER_LABELS, ENROLLMENT_STATUS_LABELS } from '../../types/database';
 import { Search, Mail, Plus, CreditCard as Edit2, Trash2, X, UserPlus, MoreVertical, Phone, Loader2, BookOpen, Copy, Check as CheckIcon } from 'lucide-react';
 
 function generateSecurePassword() {
@@ -17,7 +18,44 @@ interface StudentFormData {
   email: string;
   phone: string;
   class_id: string;
+  personal_number: string;
+  date_of_birth: string;
+  place_of_birth: string;
+  address: string;
+  gender: Gender | '';
+  nationality: string;
+  mother_tongue: string;
+  legal_guardian_name: string;
+  legal_guardian_relation: string;
+  emergency_contact_name: string;
+  emergency_contact_phone: string;
+  emergency_contact_relation: string;
+  medical_conditions: string;
+  family_doctor: string;
+  enrollment_status: EnrollmentStatus;
 }
+
+const emptyFormData: StudentFormData = {
+  full_name: '',
+  email: '',
+  phone: '',
+  class_id: '',
+  personal_number: '',
+  date_of_birth: '',
+  place_of_birth: '',
+  address: '',
+  gender: '',
+  nationality: '',
+  mother_tongue: 'shqip',
+  legal_guardian_name: '',
+  legal_guardian_relation: 'prind',
+  emergency_contact_name: '',
+  emergency_contact_phone: '',
+  emergency_contact_relation: '',
+  medical_conditions: '',
+  family_doctor: '',
+  enrollment_status: 'regjistruar',
+};
 
 interface ClassOption {
   id: string;
@@ -41,7 +79,8 @@ export default function ManageStudents() {
   const [newCredentials, setNewCredentials] = useState<{ email: string; password: string } | null>(null);
   const [copied, setCopied] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<StudentWithClass | null>(null);
-  const [formData, setFormData] = useState<StudentFormData>({ full_name: '', email: '', phone: '', class_id: '' });
+  const [formData, setFormData] = useState<StudentFormData>({ ...emptyFormData });
+  const [formError, setFormError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
@@ -103,8 +142,54 @@ export default function ManageStudents() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const validateForm = (): string | null => {
+    if (formData.personal_number && !/^[0-9]{10}$/.test(formData.personal_number)) {
+      return 'Numri personal duhet të jetë saktësisht 10 shifra.';
+    }
+    if (!formData.date_of_birth) {
+      return 'Datëlindja është e detyrueshme për Amzën.';
+    }
+    if (!formData.gender) {
+      return 'Gjinia është e detyrueshme.';
+    }
+    if (!formData.legal_guardian_name.trim()) {
+      return 'Emri i kujdestarit ligjor është i detyrueshëm.';
+    }
+    if (!formData.emergency_contact_name.trim() || !formData.emergency_contact_phone.trim()) {
+      return 'Kontakti emergjent (emri dhe telefoni) është i detyrueshëm.';
+    }
+    return null;
+  };
+
+  const buildProfilePayload = () => ({
+    email: formData.email,
+    full_name: formData.full_name,
+    phone: formData.phone,
+    personal_number: formData.personal_number || null,
+    date_of_birth: formData.date_of_birth || null,
+    place_of_birth: formData.place_of_birth,
+    address: formData.address,
+    gender: formData.gender || null,
+    nationality: formData.nationality,
+    mother_tongue: formData.mother_tongue || 'shqip',
+    legal_guardian_name: formData.legal_guardian_name,
+    legal_guardian_relation: formData.legal_guardian_relation,
+    emergency_contact_name: formData.emergency_contact_name,
+    emergency_contact_phone: formData.emergency_contact_phone,
+    emergency_contact_relation: formData.emergency_contact_relation,
+    medical_conditions: formData.medical_conditions,
+    family_doctor: formData.family_doctor,
+    enrollment_status: formData.enrollment_status,
+  });
+
   const handleAddStudent = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError('');
+    const validationError = validateForm();
+    if (validationError) {
+      setFormError(validationError);
+      return;
+    }
     setSubmitting(true);
 
     const tempPassword = generateSecurePassword();
@@ -115,7 +200,7 @@ export default function ManageStudents() {
     });
 
     if (signUpError) {
-      alert('Gabim: ' + signUpError.message);
+      setFormError('Gabim: ' + signUpError.message);
       setSubmitting(false);
       return;
     }
@@ -123,14 +208,12 @@ export default function ManageStudents() {
     if (authData.user) {
       const { error: profileError } = await supabase.from('profiles').insert({
         id: authData.user.id,
-        email: formData.email,
-        full_name: formData.full_name,
-        phone: formData.phone,
         role: 'nxenes',
+        ...buildProfilePayload(),
       });
 
       if (profileError) {
-        alert('Gabim profili: ' + profileError.message);
+        setFormError('Gabim profili: ' + profileError.message);
         setSubmitting(false);
         return;
       }
@@ -143,7 +226,7 @@ export default function ManageStudents() {
       }
 
       setShowAddModal(false);
-      setFormData({ full_name: '', email: '', phone: '', class_id: '' });
+      setFormData({ ...emptyFormData });
       setNewCredentials({ email: formData.email, password: tempPassword });
       setShowCredentials(true);
       loadStudents();
@@ -155,15 +238,22 @@ export default function ManageStudents() {
   const handleEditStudent = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedStudent) return;
+    setFormError('');
+    const validationError = validateForm();
+    if (validationError) {
+      setFormError(validationError);
+      return;
+    }
     setSubmitting(true);
 
+    const { email: _email, ...updatePayload } = buildProfilePayload();
     const { error } = await supabase
       .from('profiles')
-      .update({ full_name: formData.full_name, phone: formData.phone })
+      .update(updatePayload)
       .eq('id', selectedStudent.id);
 
     if (error) {
-      alert('Gabim: ' + error.message);
+      setFormError('Gabim: ' + error.message);
       setSubmitting(false);
       return;
     }
@@ -180,7 +270,7 @@ export default function ManageStudents() {
 
     setShowEditModal(false);
     setSelectedStudent(null);
-    setFormData({ full_name: '', email: '', phone: '', class_id: '' });
+    setFormData({ ...emptyFormData });
     loadStudents();
     setSubmitting(false);
   };
@@ -209,11 +299,27 @@ export default function ManageStudents() {
 
   const openEditModal = (student: StudentWithClass) => {
     setSelectedStudent(student);
+    setFormError('');
     setFormData({
       full_name: student.full_name,
       email: student.email,
       phone: student.phone || '',
       class_id: student.class_id || '',
+      personal_number: student.personal_number || '',
+      date_of_birth: student.date_of_birth || '',
+      place_of_birth: student.place_of_birth || '',
+      address: student.address || '',
+      gender: student.gender || '',
+      nationality: student.nationality || '',
+      mother_tongue: student.mother_tongue || 'shqip',
+      legal_guardian_name: student.legal_guardian_name || '',
+      legal_guardian_relation: student.legal_guardian_relation || 'prind',
+      emergency_contact_name: student.emergency_contact_name || '',
+      emergency_contact_phone: student.emergency_contact_phone || '',
+      emergency_contact_relation: student.emergency_contact_relation || '',
+      medical_conditions: student.medical_conditions || '',
+      family_doctor: student.family_doctor || '',
+      enrollment_status: student.enrollment_status || 'regjistruar',
     });
     setShowEditModal(true);
     setActiveDropdown(null);
@@ -244,7 +350,8 @@ export default function ManageStudents() {
         </div>
         <button
           onClick={() => {
-            setFormData({ full_name: '', email: '', phone: '', class_id: '' });
+            setFormData({ ...emptyFormData });
+            setFormError('');
             setShowAddModal(true);
           }}
           className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors shadow-lg shadow-blue-600/25"
@@ -407,8 +514,8 @@ export default function ManageStudents() {
 
       {(showAddModal || showEditModal) && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6">
-            <div className="flex items-center justify-between mb-6">
+          <div className="bg-white rounded-2xl max-w-3xl w-full p-6 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6 sticky top-0 bg-white pb-3 border-b border-slate-100">
               <div className="flex items-center gap-3">
                 <div className={`w-10 h-10 ${showAddModal ? 'bg-blue-100' : 'bg-cyan-100'} rounded-xl flex items-center justify-center`}>
                   {showAddModal ? <UserPlus className="w-5 h-5 text-blue-600" /> : <Edit2 className="w-5 h-5 text-cyan-600" />}
@@ -418,68 +525,279 @@ export default function ManageStudents() {
                 </h2>
               </div>
               <button
-                onClick={() => { setShowAddModal(false); setShowEditModal(false); }}
+                onClick={() => { setShowAddModal(false); setShowEditModal(false); setFormError(''); }}
                 className="p-1 text-slate-400 hover:text-slate-600 rounded"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={showAddModal ? handleAddStudent : handleEditStudent} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Emri i Plote</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.full_name}
-                  onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                  className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                  placeholder="Emri Mbiemri"
-                />
-              </div>
+            <form onSubmit={showAddModal ? handleAddStudent : handleEditStudent} className="space-y-6">
+              {formError && (
+                <div className="bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl px-4 py-3">
+                  {formError}
+                </div>
+              )}
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
-                <input
-                  type="email"
-                  required={showAddModal}
-                  disabled={showEditModal}
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className={`w-full px-3 py-2.5 border border-slate-200 rounded-xl outline-none ${showEditModal ? 'bg-slate-50 text-slate-500 cursor-not-allowed' : 'focus:ring-2 focus:ring-blue-500 focus:border-blue-500'}`}
-                  placeholder="email@shkolla.al"
-                />
-              </div>
+              <section>
+                <h3 className="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                  <span className="w-1 h-4 bg-blue-500 rounded-full"></span>
+                  Të dhënat bazike
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="sm:col-span-2">
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Emri i Plotë *</label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.full_name}
+                      onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                      placeholder="Emri Mbiemri"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Email *</label>
+                    <input
+                      type="email"
+                      required={showAddModal}
+                      disabled={showEditModal}
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className={`w-full px-3 py-2.5 border border-slate-200 rounded-xl outline-none ${showEditModal ? 'bg-slate-50 text-slate-500 cursor-not-allowed' : 'focus:ring-2 focus:ring-blue-500'}`}
+                      placeholder="email@shkolla.al"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Telefon</label>
+                    <input
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                      placeholder="+383 44 123 456"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Klasa</label>
+                    <select
+                      value={formData.class_id}
+                      onChange={(e) => setFormData({ ...formData, class_id: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                    >
+                      <option value="">Pa klasë</option>
+                      {classes.map((c) => (
+                        <option key={c.id} value={c.id}>{c.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Statusi i regjistrimit</label>
+                    <select
+                      value={formData.enrollment_status}
+                      onChange={(e) => setFormData({ ...formData, enrollment_status: e.target.value as EnrollmentStatus })}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                    >
+                      {(Object.keys(ENROLLMENT_STATUS_LABELS) as EnrollmentStatus[]).map((s) => (
+                        <option key={s} value={s}>{ENROLLMENT_STATUS_LABELS[s]}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </section>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Klasa</label>
-                <select
-                  value={formData.class_id}
-                  onChange={(e) => setFormData({ ...formData, class_id: e.target.value })}
-                  className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                >
-                  <option value="">Pa klase</option>
-                  {classes.map((c) => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
-                  ))}
-                </select>
-              </div>
+              <section>
+                <h3 className="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                  <span className="w-1 h-4 bg-blue-500 rounded-full"></span>
+                  Të dhënat e Amzës (UA 19/2018)
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Numri Personal (10 shifra)</label>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={10}
+                      value={formData.personal_number}
+                      onChange={(e) => setFormData({ ...formData, personal_number: e.target.value.replace(/\D/g, '') })}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-mono"
+                      placeholder="1234567890"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Datëlindja *</label>
+                    <input
+                      type="date"
+                      required
+                      value={formData.date_of_birth}
+                      onChange={(e) => setFormData({ ...formData, date_of_birth: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Vendlindja</label>
+                    <input
+                      type="text"
+                      value={formData.place_of_birth}
+                      onChange={(e) => setFormData({ ...formData, place_of_birth: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                      placeholder="Prishtinë"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Gjinia *</label>
+                    <select
+                      required
+                      value={formData.gender}
+                      onChange={(e) => setFormData({ ...formData, gender: e.target.value as Gender })}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                    >
+                      <option value="">— Zgjidh —</option>
+                      {(Object.keys(GENDER_LABELS) as Gender[]).map((g) => (
+                        <option key={g} value={g}>{GENDER_LABELS[g]}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Kombësia (vetëdeklarim)</label>
+                    <input
+                      type="text"
+                      value={formData.nationality}
+                      onChange={(e) => setFormData({ ...formData, nationality: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                      placeholder="Shqiptar/Serb/Turk/Boshnjak/Rom/..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Gjuha amtare</label>
+                    <input
+                      type="text"
+                      value={formData.mother_tongue}
+                      onChange={(e) => setFormData({ ...formData, mother_tongue: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                      placeholder="shqip"
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Adresa</label>
+                    <input
+                      type="text"
+                      value={formData.address}
+                      onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                      placeholder="Rruga, qyteti, kodi postar"
+                    />
+                  </div>
+                </div>
+              </section>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Telefon</label>
-                <input
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                  placeholder="+383 44 123 456"
-                />
-              </div>
+              <section>
+                <h3 className="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                  <span className="w-1 h-4 bg-emerald-500 rounded-full"></span>
+                  Kujdestari ligjor *
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Emri i kujdestarit *</label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.legal_guardian_name}
+                      onChange={(e) => setFormData({ ...formData, legal_guardian_name: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Lidhja</label>
+                    <select
+                      value={formData.legal_guardian_relation}
+                      onChange={(e) => setFormData({ ...formData, legal_guardian_relation: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                    >
+                      <option value="prind">Prind</option>
+                      <option value="nene">Nënë</option>
+                      <option value="baba">Baba</option>
+                      <option value="gjyshe">Gjyshe</option>
+                      <option value="gjysh">Gjysh</option>
+                      <option value="tjeter">Tjetër kujdestar ligjor</option>
+                    </select>
+                  </div>
+                </div>
+              </section>
 
-              <div className="flex gap-3 pt-4">
+              <section>
+                <h3 className="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                  <span className="w-1 h-4 bg-amber-500 rounded-full"></span>
+                  Kontakt emergjent *
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Emri *</label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.emergency_contact_name}
+                      onChange={(e) => setFormData({ ...formData, emergency_contact_name: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Telefon *</label>
+                    <input
+                      type="tel"
+                      required
+                      value={formData.emergency_contact_phone}
+                      onChange={(e) => setFormData({ ...formData, emergency_contact_phone: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none"
+                      placeholder="+383 44 123 456"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Lidhja</label>
+                    <input
+                      type="text"
+                      value={formData.emergency_contact_relation}
+                      onChange={(e) => setFormData({ ...formData, emergency_contact_relation: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none"
+                      placeholder="Prind, gjysh, ..."
+                    />
+                  </div>
+                </div>
+              </section>
+
+              <section>
+                <h3 className="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                  <span className="w-1 h-4 bg-rose-500 rounded-full"></span>
+                  Informacion shëndetësor (opsional)
+                </h3>
+                <div className="grid grid-cols-1 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Alergji / Kushte mjekësore</label>
+                    <textarea
+                      rows={2}
+                      value={formData.medical_conditions}
+                      onChange={(e) => setFormData({ ...formData, medical_conditions: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-500 outline-none resize-none"
+                      placeholder="Astma, alergji ndaj polenit, etj."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Mjeku familjar</label>
+                    <input
+                      type="text"
+                      value={formData.family_doctor}
+                      onChange={(e) => setFormData({ ...formData, family_doctor: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-500 outline-none"
+                      placeholder="Dr. Emri / Klinika"
+                    />
+                  </div>
+                </div>
+              </section>
+
+              <div className="flex gap-3 pt-4 sticky bottom-0 bg-white border-t border-slate-100 -mx-6 px-6 -mb-6 pb-6">
                 <button
                   type="button"
-                  onClick={() => { setShowAddModal(false); setShowEditModal(false); }}
+                  onClick={() => { setShowAddModal(false); setShowEditModal(false); setFormError(''); }}
                   className="flex-1 px-4 py-2.5 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium transition-colors"
                 >
                   Anulo
