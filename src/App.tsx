@@ -18,6 +18,7 @@ import SchoolCouncils from './pages/director/SchoolCouncils';
 import SchoolSettings from './pages/director/SchoolSettings';
 import ReportCards from './pages/director/ReportCards';
 import ReportCardView from './pages/director/ReportCardView';
+import TeacherLicensing from './pages/director/TeacherLicensing';
 
 import TeacherDashboard from './pages/teacher/TeacherDashboard';
 import MyClasses from './pages/teacher/MyClasses';
@@ -28,6 +29,7 @@ import SubjectsPage from './pages/teacher/SubjectsPage';
 import BehaviorPage from './pages/teacher/BehaviorPage';
 import DisciplinePage from './pages/teacher/DisciplinePage';
 import StudentAccommodations from './pages/teacher/StudentAccommodations';
+import MyLicense from './pages/teacher/MyLicense';
 
 import StudentDashboard from './pages/student/StudentDashboard';
 import MyGrades from './pages/student/MyGrades';
@@ -54,6 +56,7 @@ import {
 const directorNav: NavItem[] = [
   { label: 'Paneli Kryesor', path: '/drejtor', icon: LayoutDashboard },
   { label: 'Mesuesit', path: '/drejtor/mesues', icon: GraduationCap },
+  { label: 'Licencat', path: '/drejtor/licencat', icon: Award },
   { label: 'Nxenesit', path: '/drejtor/nxenes', icon: Users },
   { label: 'Prinderit', path: '/drejtor/prinder', icon: UserCog },
   { label: 'Klasat', path: '/drejtor/klasa', icon: Layers },
@@ -81,6 +84,7 @@ const teacherNav: NavItem[] = [
   { label: 'Frekuentimi', path: '/mesues/frekuentimi', icon: CalendarCheck },
   { label: 'Orari Mësimor', path: '/mesues/orari', icon: Clock },
   { label: 'Mesazhet', path: '/mesues/mesazhet', icon: MessageSquare },
+  { label: 'Licenca Ime', path: '/mesues/licenca', icon: Award },
 ];
 
 const studentNav: NavItem[] = [
@@ -132,6 +136,7 @@ function AppRoutes() {
         <Route element={<DashboardLayout navItems={directorNav} role="drejtor" />}>
           <Route path="/drejtor" element={<DirectorDashboard />} />
           <Route path="/drejtor/mesues" element={<ManageTeachers />} />
+          <Route path="/drejtor/licencat" element={<TeacherLicensing />} />
           <Route path="/drejtor/nxenes" element={<ManageStudents />} />
           <Route path="/drejtor/prinder" element={<ManageParents />} />
           <Route path="/drejtor/klasa" element={<ManageClasses />} />
@@ -164,6 +169,7 @@ function AppRoutes() {
           <Route path="/mesues/disiplina" element={<DisciplinePage />} />
           <Route path="/mesues/akomodimet" element={<StudentAccommodations />} />
           <Route path="/mesues/keshillat" element={<MyCouncils />} />
+          <Route path="/mesues/licenca" element={<MyLicense />} />
           <Route path="/mesues/frekuentimi" element={<AttendancePage />} />
           <Route path="/mesues/lendet" element={<SubjectsPage />} />
           <Route path="/mesues/orari" element={<TeacherSchedule />} />

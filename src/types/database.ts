@@ -31,6 +31,56 @@ export interface Profile {
   deleted_at?: string | null;
   last_login_at?: string | null;
   consent_recorded_at?: string | null;
+  license_number?: string | null;
+  license_level?: LicenseLevel | null;
+  license_issued_at?: string | null;
+  license_expires_at?: string | null;
+  qualification?: string;
+  subject_specialization?: string;
+  hired_at?: string | null;
+}
+
+export type LicenseLevel = 'fillestar' | 'karriere' | 'keshillues';
+
+export const LICENSE_LEVEL_LABELS: Record<LicenseLevel, string> = {
+  fillestar: 'Mësimdhënës fillestar',
+  karriere: 'Mësimdhënës i karrierës',
+  keshillues: 'Mësimdhënës këshillues',
+};
+
+export type ZHPMCategory =
+  | 'didaktike_pedagogjike'
+  | 'lendore'
+  | 'tik'
+  | 'gjuhe_te_huaj'
+  | 'gjitheperfshirje'
+  | 'menaxhim'
+  | 'tjeter';
+
+export const ZHPM_CATEGORY_LABELS: Record<ZHPMCategory, string> = {
+  didaktike_pedagogjike: 'Didaktike / Pedagogjike',
+  lendore: 'Lëndore',
+  tik: 'TIK / Teknologji',
+  gjuhe_te_huaj: 'Gjuhë të huaja',
+  gjitheperfshirje: 'Gjithëpërfshirje (NVA)',
+  menaxhim: 'Menaxhim',
+  tjeter: 'Tjetër',
+};
+
+export interface ProfessionalDevelopment {
+  id: string;
+  teacher_id: string;
+  title: string;
+  organizer: string;
+  hours: number;
+  completion_date: string;
+  certificate_url: string | null;
+  category: ZHPMCategory;
+  notes: string;
+  verified: boolean;
+  verified_by: string | null;
+  verified_at: string | null;
+  created_at: string;
 }
 
 export const GENDER_LABELS: Record<Gender, string> = {
