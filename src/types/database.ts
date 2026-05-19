@@ -432,6 +432,82 @@ export interface SelfAssessment {
   created_at: string;
 }
 
+// === Paketa 13: Plani Vjetor i Shkollës ===
+
+export type AnnualPlanStatus = 'draft' | 'miratuar' | 'aktiv' | 'perfunduar';
+
+export const ANNUAL_PLAN_STATUS_LABELS: Record<AnnualPlanStatus, string> = {
+  draft: 'Draft',
+  miratuar: 'I miratuar',
+  aktiv: 'Aktiv',
+  perfunduar: 'I përfunduar',
+};
+
+export const ANNUAL_PLAN_STATUS_COLORS: Record<AnnualPlanStatus, string> = {
+  draft: 'bg-slate-100 text-slate-600',
+  miratuar: 'bg-blue-100 text-blue-700',
+  aktiv: 'bg-emerald-100 text-emerald-700',
+  perfunduar: 'bg-purple-100 text-purple-700',
+};
+
+export interface AnnualSchoolPlan {
+  id: string;
+  academic_year_id: string | null;
+  school_id: string | null;
+  title: string;
+  vision: string;
+  mission: string;
+  values_principles: string;
+  analysis_situation: string;
+  priority_areas: string;
+  general_goals: string;
+  resources: string;
+  evaluation_methods: string;
+  status: AnnualPlanStatus;
+  created_by: string;
+  approved_by: string | null;
+  approved_at: string | null;
+  approved_notes: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export type PlanObjectiveArea = 'mesimore' | 'organizative' | 'infrastrukture' | 'profesionale' | 'sociale' | 'tjeter';
+
+export const PLAN_OBJECTIVE_AREA_LABELS: Record<PlanObjectiveArea, string> = {
+  mesimore: 'Mësimore',
+  organizative: 'Organizative',
+  infrastrukture: 'Infrastrukturë',
+  profesionale: 'Profesionale (staf)',
+  sociale: 'Sociale & komunitare',
+  tjeter: 'Tjetër',
+};
+
+export type PlanObjectiveStatus = 'planifikuar' | 'ne_proces' | 'arritur' | 'pjeserisht_arritur' | 'nuk_eshte_arritur';
+
+export const PLAN_OBJECTIVE_STATUS_LABELS: Record<PlanObjectiveStatus, string> = {
+  planifikuar: 'I planifikuar',
+  ne_proces: 'Në proces',
+  arritur: 'I arritur',
+  pjeserisht_arritur: 'Pjesërisht i arritur',
+  nuk_eshte_arritur: 'Nuk është arritur',
+};
+
+export interface PlanObjective {
+  id: string;
+  plan_id: string;
+  area: PlanObjectiveArea;
+  title: string;
+  description: string;
+  expected_outcome: string;
+  responsible_person: string;
+  start_date: string | null;
+  target_date: string | null;
+  status: PlanObjectiveStatus;
+  notes: string;
+  created_at: string;
+}
+
 export const GENDER_LABELS: Record<Gender, string> = {
   M: 'Mashkull',
   F: 'Femër',

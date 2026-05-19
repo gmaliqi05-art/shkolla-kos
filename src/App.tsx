@@ -24,6 +24,7 @@ import Activities from './pages/director/Activities';
 import NationalTests from './pages/director/NationalTests';
 import Municipalities from './pages/director/Municipalities';
 import SchoolCalendar from './pages/director/SchoolCalendar';
+import AnnualPlan from './pages/director/AnnualPlan';
 
 import TeacherDashboard from './pages/teacher/TeacherDashboard';
 import MyClasses from './pages/teacher/MyClasses';
@@ -63,7 +64,7 @@ import {
   Megaphone, BookOpen, ClipboardCheck, CalendarCheck, Award,
   Calendar, Clock, Star, MessageSquare, Library, UserCog, Shield,
   Activity, Trash2, Lock, Heart, Sparkles, Briefcase, FileCheck, Building2,
-  Trophy, MapPin, NotebookPen, FileText, Stethoscope, FolderOpen,
+  Trophy, MapPin, NotebookPen, FileText, Stethoscope, FolderOpen, FileSpreadsheet,
 } from 'lucide-react';
 
 const directorNav: NavItem[] = [
@@ -86,6 +87,7 @@ const directorNav: NavItem[] = [
   { label: 'Cilësimet', path: '/drejtor/cilesime', icon: Building2 },
   { label: 'Komunat', path: '/drejtor/komunat', icon: MapPin },
   { label: 'Kalendari', path: '/drejtor/kalendari', icon: Calendar },
+  { label: 'Plani Vjetor', path: '/drejtor/plani-vjetor', icon: FileSpreadsheet },
   { label: 'Njoftimet', path: '/drejtor/njoftime', icon: Megaphone },
   { label: 'Mesazhet', path: '/drejtor/mesazhet', icon: MessageSquare },
 ];
@@ -177,6 +179,7 @@ function AppRoutes() {
           <Route path="/drejtor/cilesime" element={<SchoolSettings />} />
           <Route path="/drejtor/komunat" element={<Municipalities />} />
           <Route path="/drejtor/kalendari" element={<SchoolCalendar />} />
+          <Route path="/drejtor/plani-vjetor" element={<AnnualPlan />} />
           <Route path="/drejtor/disiplina" element={<DisciplinePage />} />
           <Route path="/drejtor/nva" element={<SpecialNeedsManagement />} />
           <Route path="/drejtor/keshillat" element={<SchoolCouncils />} />
