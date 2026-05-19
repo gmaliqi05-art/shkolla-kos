@@ -38,6 +38,7 @@ export interface Profile {
   qualification?: string;
   subject_specialization?: string;
   hired_at?: string | null;
+  preferred_language?: 'sq' | 'sr' | 'tr' | 'bs';
 }
 
 export type LicenseLevel = 'fillestar' | 'karriere' | 'keshillues';
