@@ -37,10 +37,6 @@ const DEMO_NOTIFS: Record<UserRole, NotifItem[]> = {
     { id: 'n1', type: 'message', title: 'Ecurite e femijes', preview: 'Ardi ka pasur rezultate shume te mira kete jave...', from: 'Florentina Gashi', time: '2 ore', isRead: false },
     { id: 'n2', type: 'announcement', title: 'Mbledhje me prinderit', preview: 'Diten e enjte ne oren 17:00', from: 'Arben Hoxha', time: '1 dite', isRead: false },
   ],
-  pedagog: [
-    { id: 'n1', type: 'message', title: 'Vleresim per nxenesin', preview: 'Kerkohet konsultim per Ardin...', from: 'Florentina Gashi', time: '1 ore', isRead: false },
-    { id: 'n2', type: 'announcement', title: 'Trajnim profesional', preview: 'Trajnimi i ri per arsimin gjithperfshires', from: 'Arben Hoxha', time: '2 dite', isRead: true },
-  ],
 };
 
 export default function Header({ onMenuToggle }: HeaderProps) {
@@ -143,7 +139,6 @@ export default function Header({ onMenuToggle }: HeaderProps) {
       mesues: '/mesues/mesazhet',
       nxenes: '/nxenes/mesazhet',
       prind: '/prind/mesazhet',
-      pedagog: '/pedagog/mesazhet',
     };
     return basePaths[profile.role];
   };

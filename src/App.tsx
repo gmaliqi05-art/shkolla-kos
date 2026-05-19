@@ -11,9 +11,6 @@ import ManageStudents from './pages/director/ManageStudents';
 import ManageParents from './pages/director/ManageParents';
 import Reports from './pages/director/Reports';
 import Announcements from './pages/director/Announcements';
-import AuditLogs from './pages/director/AuditLogs';
-import DeletionRequests from './pages/director/DeletionRequests';
-import SpecialNeedsManagement from './pages/director/SpecialNeedsManagement';
 
 import TeacherDashboard from './pages/teacher/TeacherDashboard';
 import MyClasses from './pages/teacher/MyClasses';
@@ -23,7 +20,6 @@ import TeacherSchedule from './pages/teacher/TeacherSchedule';
 import SubjectsPage from './pages/teacher/SubjectsPage';
 import BehaviorPage from './pages/teacher/BehaviorPage';
 import DisciplinePage from './pages/teacher/DisciplinePage';
-import StudentAccommodations from './pages/teacher/StudentAccommodations';
 
 import StudentDashboard from './pages/student/StudentDashboard';
 import MyGrades from './pages/student/MyGrades';
@@ -33,17 +29,13 @@ import MyAttendance from './pages/student/MyAttendance';
 import ParentDashboard from './pages/parent/ParentDashboard';
 import ChildGrades from './pages/parent/ChildGrades';
 import ChildAttendance from './pages/parent/ChildAttendance';
-import PrivacySettings from './pages/parent/PrivacySettings';
-import ChildIEP from './pages/parent/ChildIEP';
 
 import MessagesPage from './pages/shared/MessagesPage';
-import PrivacyPolicy from './pages/shared/PrivacyPolicy';
 
 import {
   LayoutDashboard, Users, GraduationCap, Layers, BarChart3,
   Megaphone, BookOpen, ClipboardCheck, CalendarCheck, Award,
   Calendar, Clock, Star, MessageSquare, Library, UserCog, Shield,
-  Activity, Trash2, Lock, Heart, Sparkles,
 } from 'lucide-react';
 
 const directorNav: NavItem[] = [
@@ -54,9 +46,6 @@ const directorNav: NavItem[] = [
   { label: 'Klasat', path: '/drejtor/klasa', icon: Layers },
   { label: 'Raportet', path: '/drejtor/raporte', icon: BarChart3 },
   { label: 'Disiplina', path: '/drejtor/disiplina', icon: Shield },
-  { label: 'NVA & PIA', path: '/drejtor/nva', icon: Heart },
-  { label: 'Audit Log', path: '/drejtor/audit', icon: Activity },
-  { label: 'Kërkesat Fshirje', path: '/drejtor/kerkesa-fshirje', icon: Trash2 },
   { label: 'Njoftimet', path: '/drejtor/njoftime', icon: Megaphone },
   { label: 'Mesazhet', path: '/drejtor/mesazhet', icon: MessageSquare },
 ];
@@ -68,7 +57,6 @@ const teacherNav: NavItem[] = [
   { label: 'Vendos Nota', path: '/mesues/nota', icon: ClipboardCheck },
   { label: 'Sjellja', path: '/mesues/sjellja', icon: Star },
   { label: 'Disiplina', path: '/mesues/disiplina', icon: Shield },
-  { label: 'Akomodimet', path: '/mesues/akomodimet', icon: Sparkles },
   { label: 'Frekuentimi', path: '/mesues/frekuentimi', icon: CalendarCheck },
   { label: 'Orari Mësimor', path: '/mesues/orari', icon: Clock },
   { label: 'Mesazhet', path: '/mesues/mesazhet', icon: MessageSquare },
@@ -87,8 +75,6 @@ const parentNav: NavItem[] = [
   { label: 'Notat', path: '/prind/nota', icon: Star },
   { label: 'Frekuentimi', path: '/prind/frekuentimi', icon: Calendar },
   { label: 'Mesazhet', path: '/prind/mesazhet', icon: MessageSquare },
-  { label: 'PIA i Fëmijës', path: '/prind/pia', icon: Heart },
-  { label: 'Privatësia', path: '/prind/privatesia', icon: Lock },
 ];
 
 function AppRoutes() {
@@ -108,7 +94,6 @@ function AppRoutes() {
   if (!profile) {
     return (
       <Routes>
-        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="*" element={<LoginPage />} />
       </Routes>
     );
@@ -126,9 +111,6 @@ function AppRoutes() {
           <Route path="/drejtor/klasa" element={<ManageClasses />} />
           <Route path="/drejtor/raporte" element={<Reports />} />
           <Route path="/drejtor/disiplina" element={<DisciplinePage />} />
-          <Route path="/drejtor/nva" element={<SpecialNeedsManagement />} />
-          <Route path="/drejtor/audit" element={<AuditLogs />} />
-          <Route path="/drejtor/kerkesa-fshirje" element={<DeletionRequests />} />
           <Route path="/drejtor/njoftime" element={<Announcements />} />
           <Route path="/drejtor/mesazhet" element={<MessagesPage />} />
         </Route>
@@ -147,7 +129,6 @@ function AppRoutes() {
           <Route path="/mesues/nota" element={<GradeEntry />} />
           <Route path="/mesues/sjellja" element={<BehaviorPage />} />
           <Route path="/mesues/disiplina" element={<DisciplinePage />} />
-          <Route path="/mesues/akomodimet" element={<StudentAccommodations />} />
           <Route path="/mesues/frekuentimi" element={<AttendancePage />} />
           <Route path="/mesues/lendet" element={<SubjectsPage />} />
           <Route path="/mesues/orari" element={<TeacherSchedule />} />
@@ -183,8 +164,6 @@ function AppRoutes() {
           <Route path="/prind/nota" element={<ChildGrades />} />
           <Route path="/prind/frekuentimi" element={<ChildAttendance />} />
           <Route path="/prind/mesazhet" element={<MessagesPage />} />
-          <Route path="/prind/pia" element={<ChildIEP />} />
-          <Route path="/prind/privatesia" element={<PrivacySettings />} />
         </Route>
         <Route path="*" element={<Navigate to="/prind" replace />} />
       </Routes>
