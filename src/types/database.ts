@@ -721,3 +721,44 @@ export interface MeetingMinutes {
   created_at: string;
   updated_at: string;
 }
+
+// === Paketa 5: Dëftesa Zyrtare (UA 19/2018) ===
+
+export interface SchoolInfo {
+  id: string;
+  name: string;
+  full_name: string;
+  address: string;
+  municipality: string;
+  phone: string;
+  email: string;
+  website: string;
+  director_name: string;
+  logo_url: string | null;
+  stamp_url: string | null;
+  registration_number: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export type ReportCardType = 'periudhshme' | 'vjetore' | 'certifikate_klases_5' | 'diplome_klases_9';
+
+export const REPORT_CARD_TYPE_LABELS: Record<ReportCardType, string> = {
+  periudhshme: 'Dëftesë e Periudhës',
+  vjetore: 'Dëftesë Vjetore',
+  certifikate_klases_5: 'Certifikatë e Klasës së V-të',
+  diplome_klases_9: 'Diplomë e Klasës së IX-të',
+};
+
+export interface ReportCardIssued {
+  id: string;
+  student_id: string;
+  class_id: string | null;
+  academic_year_id: string | null;
+  period: number | null;
+  card_type: ReportCardType;
+  issued_by: string;
+  issued_at: string;
+  serial_number: string | null;
+  notes: string;
+}
