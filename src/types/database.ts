@@ -615,3 +615,109 @@ export interface SupportStaffAssignment {
   is_active: boolean;
   created_at: string;
 }
+
+// === Paketa 4: Organet Shkollore (Ligji 04/L-032 Nenet 18-23) ===
+
+export type CouncilType = 'drejtues' | 'prinder' | 'nxenes' | 'profesional';
+
+export const COUNCIL_TYPE_LABELS: Record<CouncilType, string> = {
+  drejtues: 'Këshilli Drejtues i Shkollës',
+  prinder: 'Këshilli i Prindërve',
+  nxenes: 'Këshilli i Nxënësve',
+  profesional: 'Këshilli Profesional i Mësimdhënësve',
+};
+
+export const COUNCIL_TYPE_DESCRIPTIONS: Record<CouncilType, string> = {
+  drejtues: 'Organi më i lartë drejtues i shkollës (Neni 18) — 7 deri 9 anëtarë: prindër, mësues, përfaqësues të komunës dhe nxënës.',
+  prinder: 'Përfaqëson prindërit e nxënësve të shkollës (Neni 19) — me përfaqësues nga çdo klasë.',
+  nxenes: 'Përfaqëson nxënësit në vendimmarrjen e shkollës (Neni 23) — për nxënësit e klasave 6–9.',
+  profesional: 'Përbëhet nga të gjithë mësimdhënësit dhe drejtuesit (Neni 20) — për çështje pedagogjike.',
+};
+
+export type CouncilMemberRole = 'kryetar' | 'zevendes_kryetar' | 'sekretar' | 'anetar';
+
+export const COUNCIL_MEMBER_ROLE_LABELS: Record<CouncilMemberRole, string> = {
+  kryetar: 'Kryetar/e',
+  zevendes_kryetar: 'Zëvendëskryetar/e',
+  sekretar: 'Sekretar/e',
+  anetar: 'Anëtar/e',
+};
+
+export interface SchoolCouncil {
+  id: string;
+  type: CouncilType;
+  name: string;
+  description: string;
+  academic_year_id: string | null;
+  is_active: boolean;
+  established_at: string | null;
+  term_ends: string | null;
+  created_at: string;
+}
+
+export interface CouncilMember {
+  id: string;
+  council_id: string;
+  user_id: string;
+  role: CouncilMemberRole;
+  represents: string;
+  joined_at: string;
+  left_at: string | null;
+  is_active: boolean;
+  notes: string;
+  created_at: string;
+}
+
+export type MeetingStatus = 'planifikuar' | 'mbajtur' | 'anuluar' | 'shtyer';
+
+export const MEETING_STATUS_LABELS: Record<MeetingStatus, string> = {
+  planifikuar: 'I planifikuar',
+  mbajtur: 'I mbajtur',
+  anuluar: 'I anuluar',
+  shtyer: 'I shtyrë',
+};
+
+export interface CouncilMeeting {
+  id: string;
+  council_id: string;
+  title: string;
+  meeting_date: string;
+  start_time: string | null;
+  end_time: string | null;
+  location: string;
+  agenda: string;
+  status: MeetingStatus;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export type MeetingAttendanceStatus = 'pa_specifikuar' | 'prezent' | 'mungon' | 'arsyeshme';
+
+export const MEETING_ATTENDANCE_LABELS: Record<MeetingAttendanceStatus, string> = {
+  pa_specifikuar: 'Pa specifikuar',
+  prezent: 'Prezent',
+  mungon: 'Mungon',
+  arsyeshme: 'I/E arsyeshëm/e',
+};
+
+export interface MeetingAttendance {
+  id: string;
+  meeting_id: string;
+  member_id: string;
+  status: MeetingAttendanceStatus;
+  notes: string;
+}
+
+export interface MeetingMinutes {
+  id: string;
+  meeting_id: string;
+  content: string;
+  decisions: string;
+  recorded_by: string;
+  approved: boolean;
+  approved_at: string | null;
+  approved_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
