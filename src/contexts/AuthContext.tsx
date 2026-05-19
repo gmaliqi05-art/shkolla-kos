@@ -17,42 +17,55 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const DEMO_PROFILE_DEFAULTS = {
+  phone: '',
+  avatar_url: '',
+  created_at: new Date().toISOString(),
+  personal_number: null,
+  date_of_birth: null,
+  place_of_birth: '',
+  address: '',
+  gender: null,
+  nationality: '',
+  mother_tongue: 'shqip',
+  legal_guardian_name: '',
+  legal_guardian_relation: '',
+  emergency_contact_name: '',
+  emergency_contact_phone: '',
+  emergency_contact_relation: '',
+  medical_conditions: '',
+  family_doctor: '',
+  enrollment_status: 'regjistruar' as const,
+};
+
 const DEMO_PROFILES: Record<UserRole, Profile> = {
   drejtor: {
+    ...DEMO_PROFILE_DEFAULTS,
     id: 'demo-drejtor',
     email: 'drejtor@shkolla.ks',
     full_name: 'Arben Hoxha',
     role: 'drejtor',
-    phone: '',
-    avatar_url: '',
-    created_at: new Date().toISOString(),
   },
   mesues: {
+    ...DEMO_PROFILE_DEFAULTS,
     id: 'demo-mesues',
     email: 'mesues@shkolla.ks',
     full_name: 'Florentina Gashi',
     role: 'mesues',
-    phone: '',
-    avatar_url: '',
-    created_at: new Date().toISOString(),
   },
   nxenes: {
+    ...DEMO_PROFILE_DEFAULTS,
     id: 'demo-nxenes',
     email: 'nxenes@shkolla.ks',
     full_name: 'Ardi Krasniqi',
     role: 'nxenes',
-    phone: '',
-    avatar_url: '',
-    created_at: new Date().toISOString(),
   },
   prind: {
+    ...DEMO_PROFILE_DEFAULTS,
     id: 'demo-prind',
     email: 'prind@shkolla.ks',
     full_name: 'Driton Krasniqi',
     role: 'prind',
-    phone: '',
-    avatar_url: '',
-    created_at: new Date().toISOString(),
   },
 };
 

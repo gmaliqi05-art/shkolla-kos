@@ -18,6 +18,8 @@ import GradeEntry from './pages/teacher/GradeEntry';
 import AttendancePage from './pages/teacher/AttendancePage';
 import TeacherSchedule from './pages/teacher/TeacherSchedule';
 import SubjectsPage from './pages/teacher/SubjectsPage';
+import BehaviorPage from './pages/teacher/BehaviorPage';
+import DisciplinePage from './pages/teacher/DisciplinePage';
 
 import StudentDashboard from './pages/student/StudentDashboard';
 import MyGrades from './pages/student/MyGrades';
@@ -33,7 +35,7 @@ import MessagesPage from './pages/shared/MessagesPage';
 import {
   LayoutDashboard, Users, GraduationCap, Layers, BarChart3,
   Megaphone, BookOpen, ClipboardCheck, CalendarCheck, Award,
-  Calendar, Clock, Star, MessageSquare, Library, UserCog,
+  Calendar, Clock, Star, MessageSquare, Library, UserCog, Shield,
 } from 'lucide-react';
 
 const directorNav: NavItem[] = [
@@ -43,6 +45,7 @@ const directorNav: NavItem[] = [
   { label: 'Prinderit', path: '/drejtor/prinder', icon: UserCog },
   { label: 'Klasat', path: '/drejtor/klasa', icon: Layers },
   { label: 'Raportet', path: '/drejtor/raporte', icon: BarChart3 },
+  { label: 'Disiplina', path: '/drejtor/disiplina', icon: Shield },
   { label: 'Njoftimet', path: '/drejtor/njoftime', icon: Megaphone },
   { label: 'Mesazhet', path: '/drejtor/mesazhet', icon: MessageSquare },
 ];
@@ -52,6 +55,8 @@ const teacherNav: NavItem[] = [
   { label: 'Klasat e Mia', path: '/mesues/klasa', icon: BookOpen },
   { label: 'Lëndët Mësimore', path: '/mesues/lendet', icon: Library },
   { label: 'Vendos Nota', path: '/mesues/nota', icon: ClipboardCheck },
+  { label: 'Sjellja', path: '/mesues/sjellja', icon: Star },
+  { label: 'Disiplina', path: '/mesues/disiplina', icon: Shield },
   { label: 'Frekuentimi', path: '/mesues/frekuentimi', icon: CalendarCheck },
   { label: 'Orari Mësimor', path: '/mesues/orari', icon: Clock },
   { label: 'Mesazhet', path: '/mesues/mesazhet', icon: MessageSquare },
@@ -105,6 +110,7 @@ function AppRoutes() {
           <Route path="/drejtor/prinder" element={<ManageParents />} />
           <Route path="/drejtor/klasa" element={<ManageClasses />} />
           <Route path="/drejtor/raporte" element={<Reports />} />
+          <Route path="/drejtor/disiplina" element={<DisciplinePage />} />
           <Route path="/drejtor/njoftime" element={<Announcements />} />
           <Route path="/drejtor/mesazhet" element={<MessagesPage />} />
         </Route>
@@ -121,6 +127,8 @@ function AppRoutes() {
           <Route path="/mesues" element={<TeacherDashboard />} />
           <Route path="/mesues/klasa" element={<MyClasses />} />
           <Route path="/mesues/nota" element={<GradeEntry />} />
+          <Route path="/mesues/sjellja" element={<BehaviorPage />} />
+          <Route path="/mesues/disiplina" element={<DisciplinePage />} />
           <Route path="/mesues/frekuentimi" element={<AttendancePage />} />
           <Route path="/mesues/lendet" element={<SubjectsPage />} />
           <Route path="/mesues/orari" element={<TeacherSchedule />} />
