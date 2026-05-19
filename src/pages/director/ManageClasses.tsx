@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import type { Class } from '../../types/database';
-import { Search, Users, BookOpen, ChevronRight, Plus, CreditCard as Edit2, Trash2, X, FolderPlus, MoreVertical } from 'lucide-react';
+import { Search, Users, BookOpen, Plus, CreditCard as Edit2, Trash2, X, FolderPlus, MoreVertical } from 'lucide-react';
 
 interface ClassFormData {
   name: string;

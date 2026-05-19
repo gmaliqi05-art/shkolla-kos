@@ -3,7 +3,6 @@ import { Save, Check, BookOpen, AlertCircle, Loader2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import type { Grade } from '../../types/database';
-import { getGradeBgColor } from '../../types/database';
 
 interface StudentGradeData {
   student_id: string;

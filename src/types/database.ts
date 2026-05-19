@@ -153,14 +153,6 @@ export const PERIOD_LABELS: Record<number, string> = {
   3: 'Periudha e Tretë',
 };
 
-export const DESCRIPTIVE_LEVEL_LABELS: Record<number, string> = {
-  1: 'Arritje e pamjaftueshme',
-  2: 'Arritje minimale',
-  3: 'Arritje e kënaqshme',
-  4: 'Arritje shumë e kënaqshme',
-  5: 'Arritje e shkëlqyer',
-};
-
 export const ASSESSMENT_NUMBER_LABELS: Record<number, string> = {
   1: 'Vlerësimi 1',
   2: 'Vlerësimi 2',
@@ -169,6 +161,13 @@ export const ASSESSMENT_NUMBER_LABELS: Record<number, string> = {
 };
 
 export const GRADE_LABELS: Record<number, string> = {
+  1: 'Pamjaftueshme',
+  2: 'Mjaftueshme',
+  3: 'Mire',
+  4: 'Shume Mire',
+  5: 'Shkelqyeshem',
+};
+
 export type DescriptiveLevel = 'shkelqyeshem' | 'shume_kenaqshem' | 'kenaqshem' | 'mjaftueshem' | 'pamjaftueshem';
 
 export const DESCRIPTIVE_LEVEL_LABELS: Record<DescriptiveLevel, string> = {
@@ -199,19 +198,6 @@ export interface DescriptiveAssessment {
   date: string;
   created_at: string;
 }
-
-export const PERIOD_LABELS: Record<number, string> = {
-  1: 'Periudha I',
-  2: 'Periudha II',
-  3: 'Periudha III',
-};
-
-  1: 'Pamjaftueshme',
-  2: 'Mjaftueshme',
-  3: 'Mire',
-  4: 'Shume Mire',
-  5: 'Shkelqyeshem',
-};
 
 export const ATTENDANCE_LABELS: Record<AttendanceStatusType, string> = {
   prezent: 'Prezent',
