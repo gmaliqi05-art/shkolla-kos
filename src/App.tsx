@@ -20,6 +20,7 @@ import ReportCards from './pages/director/ReportCards';
 import ReportCardView from './pages/director/ReportCardView';
 import TeacherLicensing from './pages/director/TeacherLicensing';
 import Activities from './pages/director/Activities';
+import NationalTests from './pages/director/NationalTests';
 
 import TeacherDashboard from './pages/teacher/TeacherDashboard';
 import MyClasses from './pages/teacher/MyClasses';
@@ -47,6 +48,7 @@ import ChildIEP from './pages/parent/ChildIEP';
 import MessagesPage from './pages/shared/MessagesPage';
 import PrivacyPolicy from './pages/shared/PrivacyPolicy';
 import MyCouncils from './pages/shared/MyCouncils';
+import MyTestResults from './pages/shared/MyTestResults';
 
 import {
   LayoutDashboard, Users, GraduationCap, Layers, BarChart3,
@@ -70,6 +72,7 @@ const directorNav: NavItem[] = [
   { label: 'Organet Shkollore', path: '/drejtor/keshillat', icon: Briefcase },
   { label: 'Aktivitetet', path: '/drejtor/aktivitete', icon: Trophy },
   { label: 'Takimet me Prindër', path: '/drejtor/takimet', icon: Users },
+  { label: 'Testet Kombëtare', path: '/drejtor/testet-kombetare', icon: GraduationCap },
   { label: 'Audit Log', path: '/drejtor/audit', icon: Activity },
   { label: 'Kërkesat Fshirje', path: '/drejtor/kerkesa-fshirje', icon: Trash2 },
   { label: 'Cilësimet', path: '/drejtor/cilesime', icon: Building2 },
@@ -101,6 +104,7 @@ const studentNav: NavItem[] = [
   { label: 'Frekuentimi', path: '/nxenes/frekuentimi', icon: Calendar },
   { label: 'Mesazhet', path: '/nxenes/mesazhet', icon: MessageSquare },
   { label: 'Këshillat e Mi', path: '/nxenes/keshillat', icon: Briefcase },
+  { label: 'Testet Kombëtare', path: '/nxenes/testet-kombetare', icon: GraduationCap },
 ];
 
 const parentNav: NavItem[] = [
@@ -112,6 +116,7 @@ const parentNav: NavItem[] = [
   { label: 'Aktivitetet', path: '/prind/aktivitete', icon: Trophy },
   { label: 'Takimet', path: '/prind/takimet', icon: Users },
   { label: 'Këshillat e Mi', path: '/prind/keshillat', icon: Briefcase },
+  { label: 'Testet Kombëtare', path: '/prind/testet-kombetare', icon: GraduationCap },
   { label: 'Privatësia', path: '/prind/privatesia', icon: Lock },
 ];
 
@@ -158,6 +163,7 @@ function AppRoutes() {
           <Route path="/drejtor/keshillat" element={<SchoolCouncils />} />
           <Route path="/drejtor/aktivitete" element={<Activities />} />
           <Route path="/drejtor/takimet" element={<ParentMeetings />} />
+          <Route path="/drejtor/testet-kombetare" element={<NationalTests />} />
           <Route path="/drejtor/audit" element={<AuditLogs />} />
           <Route path="/drejtor/kerkesa-fshirje" element={<DeletionRequests />} />
           <Route path="/drejtor/njoftime" element={<Announcements />} />
@@ -204,6 +210,7 @@ function AppRoutes() {
           <Route path="/nxenes/frekuentimi" element={<MyAttendance />} />
           <Route path="/nxenes/mesazhet" element={<MessagesPage />} />
           <Route path="/nxenes/keshillat" element={<MyCouncils />} />
+          <Route path="/nxenes/testet-kombetare" element={<MyTestResults />} />
         </Route>
         <Route path="*" element={<Navigate to="/nxenes" replace />} />
       </Routes>
@@ -223,6 +230,7 @@ function AppRoutes() {
           <Route path="/prind/aktivitete" element={<Activities />} />
           <Route path="/prind/takimet" element={<ParentMeetings />} />
           <Route path="/prind/keshillat" element={<MyCouncils />} />
+          <Route path="/prind/testet-kombetare" element={<MyTestResults />} />
           <Route path="/prind/privatesia" element={<PrivacySettings />} />
         </Route>
         <Route path="*" element={<Navigate to="/prind" replace />} />

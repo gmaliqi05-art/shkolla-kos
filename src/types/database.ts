@@ -154,6 +154,61 @@ export interface ParentMeeting {
   created_at: string;
 }
 
+// === Paketa 8: Testet Kombëtare ===
+
+export type NationalTestStatus = 'planifikuar' | 'mbajtur' | 'rezultatet_marrura' | 'perfunduar';
+
+export const NATIONAL_TEST_STATUS_LABELS: Record<NationalTestStatus, string> = {
+  planifikuar: 'I planifikuar',
+  mbajtur: 'I mbajtur',
+  rezultatet_marrura: 'Rezultatet të marra',
+  perfunduar: 'I përfunduar',
+};
+
+export interface NationalTest {
+  id: string;
+  grade_level: number;
+  academic_year_id: string | null;
+  test_date: string;
+  name: string;
+  description: string;
+  status: NationalTestStatus;
+  created_at: string;
+}
+
+export type TestResultLevel = 'shkelqyeshem' | 'shume_mire' | 'mire' | 'kenaqshem' | 'pakenaqshem';
+
+export const TEST_RESULT_LEVEL_LABELS: Record<TestResultLevel, string> = {
+  shkelqyeshem: 'Shkëlqyeshëm',
+  shume_mire: 'Shumë mirë',
+  mire: 'Mirë',
+  kenaqshem: 'I kënaqshëm',
+  pakenaqshem: 'Pakënaqshëm',
+};
+
+export const TEST_RESULT_LEVEL_COLORS: Record<TestResultLevel, string> = {
+  shkelqyeshem: 'bg-emerald-100 text-emerald-700',
+  shume_mire: 'bg-blue-100 text-blue-700',
+  mire: 'bg-cyan-100 text-cyan-700',
+  kenaqshem: 'bg-amber-100 text-amber-700',
+  pakenaqshem: 'bg-rose-100 text-rose-700',
+};
+
+export interface NationalTestResult {
+  id: string;
+  test_id: string;
+  student_id: string;
+  subject_id: string | null;
+  subject_name: string;
+  score: number | null;
+  max_score: number | null;
+  percentage: number | null;
+  level: TestResultLevel | null;
+  notes: string;
+  recorded_by: string | null;
+  recorded_at: string;
+}
+
 export const GENDER_LABELS: Record<Gender, string> = {
   M: 'Mashkull',
   F: 'Femër',
