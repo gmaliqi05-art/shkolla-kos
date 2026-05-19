@@ -26,7 +26,7 @@ const STATUS_CONFIG = {
 
 const TYPE_LABELS: Record<string, string> = {
   vlersim: 'Vlersim',
-  perfundimtare_gjysmvjetor: 'Gjysmvjetor',
+  perfundimtare_gjysmvjetor: 'Perfundimtare',
   perfundimtare_vjetor: 'Vjetor',
 };
 

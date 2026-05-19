@@ -5,7 +5,6 @@ import { supabase } from '../../lib/supabase';
 import {
   TrendingUp,
   BarChart3,
-  PieChart,
   ArrowUpRight,
   ArrowDownRight,
   Loader2,
@@ -18,6 +17,7 @@ import {
   MessageSquare,
   ClipboardCheck,
   ChevronRight,
+  FileDown,
 } from 'lucide-react';
 
 interface SubjectAvg { name: string; avg: number; }
@@ -253,6 +253,70 @@ export default function Reports() {
     }
   };
 
+  const handleExportPDF = () => {
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    const today = new Date().toLocaleDateString('sq-AL', { year: 'numeric', month: 'long', day: 'numeric' });
+
+    const subjectRows = subjectAvgs.map(s => `<tr><td>${s.name}</td><td style="text-align:center;font-weight:600">${s.avg}</td></tr>`).join('');
+    const classRows = classPerf.map(c => `<tr><td>${c.className}</td><td style="text-align:center">${c.studentCount}</td><td style="text-align:center;font-weight:600">${c.avg}</td></tr>`).join('');
+    const teacherRows = teacherActivity.map(t => `<tr><td>${t.name}</td><td style="text-align:center">${t.classCount}</td><td style="text-align:center">${t.gradesThisMonth}</td><td style="text-align:center">${t.attendanceThisMonth}</td><td>${t.lastGradeDate ? new Date(t.lastGradeDate).toLocaleDateString('sq-AL') : 'Asnjë'}</td></tr>`).join('');
+    const atRiskRows = atRiskStudents.map(s => `<tr><td>${s.name}</td><td style="text-align:center">${s.className}</td><td style="text-align:center;font-weight:600">${s.avg}</td><td style="text-align:center">${s.absences}</td></tr>`).join('');
+
+    printWindow.document.write(`<!DOCTYPE html><html><head><title>Raport Shkollor - ${today}</title><style>
+      body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:40px;color:#1e293b;max-width:900px;margin:0 auto}
+      h1{font-size:22px;margin-bottom:4px}
+      h2{font-size:16px;margin-top:32px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}
+      h3{font-size:14px;margin-top:24px;color:#475569}
+      .subtitle{color:#64748b;font-size:13px;margin-bottom:24px}
+      .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0}
+      .stat{border:1px solid #e2e8f0;border-radius:8px;padding:16px;text-align:center}
+      .stat-value{font-size:24px;font-weight:700}
+      .stat-label{font-size:11px;color:#64748b;margin-top:4px}
+      table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
+      th,td{padding:8px 12px;border-bottom:1px solid #f1f5f9;text-align:left}
+      th{background:#f8fafc;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:#64748b;font-weight:600}
+      .footer{margin-top:40px;padding-top:16px;border-top:1px solid #e2e8f0;font-size:11px;color:#94a3b8;text-align:center}
+      @media print{body{padding:20px}}
+    </style></head><body>
+      <h1>Raport Shkollor</h1>
+      <p class="subtitle">Gjeneruar me: ${today}</p>
+
+      <div class="stats">
+        <div class="stat"><div class="stat-value">${stats.schoolAvg}</div><div class="stat-label">Mesatarja e Shkollës</div></div>
+        <div class="stat"><div class="stat-value">${stats.attendancePct}%</div><div class="stat-label">Frekuentimi</div></div>
+        <div class="stat"><div class="stat-value">${stats.studentsWithFive}</div><div class="stat-label">Nxënës me notë 5</div></div>
+        <div class="stat"><div class="stat-value">${stats.studentsWithOne}</div><div class="stat-label">Nxënës me notë 1</div></div>
+      </div>
+
+      <h2>Mesatarja sipas Lëndës</h2>
+      <table><thead><tr><th>Lënda</th><th style="text-align:center">Mesatarja</th></tr></thead><tbody>${subjectRows}</tbody></table>
+
+      <h2>Performanca sipas Klasës</h2>
+      <table><thead><tr><th>Klasa</th><th style="text-align:center">Nxënës</th><th style="text-align:center">Mesatarja</th></tr></thead><tbody>${classRows}</tbody></table>
+
+      <h2>Aktiviteti i Mësuesve — Këtë Muaj</h2>
+      <table><thead><tr><th>Mësuesi</th><th style="text-align:center">Klasa</th><th style="text-align:center">Nota</th><th style="text-align:center">Frekuencë</th><th>Nota e Fundit</th></tr></thead><tbody>${teacherRows}</tbody></table>
+
+      ${atRiskStudents.length > 0 ? `<h2>Nxënës në Rrezik Akademik</h2>
+      <table><thead><tr><th>Nxënësi</th><th style="text-align:center">Klasa</th><th style="text-align:center">Mesatare</th><th style="text-align:center">Mungesa</th></tr></thead><tbody>${atRiskRows}</tbody></table>` : ''}
+
+      <h2>Frekuentimi</h2>
+      <div class="stats">
+        <div class="stat"><div class="stat-value">${stats.totalDays > 0 ? Math.round((stats.attendancePct / 100) * stats.totalDays) : 0}</div><div class="stat-label">Prezente</div></div>
+        <div class="stat"><div class="stat-value">${stats.totalAbsences - stats.justifiedAbsences}</div><div class="stat-label">Mungesa</div></div>
+        <div class="stat"><div class="stat-value">${stats.justifiedAbsences}</div><div class="stat-label">Arsyeshme</div></div>
+        <div class="stat"><div class="stat-value">${stats.totalDays}</div><div class="stat-label">Gjithsej Regjistrime</div></div>
+      </div>
+
+      <div class="footer">Sistemi i Menaxhimit Shkollor — Shkolla-Kos</div>
+    </body></html>`);
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(() => { printWindow.print(); }, 250);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-96">
@@ -278,13 +342,22 @@ export default function Reports() {
           <h1 className="text-2xl font-bold text-slate-900">Raportet</h1>
           <p className="text-slate-500 mt-1">Statistika dhe analiza — Sistemi i vlerësimit 1–5</p>
         </div>
-        <button
-          onClick={loadReports}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors"
-        >
-          <RefreshCw className="w-4 h-4" />
-          Rifresko
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleExportPDF}
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-colors"
+          >
+            <FileDown className="w-4 h-4" />
+            Eksporto PDF
+          </button>
+          <button
+            onClick={loadReports}
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors"
+          >
+            <RefreshCw className="w-4 h-4" />
+            Rifresko
+          </button>
+        </div>
       </div>
 
       {lastUpdated && (

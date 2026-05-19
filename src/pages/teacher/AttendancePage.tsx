@@ -11,12 +11,26 @@ interface Student {
   status: AttendanceStatus;
 }
 
+interface ClassSubjectRow {
+  id: string;
+  class_id: string;
+  subject_id: string;
+  classes: { name: string } | { name: string }[] | null;
+  subjects: { name: string } | { name: string }[] | null;
+}
+
 interface ClassSubject {
   id: string;
   class_id: string;
   subject_id: string;
-  classes: { name: string };
-  subjects: { name: string };
+  className: string;
+  subjectName: string;
+}
+
+function extractName(rel: { name: string } | { name: string }[] | null): string {
+  if (!rel) return '';
+  if (Array.isArray(rel)) return rel[0]?.name ?? '';
+  return rel.name;
 }
 
 export default function AttendancePage() {
@@ -46,8 +60,8 @@ export default function AttendancePage() {
           id: 'demo-1',
           class_id: 'demo-class',
           subject_id: 'demo-subject',
-          classes: { name: 'Klasa 5-A' },
-          subjects: { name: 'Matematikë' },
+          className: 'Klasa 5-A',
+          subjectName: 'Matematikë',
         },
       ]);
       setSelectedClassSubject('demo-1');
@@ -69,9 +83,16 @@ export default function AttendancePage() {
 
       if (error) throw error;
 
-      setClassSubjects(data || []);
-      if (data && data.length > 0) {
-        setSelectedClassSubject(data[0].id);
+      const mapped: ClassSubject[] = (data || []).map((row: ClassSubjectRow) => ({
+        id: row.id,
+        class_id: row.class_id,
+        subject_id: row.subject_id,
+        className: extractName(row.classes),
+        subjectName: extractName(row.subjects),
+      }));
+      setClassSubjects(mapped);
+      if (mapped.length > 0) {
+        setSelectedClassSubject(mapped[0].id);
       }
     } catch (error) {
       console.error('Error loading classes:', error);
@@ -277,7 +298,7 @@ export default function AttendancePage() {
             >
               {classSubjects.map((cs) => (
                 <option key={cs.id} value={cs.id}>
-                  {cs.classes.name} - {cs.subjects.name}
+                  {cs.className} - {cs.subjectName}
                 </option>
               ))}
             </select>
@@ -307,7 +328,7 @@ export default function AttendancePage() {
           <div className="text-center py-8">
             <AlertCircle className="w-10 h-10 text-slate-300 mx-auto mb-3" />
             <p className="text-slate-500 text-sm">
-              Nuk ka nxënës të regjistruar në {currentClassSubject?.classes.name}
+              Nuk ka nxënës të regjistruar në {currentClassSubject?.className}
             </p>
           </div>
         ) : (

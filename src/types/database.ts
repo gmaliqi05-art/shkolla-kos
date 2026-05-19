@@ -143,8 +143,22 @@ export const ROLE_LABELS: Record<UserRole, string> = {
 
 export const ASSESSMENT_TYPE_LABELS: Record<AssessmentType, string> = {
   vlersim: 'Vlerësim',
-  perfundimtare_gjysmvjetor: 'Nota Përfundimtare Gjysmëvjetori',
+  perfundimtare_gjysmvjetor: 'Nota Përfundimtare e Periudhës',
   perfundimtare_vjetor: 'Nota Përfundimtare Vjetore',
+};
+
+export const PERIOD_LABELS: Record<number, string> = {
+  1: 'Periudha e Parë',
+  2: 'Periudha e Dytë',
+  3: 'Periudha e Tretë',
+};
+
+export const DESCRIPTIVE_LEVEL_LABELS: Record<number, string> = {
+  1: 'Arritje e pamjaftueshme',
+  2: 'Arritje minimale',
+  3: 'Arritje e kënaqshme',
+  4: 'Arritje shumë e kënaqshme',
+  5: 'Arritje e shkëlqyer',
 };
 
 export const ASSESSMENT_NUMBER_LABELS: Record<number, string> = {
@@ -155,6 +169,43 @@ export const ASSESSMENT_NUMBER_LABELS: Record<number, string> = {
 };
 
 export const GRADE_LABELS: Record<number, string> = {
+export type DescriptiveLevel = 'shkelqyeshem' | 'shume_kenaqshem' | 'kenaqshem' | 'mjaftueshem' | 'pamjaftueshem';
+
+export const DESCRIPTIVE_LEVEL_LABELS: Record<DescriptiveLevel, string> = {
+  shkelqyeshem: 'Arritje e shkëlqyer',
+  shume_kenaqshem: 'Arritje shumë e kënaqshme',
+  kenaqshem: 'Arritje e kënaqshme',
+  mjaftueshem: 'Arritje minimale',
+  pamjaftueshem: 'Arritje e pamjaftueshme',
+};
+
+export const DESCRIPTIVE_LEVEL_COLORS: Record<DescriptiveLevel, string> = {
+  shkelqyeshem: 'bg-emerald-100 text-emerald-700',
+  shume_kenaqshem: 'bg-blue-100 text-blue-700',
+  kenaqshem: 'bg-cyan-100 text-cyan-700',
+  mjaftueshem: 'bg-amber-100 text-amber-700',
+  pamjaftueshem: 'bg-rose-100 text-rose-700',
+};
+
+export interface DescriptiveAssessment {
+  id: string;
+  student_id: string;
+  subject_id: string;
+  class_id: string;
+  teacher_id: string;
+  period: number;
+  level: DescriptiveLevel;
+  comment: string;
+  date: string;
+  created_at: string;
+}
+
+export const PERIOD_LABELS: Record<number, string> = {
+  1: 'Periudha I',
+  2: 'Periudha II',
+  3: 'Periudha III',
+};
+
   1: 'Pamjaftueshme',
   2: 'Mjaftueshme',
   3: 'Mire',

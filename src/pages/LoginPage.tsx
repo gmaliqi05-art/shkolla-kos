@@ -1,23 +1,10 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
 import type { UserRole } from '../types/database';
-import {
-  GraduationCap,
-  Eye,
-  EyeOff,
-  BookOpen,
-  Users,
-  BarChart3,
-  Shield,
-  Loader2,
-  UserCircle,
-  School,
-  User,
-  UserCheck,
-} from 'lucide-react';
+import { GraduationCap, Eye, EyeOff, BookOpen, Users, BarChart3, Shield, Loader2, CircleUser as UserCircle, School, User, UserCheck, ArrowLeft, CheckCircle } from 'lucide-react';
 
 const ROLES: { value: UserRole; label: string; description: string }[] = [
-  { value: 'drejtor', label: 'Drejtor', description: 'Menaxhoni shkollen' },
   { value: 'mesues', label: 'Mesues', description: 'Menaxhoni klasat' },
   { value: 'nxenes', label: 'Nxenes', description: 'Shikoni notat' },
   { value: 'prind', label: 'Prind', description: 'Ndiqni femijen' },
@@ -36,10 +23,29 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  const [role, setRole] = useState<UserRole>('nxenes');
+  const [role, setRole] = useState<UserRole>('mesues');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showReset, setShowReset] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetSent, setResetSent] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setResetLoading(true);
+    setError('');
+    const { error: err } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+      redirectTo: window.location.origin,
+    });
+    if (err) {
+      setError(err.message);
+    } else {
+      setResetSent(true);
+    }
+    setResetLoading(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -129,6 +135,55 @@ export default function LoginPage() {
           </div>
 
           <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 p-8">
+            {showReset ? (
+              <div>
+                <button
+                  onClick={() => { setShowReset(false); setError(''); setResetSent(false); }}
+                  className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 mb-4 transition-colors"
+                >
+                  <ArrowLeft className="w-4 h-4" /> Kthehu
+                </button>
+                <h2 className="text-2xl font-bold text-slate-900 mb-1">Rivendosni fjalekalimin</h2>
+                <p className="text-slate-500 text-sm mb-6">
+                  Vendosni emailin tuaj dhe do t'ju dergojme nje link per rivendosje.
+                </p>
+                {error && (
+                  <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+                    {error}
+                  </div>
+                )}
+                {resetSent ? (
+                  <div className="text-center py-6">
+                    <CheckCircle className="w-12 h-12 text-emerald-500 mx-auto mb-3" />
+                    <p className="text-slate-900 font-semibold">Email i derguar!</p>
+                    <p className="text-sm text-slate-500 mt-1">Kontrolloni inbox-in tuaj per linkun e rivendosjes.</p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleResetPassword} className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1.5">Email</label>
+                      <input
+                        type="email"
+                        value={resetEmail}
+                        onChange={(e) => setResetEmail(e.target.value)}
+                        className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-slate-900 placeholder-slate-400"
+                        placeholder="emri@shkolla.al"
+                        required
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={resetLoading}
+                      className="w-full bg-blue-900 hover:bg-blue-800 text-white py-3 rounded-xl font-semibold transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                    >
+                      {resetLoading && <Loader2 className="w-5 h-5 animate-spin" />}
+                      Dergo linkun
+                    </button>
+                  </form>
+                )}
+              </div>
+            ) : (
+            <>
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-slate-900">
                 {isRegister ? 'Krijo llogari' : 'Mire se vini'}
@@ -223,6 +278,18 @@ export default function LoginPage() {
                 </div>
               </div>
 
+              {!isRegister && (
+                <div className="text-right">
+                  <button
+                    type="button"
+                    onClick={() => { setShowReset(true); setError(''); }}
+                    className="text-xs text-blue-600 hover:text-blue-800 font-medium transition-colors"
+                  >
+                    Keni harruar fjalekalimin?
+                  </button>
+                </div>
+              )}
+
               <button
                 type="submit"
                 disabled={loading}
@@ -265,6 +332,8 @@ export default function LoginPage() {
                 ))}
               </div>
             </div>
+            </>
+            )}
           </div>
 
           <p className="text-center text-slate-400 text-xs mt-6">

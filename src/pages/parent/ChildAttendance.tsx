@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
-import { Check, X, Clock, AlertCircle, Calendar, TrendingUp, Loader2, Users } from 'lucide-react';
+import { Check, X, Clock, AlertCircle, Calendar, TrendingUp, Loader2, Users, FileText, Send, CheckCircle } from 'lucide-react';
 
 type AttStatus = 'prezent' | 'mungon' | 'vonese' | 'arsyeshme';
 
@@ -26,13 +26,30 @@ const DAY_ABBR = ['Diel', 'Hen', 'Mar', 'Mer', 'Enj', 'Pre', 'Sht'];
 
 const MONTH_NAMES = ['Janar', 'Shkurt', 'Mars', 'Prill', 'Maj', 'Qershor', 'Korrik', 'Gusht', 'Shtator', 'Tetor', 'Nentor', 'Dhjetor'];
 
+interface ExcuseRequest {
+  id: string;
+  date_from: string;
+  date_to: string;
+  reason: string;
+  status: 'pending' | 'approved' | 'rejected';
+  created_at: string;
+}
+
 export default function ChildAttendance() {
   const { profile, isDemo } = useAuth();
   const [loading, setLoading] = useState(true);
   const [childName, setChildName] = useState('');
+  const [childId, setChildId] = useState('');
   const [summary, setSummary] = useState({ present: 0, absent: 0, late: 0, justified: 0, total: 0 });
   const [monthlyData, setMonthlyData] = useState<MonthData[]>([]);
   const [weeklyTrend, setWeeklyTrend] = useState<WeekTrend[]>([]);
+  const [showExcuseForm, setShowExcuseForm] = useState(false);
+  const [excuseDateFrom, setExcuseDateFrom] = useState('');
+  const [excuseDateTo, setExcuseDateTo] = useState('');
+  const [excuseReason, setExcuseReason] = useState('');
+  const [excuseSubmitting, setExcuseSubmitting] = useState(false);
+  const [excuseSuccess, setExcuseSuccess] = useState(false);
+  const [excuses, setExcuses] = useState<ExcuseRequest[]>([]);
 
   useEffect(() => {
     loadData();
@@ -90,8 +107,10 @@ export default function ChildAttendance() {
         return;
       }
 
-      const childId = parentStudent.student_id;
+      const cId = parentStudent.student_id;
+      setChildId(cId);
       setChildName((parentStudent as any).profiles?.full_name || '');
+      const childId = cId;
 
       const { data: records } = await supabase
         .from('attendance')
@@ -154,10 +173,39 @@ export default function ChildAttendance() {
           rate: weekMap[wn].total > 0 ? Math.round((weekMap[wn].present / weekMap[wn].total) * 100) : 100,
         })));
       }
+      const { data: excuseData } = await supabase
+        .from('absence_excuses')
+        .select('id, date_from, date_to, reason, status, created_at')
+        .eq('student_id', childId)
+        .eq('parent_id', profile?.id)
+        .order('created_at', { ascending: false })
+        .limit(10);
+      if (excuseData) setExcuses(excuseData);
     } catch (error) {
       console.error('Error loading child attendance:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSubmitExcuse = async () => {
+    if (!excuseDateFrom || !excuseReason || !childId || !profile) return;
+    setExcuseSubmitting(true);
+    const { error } = await supabase.from('absence_excuses').insert({
+      student_id: childId,
+      parent_id: profile.id,
+      date_from: excuseDateFrom,
+      date_to: excuseDateTo || excuseDateFrom,
+      reason: excuseReason,
+    });
+    setExcuseSubmitting(false);
+    if (!error) {
+      setExcuseSuccess(true);
+      setExcuseDateFrom('');
+      setExcuseDateTo('');
+      setExcuseReason('');
+      setTimeout(() => { setExcuseSuccess(false); setShowExcuseForm(false); }, 2000);
+      loadData();
     }
   };
 
@@ -293,6 +341,96 @@ export default function ChildAttendance() {
             </div>
           ))}
         </div>
+      </div>
+
+      <div className="bg-white rounded-2xl border border-slate-100 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <FileText className="w-5 h-5 text-blue-500" />
+            <h3 className="font-semibold text-slate-900">Arsyetim Mungese</h3>
+          </div>
+          {!showExcuseForm && (
+            <button
+              onClick={() => setShowExcuseForm(true)}
+              className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors"
+            >
+              <Send className="w-4 h-4" />
+              Dorëzo Arsyetim
+            </button>
+          )}
+        </div>
+
+        {showExcuseForm && (
+          <div className="mb-6 p-4 bg-blue-50 border border-blue-100 rounded-xl space-y-3">
+            {excuseSuccess ? (
+              <div className="text-center py-4">
+                <CheckCircle className="w-10 h-10 text-emerald-500 mx-auto mb-2" />
+                <p className="text-sm font-medium text-slate-900">Kerkesa u dergua me sukses!</p>
+              </div>
+            ) : (
+              <>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-medium text-slate-700 mb-1">Nga data</label>
+                    <input type="date" value={excuseDateFrom} onChange={(e) => setExcuseDateFrom(e.target.value)}
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-slate-700 mb-1">Deri ne date</label>
+                    <input type="date" value={excuseDateTo} onChange={(e) => setExcuseDateTo(e.target.value)}
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500" />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">Arsyeja</label>
+                  <textarea value={excuseReason} onChange={(e) => setExcuseReason(e.target.value)}
+                    rows={3} placeholder="Pershkruani arsyen e mungesës..."
+                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={handleSubmitExcuse} disabled={excuseSubmitting || !excuseDateFrom || !excuseReason}
+                    className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors flex items-center gap-1.5">
+                    {excuseSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                    Dergo
+                  </button>
+                  <button onClick={() => setShowExcuseForm(false)}
+                    className="px-4 py-2 text-slate-600 text-sm font-medium rounded-lg hover:bg-slate-100 transition-colors">
+                    Anulo
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
+        {excuses.length > 0 ? (
+          <div className="space-y-2">
+            {excuses.map(exc => (
+              <div key={exc.id} className={`flex items-center justify-between p-3 rounded-xl border ${
+                exc.status === 'approved' ? 'border-emerald-200 bg-emerald-50' :
+                exc.status === 'rejected' ? 'border-rose-200 bg-rose-50' :
+                'border-slate-200 bg-slate-50'
+              }`}>
+                <div>
+                  <p className="text-sm font-medium text-slate-900">
+                    {new Date(exc.date_from).toLocaleDateString('sq-AL')}
+                    {exc.date_to !== exc.date_from && ` - ${new Date(exc.date_to).toLocaleDateString('sq-AL')}`}
+                  </p>
+                  <p className="text-xs text-slate-500 mt-0.5">{exc.reason}</p>
+                </div>
+                <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
+                  exc.status === 'approved' ? 'bg-emerald-100 text-emerald-700' :
+                  exc.status === 'rejected' ? 'bg-rose-100 text-rose-700' :
+                  'bg-amber-100 text-amber-700'
+                }`}>
+                  {exc.status === 'approved' ? 'Aprovuar' : exc.status === 'rejected' ? 'Refuzuar' : 'Ne pritje'}
+                </span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-slate-400 text-center">Nuk keni derguar arsyetime ende.</p>
+        )}
       </div>
     </div>
   );

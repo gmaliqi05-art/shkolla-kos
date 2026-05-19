@@ -23,6 +23,8 @@ const DEMO_PROFILES: Record<UserRole, Profile> = {
     email: 'drejtor@shkolla.ks',
     full_name: 'Arben Hoxha',
     role: 'drejtor',
+    phone: '',
+    avatar_url: '',
     created_at: new Date().toISOString(),
   },
   mesues: {
@@ -30,6 +32,8 @@ const DEMO_PROFILES: Record<UserRole, Profile> = {
     email: 'mesues@shkolla.ks',
     full_name: 'Florentina Gashi',
     role: 'mesues',
+    phone: '',
+    avatar_url: '',
     created_at: new Date().toISOString(),
   },
   nxenes: {
@@ -37,6 +41,8 @@ const DEMO_PROFILES: Record<UserRole, Profile> = {
     email: 'nxenes@shkolla.ks',
     full_name: 'Ardi Krasniqi',
     role: 'nxenes',
+    phone: '',
+    avatar_url: '',
     created_at: new Date().toISOString(),
   },
   prind: {
@@ -44,6 +50,8 @@ const DEMO_PROFILES: Record<UserRole, Profile> = {
     email: 'prind@shkolla.ks',
     full_name: 'Driton Krasniqi',
     role: 'prind',
+    phone: '',
+    avatar_url: '',
     created_at: new Date().toISOString(),
   },
 };

@@ -265,14 +265,15 @@ export default function ChildGrades() {
             </div>
           )}
           <div className="flex-1">
-            <label className="block text-sm font-medium text-slate-700 mb-2">Gjysmevjetori</label>
+            <label className="block text-sm font-medium text-slate-700 mb-2">Periudha</label>
             <select
               value={semester}
               onChange={(e) => setSemester(Number(e.target.value))}
               className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-500 outline-none text-sm"
             >
-              <option value={1}>Gjysmevjetori i Pare</option>
-              <option value={2}>Gjysmevjetori i Dyte</option>
+              <option value={1}>Periudha e Pare</option>
+              <option value={2}>Periudha e Dyte</option>
+              <option value={3}>Periudha e Trete</option>
             </select>
           </div>
         </div>

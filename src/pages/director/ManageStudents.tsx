@@ -188,12 +188,14 @@ export default function ManageStudents() {
   const handleDeleteStudent = async (student: StudentWithClass) => {
     if (!confirm(`Fshij nxenesin: ${student.full_name}?`)) return;
 
-    const { error: scErr } = await supabase.from('student_classes').delete().eq('student_id', student.id);
-    if (scErr) { alert('Gabim: ' + scErr.message); return; }
-    const { error: grErr } = await supabase.from('grades').delete().eq('student_id', student.id);
-    if (grErr) { alert('Gabim: ' + grErr.message); return; }
-    const { error: atErr } = await supabase.from('attendance').delete().eq('student_id', student.id);
-    if (atErr) { alert('Gabim: ' + atErr.message); return; }
+    await supabase.from('messages').delete().or(`sender_id.eq.${student.id},receiver_id.eq.${student.id}`);
+    await supabase.from('parent_students').delete().eq('student_id', student.id);
+    await supabase.from('student_classes').delete().eq('student_id', student.id);
+    await supabase.from('grades').delete().eq('student_id', student.id);
+    await supabase.from('attendance').delete().eq('student_id', student.id);
+    await supabase.from('messages').delete().eq('sender_id', student.id);
+    await supabase.from('messages').delete().eq('receiver_id', student.id);
+    await supabase.from('parent_students').delete().eq('student_id', student.id);
 
     const { error } = await supabase.from('profiles').delete().eq('id', student.id);
     if (error) {

@@ -100,7 +100,13 @@ export default function ManageClasses() {
   };
 
   const handleDeleteClass = async (cls: Class) => {
-    if (!confirm(`A jeni te sigurt qe doni te fshini: ${cls.name}?`)) return;
+    if (!confirm(`A jeni te sigurt qe doni te fshini: ${cls.name}? Kjo do te fshije te gjitha te dhenat e lidhura.`)) return;
+
+    await supabase.from('schedule').delete().eq('class_id', cls.id);
+    await supabase.from('attendance').delete().eq('class_id', cls.id);
+    await supabase.from('grades').delete().eq('class_id', cls.id);
+    await supabase.from('student_classes').delete().eq('class_id', cls.id);
+    await supabase.from('class_subjects').delete().eq('class_id', cls.id);
 
     const { error } = await supabase.from('classes').delete().eq('id', cls.id);
 

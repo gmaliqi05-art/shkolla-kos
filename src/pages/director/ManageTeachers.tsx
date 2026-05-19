@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import type { Profile } from '../../types/database';
-import { Search, Mail, Phone, BookOpen, MoreVertical, Plus, CreditCard as Edit2, Trash2, X, UserPlus, Loader2, Link2, Copy, Check as CheckIcon } from 'lucide-react';
+import { Search, Phone, BookOpen, MoreVertical, Plus, CreditCard as Edit2, Trash2, X, UserPlus, Loader2, Link2, Copy, Check as CheckIcon } from 'lucide-react';
 
 interface TeacherFormData {
   full_name: string;

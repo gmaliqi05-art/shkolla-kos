@@ -201,7 +201,7 @@ export default function MySchedule() {
                   <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider text-left w-32">
                     Ora
                   </th>
-                  {DAYS.map((day, index) => (
+                  {DAYS.map((day) => (
                     <th
                       key={day}
                       className={`px-4 py-3 text-xs font-semibold uppercase tracking-wider text-center ${

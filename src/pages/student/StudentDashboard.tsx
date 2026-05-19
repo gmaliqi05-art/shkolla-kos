@@ -143,7 +143,7 @@ export default function StudentDashboard() {
         const teacherMap: Record<string, string> = {};
         teachers?.forEach(t => { teacherMap[t.id] = t.full_name; });
 
-        const TYPE_LABELS: Record<string, string> = { vlersim: 'Vlersim', perfundimtare_gjysmvjetor: 'Gjysmvjetor', perfundimtare_vjetor: 'Vjetor' };
+        const TYPE_LABELS: Record<string, string> = { vlersim: 'Vlersim', perfundimtare_gjysmvjetor: 'Perfundimtare', perfundimtare_vjetor: 'Vjetor' };
 
         setRecentGrades(grades.slice(0, 5).map((g: any) => {
           const today = new Date().toISOString().split('T')[0];

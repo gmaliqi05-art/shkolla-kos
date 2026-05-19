@@ -150,17 +150,24 @@ export default function GradeEntry() {
       const selected = classes.find(c => c.id === selectedClassSubject);
       if (!selected) return;
 
+      const gradesQuery = supabase
+        .from('grades')
+        .select('*')
+        .eq('class_id', selected.classData.id)
+        .eq('subject_id', selected.subject.id);
+
+      if (semester === 0) {
+        gradesQuery.eq('assessment_type', 'perfundimtare_vjetor');
+      } else {
+        gradesQuery.eq('semester', semester);
+      }
+
       const [enrollRes, gradesRes] = await Promise.all([
         supabase
           .from('student_classes')
           .select('student_id, profiles:student_id(id, full_name)')
           .eq('class_id', selected.classData.id),
-        supabase
-          .from('grades')
-          .select('*')
-          .eq('class_id', selected.classData.id)
-          .eq('subject_id', selected.subject.id)
-          .eq('semester', semester),
+        gradesQuery,
       ]);
 
       if (enrollRes.error) throw enrollRes.error;
@@ -175,10 +182,16 @@ export default function GradeEntry() {
 
         const gradeMap: ExistingGrade = {};
         studentGrades.forEach((g: Grade) => {
-          if (g.assessment_type === 'vlersim' && g.assessment_number) {
-            gradeMap[g.assessment_number] = g.grade.toString();
-          } else if (g.assessment_type === 'perfundimtare_gjysmvjetor') {
-            gradeMap.perfundimtare = g.grade.toString();
+          if (semester === 0) {
+            if (g.assessment_type === 'perfundimtare_vjetor') {
+              gradeMap.perfundimtare = g.grade.toString();
+            }
+          } else {
+            if (g.assessment_type === 'vlersim' && g.assessment_number) {
+              gradeMap[g.assessment_number] = g.grade.toString();
+            } else if (g.assessment_type === 'perfundimtare_gjysmvjetor') {
+              gradeMap.perfundimtare = g.grade.toString();
+            }
           }
         });
 
@@ -232,6 +245,45 @@ export default function GradeEntry() {
       setError('');
 
       for (const student of students) {
+        if (semester === 0) {
+          if (student.perfundimtare) {
+            const { data: existing, error: checkError } = await supabase
+              .from('grades')
+              .select('id')
+              .eq('student_id', student.student_id)
+              .eq('class_id', selected.classData.id)
+              .eq('subject_id', selected.subject.id)
+              .eq('assessment_type', 'perfundimtare_vjetor')
+              .maybeSingle();
+
+            if (checkError) throw checkError;
+
+            if (existing) {
+              const { error: updateError } = await supabase
+                .from('grades')
+                .update({ grade: Number(student.perfundimtare), date: new Date().toISOString().split('T')[0] })
+                .eq('id', existing.id);
+              if (updateError) throw updateError;
+            } else {
+              const { error: insertError } = await supabase
+                .from('grades')
+                .insert({
+                  student_id: student.student_id,
+                  class_id: selected.classData.id,
+                  subject_id: selected.subject.id,
+                  teacher_id: profile.id,
+                  grade: Number(student.perfundimtare),
+                  semester: 1,
+                  assessment_type: 'perfundimtare_vjetor',
+                  assessment_number: null,
+                  date: new Date().toISOString().split('T')[0],
+                });
+              if (insertError) throw insertError;
+            }
+          }
+          continue;
+        }
+
         const assessments = [
           { num: 1, value: student.v1 },
           { num: 2, value: student.v2 },
@@ -427,14 +479,16 @@ export default function GradeEntry() {
             </div>
           </div>
           <div className="flex-1">
-            <label className="block text-sm font-medium text-slate-700 mb-2">Gjysmevjetori</label>
+            <label className="block text-sm font-medium text-slate-700 mb-2">Periudha</label>
             <select
               value={semester}
               onChange={(e) => setSemester(Number(e.target.value))}
               className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none text-sm"
             >
-              <option value={1}>Gjysmevjetori i Pare</option>
-              <option value={2}>Gjysmevjetori i Dyte</option>
+              <option value={1}>Periudha e Pare</option>
+              <option value={2}>Periudha e Dyte</option>
+              <option value={3}>Periudha e Trete</option>
+              <option value={0}>Nota Perfundimtare Vjetore</option>
             </select>
           </div>
         </div>
@@ -445,11 +499,17 @@ export default function GradeEntry() {
               <tr className="border-b-2 border-slate-200">
                 <th className="text-left px-3 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">#</th>
                 <th className="text-left px-3 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider min-w-[200px]">Nxenesi</th>
-                <th className="text-center px-3 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">V1</th>
-                <th className="text-center px-3 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">V2</th>
-                <th className="text-center px-3 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">V3</th>
-                <th className="text-center px-3 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">V4</th>
-                <th className="text-center px-3 py-3 text-xs font-semibold text-teal-600 uppercase tracking-wider bg-teal-50">Perfundimtare</th>
+                {semester !== 0 && (
+                  <>
+                    <th className="text-center px-3 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">V1</th>
+                    <th className="text-center px-3 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">V2</th>
+                    <th className="text-center px-3 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">V3</th>
+                    <th className="text-center px-3 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">V4</th>
+                  </>
+                )}
+                <th className="text-center px-3 py-3 text-xs font-semibold text-teal-600 uppercase tracking-wider bg-teal-50">
+                  {semester === 0 ? 'Nota Vjetore' : 'Perfundimtare'}
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -464,7 +524,7 @@ export default function GradeEntry() {
                       <span className="text-sm font-medium text-slate-900">{student.student_name}</span>
                     </div>
                   </td>
-                  {(['v1', 'v2', 'v3', 'v4'] as const).map((field) => (
+                  {semester !== 0 && (['v1', 'v2', 'v3', 'v4'] as const).map((field) => (
                     <td key={field} className="px-3 py-3">
                       <input
                         type="number"

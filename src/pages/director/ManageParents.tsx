@@ -117,6 +117,11 @@ export default function ManageParents() {
 
   const handleDeleteParent = async (parent: ParentWithChildren) => {
     if (!confirm(`Fshi llogarinë e ${parent.full_name}?`)) return;
+    await supabase.from('messages').delete().or(`sender_id.eq.${parent.id},receiver_id.eq.${parent.id}`);
+    await supabase.from('parent_students').delete().eq('parent_id', parent.id);
+    await supabase.from('parent_students').delete().eq('parent_id', parent.id);
+    await supabase.from('messages').delete().eq('sender_id', parent.id);
+    await supabase.from('messages').delete().eq('receiver_id', parent.id);
     await supabase.from('profiles').delete().eq('id', parent.id);
     await loadParents();
   };
