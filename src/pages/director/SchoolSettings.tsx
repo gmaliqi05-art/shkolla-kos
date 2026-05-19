@@ -3,11 +3,12 @@ import { supabase } from '../../lib/supabase';
 import { logAudit } from '../../lib/audit';
 import { useAuth } from '../../contexts/AuthContext';
 import { Loader2, Building2, Save } from 'lucide-react';
-import type { SchoolInfo } from '../../types/database';
+import { SCHOOL_TYPE_LABELS, type SchoolInfo, type SchoolType, type Municipality } from '../../types/database';
 
 export default function SchoolSettings() {
   const { profile } = useAuth();
   const [info, setInfo] = useState<SchoolInfo | null>(null);
+  const [municipalities, setMunicipalities] = useState<Municipality[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
@@ -17,6 +18,8 @@ export default function SchoolSettings() {
     full_name: '',
     address: '',
     municipality: '',
+    municipality_id: '',
+    school_type: 'fillore_mesme_ulet' as SchoolType,
     phone: '',
     email: '',
     website: '',
@@ -31,7 +34,12 @@ export default function SchoolSettings() {
   }, []);
 
   const load = async () => {
-    const { data } = await supabase.from('school_info').select('*').limit(1).maybeSingle();
+    const [{ data: info }, { data: mun }] = await Promise.all([
+      supabase.from('school_info').select('*').limit(1).maybeSingle(),
+      supabase.from('municipalities').select('*').order('name'),
+    ]);
+    setMunicipalities(mun || []);
+    const data = info;
     if (data) {
       setInfo(data);
       setForm({
@@ -39,6 +47,8 @@ export default function SchoolSettings() {
         full_name: data.full_name || '',
         address: data.address || '',
         municipality: data.municipality || '',
+        municipality_id: data.municipality_id || '',
+        school_type: (data.school_type as SchoolType) || 'fillore_mesme_ulet',
         phone: data.phone || '',
         email: data.email || '',
         website: data.website || '',
@@ -60,6 +70,11 @@ export default function SchoolSettings() {
       ...form,
       logo_url: form.logo_url || null,
       stamp_url: form.stamp_url || null,
+      municipality_id: form.municipality_id || null,
+      // sinkronizo emrin tekstual të komunës me id-në e zgjedhur
+      municipality: form.municipality_id
+        ? (municipalities.find((m) => m.id === form.municipality_id)?.name || form.municipality)
+        : form.municipality,
       updated_at: new Date().toISOString(),
     };
     const res = info
@@ -176,13 +191,28 @@ export default function SchoolSettings() {
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Komuna</label>
-              <input
-                type="text"
-                value={form.municipality}
-                onChange={(e) => setForm({ ...form, municipality: e.target.value })}
-                placeholder="Prishtinë"
+              <select
+                value={form.municipality_id}
+                onChange={(e) => setForm({ ...form, municipality_id: e.target.value })}
                 className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              >
+                <option value="">— Zgjidh komunën —</option>
+                {municipalities.map((m) => (
+                  <option key={m.id} value={m.id}>{m.name}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Tipi i shkollës</label>
+              <select
+                value={form.school_type}
+                onChange={(e) => setForm({ ...form, school_type: e.target.value as SchoolType })}
+                className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {(Object.keys(SCHOOL_TYPE_LABELS) as SchoolType[]).map((t) => (
+                  <option key={t} value={t}>{SCHOOL_TYPE_LABELS[t]}</option>
+                ))}
+              </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Telefon</label>

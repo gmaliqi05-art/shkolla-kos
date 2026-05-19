@@ -210,6 +210,31 @@ export interface NationalTestResult {
   recorded_at: string;
 }
 
+// === Paketa 10: Multi-shkollë & Komuna (Ligji 03/L-068) ===
+
+export interface Municipality {
+  id: string;
+  name: string;
+  region: string;
+  code: string;
+  created_at: string;
+}
+
+export type SchoolType =
+  | 'parashkollor' | 'fillore' | 'fillore_mesme_ulet' | 'mesme_ulet'
+  | 'mesme_larte' | 'profesionale' | 'speciale' | 'private';
+
+export const SCHOOL_TYPE_LABELS: Record<SchoolType, string> = {
+  parashkollor: 'Parashkollor',
+  fillore: 'Shkollë Fillore',
+  fillore_mesme_ulet: 'Shkollë Fillore dhe e Mesme e Ulët',
+  mesme_ulet: 'Shkollë e Mesme e Ulët',
+  mesme_larte: 'Shkollë e Mesme e Lartë',
+  profesionale: 'Shkollë Profesionale',
+  speciale: 'Shkollë Speciale',
+  private: 'Shkollë Private',
+};
+
 export const GENDER_LABELS: Record<Gender, string> = {
   M: 'Mashkull',
   F: 'Femër',
@@ -914,6 +939,8 @@ export interface SchoolInfo {
   logo_url: string | null;
   stamp_url: string | null;
   registration_number: string;
+  municipality_id?: string | null;
+  school_type?: SchoolType;
   created_at: string;
   updated_at: string;
 }
