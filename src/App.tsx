@@ -23,6 +23,7 @@ import TeacherLicensing from './pages/director/TeacherLicensing';
 import Activities from './pages/director/Activities';
 import NationalTests from './pages/director/NationalTests';
 import Municipalities from './pages/director/Municipalities';
+import SchoolCalendar from './pages/director/SchoolCalendar';
 
 import TeacherDashboard from './pages/teacher/TeacherDashboard';
 import MyClasses from './pages/teacher/MyClasses';
@@ -35,6 +36,8 @@ import DisciplinePage from './pages/teacher/DisciplinePage';
 import StudentAccommodations from './pages/teacher/StudentAccommodations';
 import MyLicense from './pages/teacher/MyLicense';
 import ParentMeetings from './pages/teacher/ParentMeetings';
+import ClassDiary from './pages/teacher/ClassDiary';
+import HomeworkPage from './pages/teacher/HomeworkPage';
 
 import StudentDashboard from './pages/student/StudentDashboard';
 import MyGrades from './pages/student/MyGrades';
@@ -57,7 +60,7 @@ import {
   Megaphone, BookOpen, ClipboardCheck, CalendarCheck, Award,
   Calendar, Clock, Star, MessageSquare, Library, UserCog, Shield,
   Activity, Trash2, Lock, Heart, Sparkles, Briefcase, FileCheck, Building2,
-  Trophy, MapPin,
+  Trophy, MapPin, NotebookPen, FileText,
 } from 'lucide-react';
 
 const directorNav: NavItem[] = [
@@ -79,6 +82,7 @@ const directorNav: NavItem[] = [
   { label: 'Kërkesat Fshirje', path: '/drejtor/kerkesa-fshirje', icon: Trash2 },
   { label: 'Cilësimet', path: '/drejtor/cilesime', icon: Building2 },
   { label: 'Komunat', path: '/drejtor/komunat', icon: MapPin },
+  { label: 'Kalendari', path: '/drejtor/kalendari', icon: Calendar },
   { label: 'Njoftimet', path: '/drejtor/njoftime', icon: Megaphone },
   { label: 'Mesazhet', path: '/drejtor/mesazhet', icon: MessageSquare },
 ];
@@ -98,6 +102,8 @@ const teacherNav: NavItem[] = [
   { label: 'Licenca Ime', path: '/mesues/licenca', icon: Award },
   { label: 'Aktivitetet', path: '/mesues/aktivitete', icon: Trophy },
   { label: 'Takimet me Prindër', path: '/mesues/takimet', icon: Users },
+  { label: 'Ditari i Klasës', path: '/mesues/ditari', icon: NotebookPen },
+  { label: 'Detyrat e Shtëpisë', path: '/mesues/detyrat', icon: FileText },
 ];
 
 const studentNav: NavItem[] = [
@@ -162,6 +168,7 @@ function AppRoutes() {
           <Route path="/drejtor/deftesat/:studentId/:classId/:period/:type" element={<ReportCardView />} />
           <Route path="/drejtor/cilesime" element={<SchoolSettings />} />
           <Route path="/drejtor/komunat" element={<Municipalities />} />
+          <Route path="/drejtor/kalendari" element={<SchoolCalendar />} />
           <Route path="/drejtor/disiplina" element={<DisciplinePage />} />
           <Route path="/drejtor/nva" element={<SpecialNeedsManagement />} />
           <Route path="/drejtor/keshillat" element={<SchoolCouncils />} />
@@ -193,6 +200,8 @@ function AppRoutes() {
           <Route path="/mesues/licenca" element={<MyLicense />} />
           <Route path="/mesues/aktivitete" element={<Activities />} />
           <Route path="/mesues/takimet" element={<ParentMeetings />} />
+          <Route path="/mesues/ditari" element={<ClassDiary />} />
+          <Route path="/mesues/detyrat" element={<HomeworkPage />} />
           <Route path="/mesues/frekuentimi" element={<AttendancePage />} />
           <Route path="/mesues/lendet" element={<SubjectsPage />} />
           <Route path="/mesues/orari" element={<TeacherSchedule />} />
