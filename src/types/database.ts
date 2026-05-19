@@ -27,6 +27,10 @@ export interface Profile {
   medical_conditions: string;
   family_doctor: string;
   enrollment_status: EnrollmentStatus;
+  must_change_password?: boolean;
+  deleted_at?: string | null;
+  last_login_at?: string | null;
+  consent_recorded_at?: string | null;
 }
 
 export const GENDER_LABELS: Record<Gender, string> = {
@@ -345,5 +349,82 @@ export interface DisciplinaryAction {
   reviewed_at: string | null;
   status: DisciplinaryStatus;
   notes: string;
+  created_at: string;
+}
+
+// === Privatësia & Siguria (Ligji 06/L-082) ===
+
+export type ConsentType =
+  | 'data_processing'
+  | 'photo_use'
+  | 'directory'
+  | 'medical'
+  | 'communication'
+  | 'extracurricular';
+
+export const CONSENT_TYPE_LABELS: Record<ConsentType, string> = {
+  data_processing: 'Përpunimi i të dhënave personale',
+  photo_use: 'Përdorimi i fotografive',
+  directory: 'Përfshirja në direktori shkollore',
+  medical: 'Ndarja e informacioneve mjekësore',
+  communication: 'Komunikim me palë të treta',
+  extracurricular: 'Aktivitete jashtëmësimore',
+};
+
+export const CONSENT_TYPE_DESCRIPTIONS: Record<ConsentType, string> = {
+  data_processing: 'Lejoni shkollën të përpunojë të dhënat personale të fëmijës (emri, datëlindja, adresa) sipas Ligjit 06/L-082.',
+  photo_use: 'Lejoni shkollën të bëjë dhe të publikojë fotografi të fëmijës në aktivitete shkollore.',
+  directory: 'Lejoni emrin e fëmijës të shfaqet në lista publike (p.sh. fituesit e garave).',
+  medical: 'Lejoni shkollën të ndajë informacione mjekësore me personelin përkatës në rast emergjence.',
+  communication: 'Lejoni shkollën të komunikojë me palë të treta (p.sh. ekskursione, partnerë).',
+  extracurricular: 'Lejoni pjesëmarrjen e fëmijës në aktivitete jashtëmësimore.',
+};
+
+export interface Consent {
+  id: string;
+  student_id: string;
+  granted_by: string;
+  consent_type: ConsentType;
+  granted: boolean;
+  granted_at: string;
+  revoked_at: string | null;
+  notes: string;
+}
+
+export type DeletionRequestStatus = 'pending' | 'approved' | 'rejected' | 'completed';
+
+export const DELETION_REQUEST_STATUS_LABELS: Record<DeletionRequestStatus, string> = {
+  pending: 'Në pritje',
+  approved: 'E miratuar',
+  rejected: 'E refuzuar',
+  completed: 'E përfunduar',
+};
+
+export interface DataDeletionRequest {
+  id: string;
+  requested_by: string;
+  student_id: string;
+  reason: string;
+  status: DeletionRequestStatus;
+  reviewed_by: string | null;
+  reviewed_at: string | null;
+  review_notes: string;
+  completed_at: string | null;
+  created_at: string;
+}
+
+export type AuditActionType = 'view' | 'create' | 'update' | 'delete' | 'export' | 'login' | 'logout' | 'password_change';
+
+export interface AuditLog {
+  id: string;
+  actor_id: string | null;
+  actor_role: UserRole | null;
+  action: AuditActionType;
+  resource_type: string;
+  resource_id: string | null;
+  target_user_id: string | null;
+  metadata: Record<string, unknown>;
+  ip_address: string | null;
+  user_agent: string | null;
   created_at: string;
 }

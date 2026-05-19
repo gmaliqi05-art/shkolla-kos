@@ -107,6 +107,7 @@ export default function ManageStudents() {
       .from('profiles')
       .select('*')
       .eq('role', 'nxenes')
+      .is('deleted_at', null)
       .order('full_name');
 
     if (!profiles || profiles.length === 0) {
@@ -209,6 +210,7 @@ export default function ManageStudents() {
       const { error: profileError } = await supabase.from('profiles').insert({
         id: authData.user.id,
         role: 'nxenes',
+        must_change_password: true,
         ...buildProfilePayload(),
       });
 
@@ -276,18 +278,20 @@ export default function ManageStudents() {
   };
 
   const handleDeleteStudent = async (student: StudentWithClass) => {
-    if (!confirm(`Fshij nxenesin: ${student.full_name}?`)) return;
+    if (!confirm(
+      `Largim nga sistemi: ${student.full_name}?\n\n` +
+      `Të dhënat akademike (notat, frekuentimi, Amza) do të ruhen sipas detyrimit ligjor.\n` +
+      `Statusi i nxënësit do të vendoset 'I/E larguar' dhe profili do të çaktivizohet.`
+    )) return;
 
-    await supabase.from('messages').delete().or(`sender_id.eq.${student.id},receiver_id.eq.${student.id}`);
-    await supabase.from('parent_students').delete().eq('student_id', student.id);
-    await supabase.from('student_classes').delete().eq('student_id', student.id);
-    await supabase.from('grades').delete().eq('student_id', student.id);
-    await supabase.from('attendance').delete().eq('student_id', student.id);
-    await supabase.from('messages').delete().eq('sender_id', student.id);
-    await supabase.from('messages').delete().eq('receiver_id', student.id);
-    await supabase.from('parent_students').delete().eq('student_id', student.id);
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        deleted_at: new Date().toISOString(),
+        enrollment_status: 'larguar',
+      })
+      .eq('id', student.id);
 
-    const { error } = await supabase.from('profiles').delete().eq('id', student.id);
     if (error) {
       alert('Gabim: ' + error.message);
       return;
