@@ -14,6 +14,7 @@ import Announcements from './pages/director/Announcements';
 import AuditLogs from './pages/director/AuditLogs';
 import DeletionRequests from './pages/director/DeletionRequests';
 import SpecialNeedsManagement from './pages/director/SpecialNeedsManagement';
+import SchoolCouncils from './pages/director/SchoolCouncils';
 
 import TeacherDashboard from './pages/teacher/TeacherDashboard';
 import MyClasses from './pages/teacher/MyClasses';
@@ -38,12 +39,13 @@ import ChildIEP from './pages/parent/ChildIEP';
 
 import MessagesPage from './pages/shared/MessagesPage';
 import PrivacyPolicy from './pages/shared/PrivacyPolicy';
+import MyCouncils from './pages/shared/MyCouncils';
 
 import {
   LayoutDashboard, Users, GraduationCap, Layers, BarChart3,
   Megaphone, BookOpen, ClipboardCheck, CalendarCheck, Award,
   Calendar, Clock, Star, MessageSquare, Library, UserCog, Shield,
-  Activity, Trash2, Lock, Heart, Sparkles,
+  Activity, Trash2, Lock, Heart, Sparkles, Briefcase,
 } from 'lucide-react';
 
 const directorNav: NavItem[] = [
@@ -55,6 +57,7 @@ const directorNav: NavItem[] = [
   { label: 'Raportet', path: '/drejtor/raporte', icon: BarChart3 },
   { label: 'Disiplina', path: '/drejtor/disiplina', icon: Shield },
   { label: 'NVA & PIA', path: '/drejtor/nva', icon: Heart },
+  { label: 'Organet Shkollore', path: '/drejtor/keshillat', icon: Briefcase },
   { label: 'Audit Log', path: '/drejtor/audit', icon: Activity },
   { label: 'Kërkesat Fshirje', path: '/drejtor/kerkesa-fshirje', icon: Trash2 },
   { label: 'Njoftimet', path: '/drejtor/njoftime', icon: Megaphone },
@@ -69,6 +72,7 @@ const teacherNav: NavItem[] = [
   { label: 'Sjellja', path: '/mesues/sjellja', icon: Star },
   { label: 'Disiplina', path: '/mesues/disiplina', icon: Shield },
   { label: 'Akomodimet', path: '/mesues/akomodimet', icon: Sparkles },
+  { label: 'Këshillat e Mi', path: '/mesues/keshillat', icon: Briefcase },
   { label: 'Frekuentimi', path: '/mesues/frekuentimi', icon: CalendarCheck },
   { label: 'Orari Mësimor', path: '/mesues/orari', icon: Clock },
   { label: 'Mesazhet', path: '/mesues/mesazhet', icon: MessageSquare },
@@ -80,6 +84,7 @@ const studentNav: NavItem[] = [
   { label: 'Orari Im', path: '/nxenes/orari', icon: Clock },
   { label: 'Frekuentimi', path: '/nxenes/frekuentimi', icon: Calendar },
   { label: 'Mesazhet', path: '/nxenes/mesazhet', icon: MessageSquare },
+  { label: 'Këshillat e Mi', path: '/nxenes/keshillat', icon: Briefcase },
 ];
 
 const parentNav: NavItem[] = [
@@ -88,6 +93,7 @@ const parentNav: NavItem[] = [
   { label: 'Frekuentimi', path: '/prind/frekuentimi', icon: Calendar },
   { label: 'Mesazhet', path: '/prind/mesazhet', icon: MessageSquare },
   { label: 'PIA i Fëmijës', path: '/prind/pia', icon: Heart },
+  { label: 'Këshillat e Mi', path: '/prind/keshillat', icon: Briefcase },
   { label: 'Privatësia', path: '/prind/privatesia', icon: Lock },
 ];
 
@@ -127,6 +133,7 @@ function AppRoutes() {
           <Route path="/drejtor/raporte" element={<Reports />} />
           <Route path="/drejtor/disiplina" element={<DisciplinePage />} />
           <Route path="/drejtor/nva" element={<SpecialNeedsManagement />} />
+          <Route path="/drejtor/keshillat" element={<SchoolCouncils />} />
           <Route path="/drejtor/audit" element={<AuditLogs />} />
           <Route path="/drejtor/kerkesa-fshirje" element={<DeletionRequests />} />
           <Route path="/drejtor/njoftime" element={<Announcements />} />
@@ -148,6 +155,7 @@ function AppRoutes() {
           <Route path="/mesues/sjellja" element={<BehaviorPage />} />
           <Route path="/mesues/disiplina" element={<DisciplinePage />} />
           <Route path="/mesues/akomodimet" element={<StudentAccommodations />} />
+          <Route path="/mesues/keshillat" element={<MyCouncils />} />
           <Route path="/mesues/frekuentimi" element={<AttendancePage />} />
           <Route path="/mesues/lendet" element={<SubjectsPage />} />
           <Route path="/mesues/orari" element={<TeacherSchedule />} />
@@ -168,6 +176,7 @@ function AppRoutes() {
           <Route path="/nxenes/orari" element={<MySchedule />} />
           <Route path="/nxenes/frekuentimi" element={<MyAttendance />} />
           <Route path="/nxenes/mesazhet" element={<MessagesPage />} />
+          <Route path="/nxenes/keshillat" element={<MyCouncils />} />
         </Route>
         <Route path="*" element={<Navigate to="/nxenes" replace />} />
       </Routes>
@@ -184,6 +193,7 @@ function AppRoutes() {
           <Route path="/prind/frekuentimi" element={<ChildAttendance />} />
           <Route path="/prind/mesazhet" element={<MessagesPage />} />
           <Route path="/prind/pia" element={<ChildIEP />} />
+          <Route path="/prind/keshillat" element={<MyCouncils />} />
           <Route path="/prind/privatesia" element={<PrivacySettings />} />
         </Route>
         <Route path="*" element={<Navigate to="/prind" replace />} />
