@@ -3,8 +3,9 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import type { Profile, Gender, EnrollmentStatus } from '../../types/database';
 import { GENDER_LABELS, ENROLLMENT_STATUS_LABELS } from '../../types/database';
-import { Search, Mail, Plus, CreditCard as Edit2, Trash2, X, UserPlus, MoreVertical, Phone, Loader2, BookOpen, Copy, Check as CheckIcon } from 'lucide-react';
+import { Search, Mail, Plus, CreditCard as Edit2, Trash2, X, UserPlus, MoreVertical, Phone, Loader2, BookOpen, Copy, Check as CheckIcon, FileDown } from 'lucide-react';
 import { useToast } from '../../components/ToastProvider';
+import { exportToCSV, csvDateStamp } from '../../lib/csvExport';
 
 function generateSecurePassword() {
   const chars = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -345,6 +346,23 @@ export default function ManageStudents() {
     return matchSearch && matchClass;
   });
 
+  const handleExportCSV = () => {
+    if (filtered.length === 0) {
+      toast.info('Asnjë nxënës për të eksportuar.');
+      return;
+    }
+    exportToCSV(`nxenesit-${csvDateStamp()}`, [
+      { header: 'Emri i plotë', value: (s: StudentWithClass) => s.full_name },
+      { header: 'Email', value: (s) => s.email },
+      { header: 'Telefon', value: (s) => s.phone || '' },
+      { header: 'Klasa', value: (s) => s.class_name || '' },
+      { header: 'Gjinia', value: (s) => s.gender ? GENDER_LABELS[s.gender as Gender] : '' },
+      { header: 'Datëlindja', value: (s) => s.date_of_birth || '' },
+      { header: 'Statusi', value: (s) => s.enrollment_status ? ENROLLMENT_STATUS_LABELS[s.enrollment_status as EnrollmentStatus] : '' },
+    ], filtered);
+    toast.success(`${filtered.length} nxënës u eksportuan.`);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -360,17 +378,27 @@ export default function ManageStudents() {
           <h1 className="text-2xl font-bold text-slate-900">Nxenesit</h1>
           <p className="text-slate-500 mt-1">{students.length} nxenes gjithsej</p>
         </div>
-        <button
-          onClick={() => {
-            setFormData({ ...emptyFormData });
-            setFormError('');
-            setShowAddModal(true);
-          }}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors shadow-lg shadow-blue-600/25"
-        >
-          <Plus className="w-5 h-5" />
-          Shto Nxenes
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleExportCSV}
+            className="inline-flex items-center gap-2 px-3 py-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl font-medium text-sm"
+            title="Eksporto CSV"
+          >
+            <FileDown className="w-4 h-4" />
+            CSV
+          </button>
+          <button
+            onClick={() => {
+              setFormData({ ...emptyFormData });
+              setFormError('');
+              setShowAddModal(true);
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors shadow-lg shadow-blue-600/25"
+          >
+            <Plus className="w-5 h-5" />
+            Shto Nxenes
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3">
