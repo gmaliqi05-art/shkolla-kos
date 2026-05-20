@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
-import { Loader2, Building, School, Users, GraduationCap, MapPin } from 'lucide-react';
+import { Loader2, Building, School, Users, GraduationCap, MapPin, BarChart3 } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const DEMO_SCHOOLS = [
   { id: 'ds1', name: '"Naim Frashëri"', director_name: 'Arben Hoxha', locality_name: 'Prishtinë (qendër)', students_count: 487, teachers_count: 32 },
@@ -136,6 +137,24 @@ export default function DkaDashboard() {
         <StatCard icon={GraduationCap} label="Mësues" value={stats?.totalTeachers || 0} color="teal" />
         <StatCard icon={Building} label="Drejtorë shkollash" value={stats?.totalDirectors || 0} color="blue" />
       </div>
+
+      {schools.length > 0 && (
+        <div className="bg-white rounded-2xl border border-slate-100 p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <BarChart3 className="w-5 h-5 text-amber-600" />
+            <h2 className="font-semibold text-slate-900">Numri i nxënësve për shkollë</h2>
+          </div>
+          <ResponsiveContainer width="100%" height={280}>
+            <BarChart data={schools.slice(0, 10)}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <XAxis dataKey="name" tick={{ fontSize: 11 }} angle={-15} textAnchor="end" height={60} />
+              <YAxis tick={{ fontSize: 11 }} />
+              <Tooltip />
+              <Bar dataKey="students_count" fill="#f59e0b" radius={[8, 8, 0, 0]} name="Nxënës" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      )}
 
       <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
         <div className="px-5 py-4 border-b border-slate-100">

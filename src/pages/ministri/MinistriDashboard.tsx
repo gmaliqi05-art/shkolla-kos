@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
-import { Loader2, Crown, Building2, Users, GraduationCap, School, BookOpen, Award, MapPin } from 'lucide-react';
+import { Loader2, Crown, Building2, Users, GraduationCap, School, BookOpen, Award, MapPin, TrendingUp } from 'lucide-react';
+import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 interface NationalStats {
   totalMunicipalities: number;
@@ -166,6 +167,70 @@ export default function MinistriDashboard() {
         <StatCard icon={Crown} label="Drejtorë shkollash" value={stats.totalDirectors} color="indigo" />
         <StatCard icon={BookOpen} label="Nota të regjistruara" value={stats.totalGrades.toLocaleString()} color="rose" />
         <StatCard icon={MapPin} label="Regjistrime frekuentimi" value={stats.totalAttendance.toLocaleString()} color="violet" />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white rounded-2xl border border-slate-100 p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <TrendingUp className="w-5 h-5 text-purple-600" />
+            <h2 className="font-semibold text-slate-900">Nxënësit sipas komunave (Top 8)</h2>
+          </div>
+          <ResponsiveContainer width="100%" height={280}>
+            <BarChart data={municipalities.slice(0, 8)}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <XAxis dataKey="name" tick={{ fontSize: 11 }} angle={-20} textAnchor="end" height={50} />
+              <YAxis tick={{ fontSize: 11 }} />
+              <Tooltip />
+              <Bar dataKey="students_count" fill="#8b5cf6" radius={[8, 8, 0, 0]} name="Nxënës" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div className="bg-white rounded-2xl border border-slate-100 p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <School className="w-5 h-5 text-blue-600" />
+            <h2 className="font-semibold text-slate-900">Shkollat sipas rajonit</h2>
+          </div>
+          <ResponsiveContainer width="100%" height={280}>
+            <PieChart>
+              <Pie
+                data={(() => {
+                  const byRegion = new Map<string, number>();
+                  municipalities.forEach((m) => byRegion.set(m.region, (byRegion.get(m.region) || 0) + m.schools_count));
+                  return Array.from(byRegion.entries()).map(([name, value]) => ({ name, value }));
+                })()}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={90}
+                label={(entry: { name?: string; value?: number }) => `${entry.name ?? ''}: ${entry.value ?? 0}`}
+              >
+                {['#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4'].map((c, i) => <Cell key={i} fill={c} />)}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-2xl border border-slate-100 p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <Award className="w-5 h-5 text-emerald-600" />
+          <h2 className="font-semibold text-slate-900">Mësues vs Nxënës (Top 8)</h2>
+        </div>
+        <ResponsiveContainer width="100%" height={280}>
+          <BarChart data={municipalities.slice(0, 8)}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+            <XAxis dataKey="name" tick={{ fontSize: 11 }} angle={-20} textAnchor="end" height={50} />
+            <YAxis tick={{ fontSize: 11 }} />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="teachers_count" fill="#10b981" name="Mësues" radius={[6, 6, 0, 0]} />
+            <Bar dataKey="schools_count" fill="#3b82f6" name="Shkolla" radius={[6, 6, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
