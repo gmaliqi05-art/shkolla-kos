@@ -28,6 +28,8 @@ import AnnualPlan from './pages/director/AnnualPlan';
 import LibraryPage from './pages/director/Library';
 import TwoFactorSettings from './pages/TwoFactorSettings';
 import LegalDocuments from './pages/shared/LegalDocuments';
+import MinistriDashboard from './pages/ministri/MinistriDashboard';
+import DkaDashboard from './pages/dka/DkaDashboard';
 
 import TeacherDashboard from './pages/teacher/TeacherDashboard';
 import MyClasses from './pages/teacher/MyClasses';
@@ -68,6 +70,7 @@ import {
   Calendar, Clock, Star, MessageSquare, Library, UserCog, Shield,
   Activity, Trash2, Lock, Heart, Sparkles, Briefcase, FileCheck, Building2,
   Trophy, MapPin, NotebookPen, FileText, Stethoscope, FolderOpen, FileSpreadsheet, ShieldCheck, Scale,
+  Crown, Building,
 } from 'lucide-react';
 
 const directorNav: NavItem[] = [
@@ -147,6 +150,23 @@ const parentNav: NavItem[] = [
   { label: 'Portofoli', path: '/prind/portofoli', icon: FolderOpen },
   { label: 'Privatësia', path: '/prind/privatesia', icon: Lock },
   { label: 'Dokumentet Ligjore', path: '/prind/dokumentet-ligjore', icon: Scale },
+];
+
+const dkaNav: NavItem[] = [
+  { label: 'Paneli Kryesor', path: '/dka', icon: LayoutDashboard },
+  { label: 'Komunat', path: '/dka/komunat', icon: MapPin },
+  { label: 'Mesazhet', path: '/dka/mesazhet', icon: MessageSquare },
+  { label: '2FA / Siguria', path: '/dka/2fa', icon: ShieldCheck },
+  { label: 'Dokumentet Ligjore', path: '/dka/dokumentet-ligjore', icon: Scale },
+];
+
+const ministriNav: NavItem[] = [
+  { label: 'Paneli Kryesor', path: '/ministri', icon: Crown },
+  { label: 'Komunat', path: '/ministri/komunat', icon: Building },
+  { label: 'Mesazhet', path: '/ministri/mesazhet', icon: MessageSquare },
+  { label: 'Audit Log', path: '/ministri/audit', icon: Activity },
+  { label: '2FA / Siguria', path: '/ministri/2fa', icon: ShieldCheck },
+  { label: 'Dokumentet Ligjore', path: '/ministri/dokumentet-ligjore', icon: Scale },
 ];
 
 const pedagogNav: NavItem[] = [
@@ -315,6 +335,39 @@ function AppRoutes() {
           <Route path="/pedagog/dokumentet-ligjore" element={<LegalDocuments />} />
         </Route>
         <Route path="*" element={<Navigate to="/pedagog" replace />} />
+      </Routes>
+    );
+  }
+
+  if (profile.role === 'drejtor_komunal') {
+    return (
+      <Routes>
+        <Route path="/" element={<Navigate to="/dka" replace />} />
+        <Route element={<DashboardLayout navItems={dkaNav} role="drejtor_komunal" />}>
+          <Route path="/dka" element={<DkaDashboard />} />
+          <Route path="/dka/mesazhet" element={<MessagesPage />} />
+          <Route path="/dka/komunat" element={<Municipalities />} />
+          <Route path="/dka/2fa" element={<TwoFactorSettings />} />
+          <Route path="/dka/dokumentet-ligjore" element={<LegalDocuments />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/dka" replace />} />
+      </Routes>
+    );
+  }
+
+  if (profile.role === 'ministri') {
+    return (
+      <Routes>
+        <Route path="/" element={<Navigate to="/ministri" replace />} />
+        <Route element={<DashboardLayout navItems={ministriNav} role="ministri" />}>
+          <Route path="/ministri" element={<MinistriDashboard />} />
+          <Route path="/ministri/komunat" element={<Municipalities />} />
+          <Route path="/ministri/mesazhet" element={<MessagesPage />} />
+          <Route path="/ministri/audit" element={<AuditLogs />} />
+          <Route path="/ministri/2fa" element={<TwoFactorSettings />} />
+          <Route path="/ministri/dokumentet-ligjore" element={<LegalDocuments />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/ministri" replace />} />
       </Routes>
     );
   }

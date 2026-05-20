@@ -3,13 +3,14 @@ import { supabase } from '../../lib/supabase';
 import { logAudit } from '../../lib/audit';
 import { useAuth } from '../../contexts/AuthContext';
 import { Loader2, Building2, Save } from 'lucide-react';
-import { SCHOOL_TYPE_LABELS, type SchoolInfo, type SchoolType, type Municipality } from '../../types/database';
+import { SCHOOL_TYPE_LABELS, type SchoolInfo, type SchoolType, type Municipality, type Locality } from '../../types/database';
 import FileUpload from '../../components/FileUpload';
 
 export default function SchoolSettings() {
   const { profile } = useAuth();
   const [info, setInfo] = useState<SchoolInfo | null>(null);
   const [municipalities, setMunicipalities] = useState<Municipality[]>([]);
+  const [localities, setLocalities] = useState<Locality[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
@@ -20,6 +21,7 @@ export default function SchoolSettings() {
     address: '',
     municipality: '',
     municipality_id: '',
+    locality_id: '',
     school_type: 'fillore_mesme_ulet' as SchoolType,
     phone: '',
     email: '',
@@ -35,11 +37,13 @@ export default function SchoolSettings() {
   }, []);
 
   const load = async () => {
-    const [{ data: info }, { data: mun }] = await Promise.all([
+    const [{ data: info }, { data: mun }, { data: loc }] = await Promise.all([
       supabase.from('school_info').select('*').limit(1).maybeSingle(),
       supabase.from('municipalities').select('*').order('name'),
+      supabase.from('localities').select('*').order('name'),
     ]);
     setMunicipalities(mun || []);
+    setLocalities(loc || []);
     const data = info;
     if (data) {
       setInfo(data);
@@ -49,6 +53,7 @@ export default function SchoolSettings() {
         address: data.address || '',
         municipality: data.municipality || '',
         municipality_id: data.municipality_id || '',
+        locality_id: data.locality_id || '',
         school_type: (data.school_type as SchoolType) || 'fillore_mesme_ulet',
         phone: data.phone || '',
         email: data.email || '',
@@ -72,6 +77,7 @@ export default function SchoolSettings() {
       logo_url: form.logo_url || null,
       stamp_url: form.stamp_url || null,
       municipality_id: form.municipality_id || null,
+      locality_id: form.locality_id || null,
       // sinkronizo emrin tekstual të komunës me id-në e zgjedhur
       municipality: form.municipality_id
         ? (municipalities.find((m) => m.id === form.municipality_id)?.name || form.municipality)
@@ -194,13 +200,29 @@ export default function SchoolSettings() {
               <label className="block text-sm font-medium text-slate-700 mb-1">Komuna</label>
               <select
                 value={form.municipality_id}
-                onChange={(e) => setForm({ ...form, municipality_id: e.target.value })}
+                onChange={(e) => setForm({ ...form, municipality_id: e.target.value, locality_id: '' })}
                 className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">— Zgjidh komunën —</option>
                 {municipalities.map((m) => (
                   <option key={m.id} value={m.id}>{m.name}</option>
                 ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Fshati / Qyteti</label>
+              <select
+                value={form.locality_id}
+                onChange={(e) => setForm({ ...form, locality_id: e.target.value })}
+                disabled={!form.municipality_id}
+                className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-50"
+              >
+                <option value="">— Zgjidh vendin —</option>
+                {localities
+                  .filter((l) => l.municipality_id === form.municipality_id)
+                  .map((l) => (
+                    <option key={l.id} value={l.id}>{l.name} {l.is_city_center ? '(qendër)' : `(${l.type})`}</option>
+                  ))}
               </select>
             </div>
             <div>
