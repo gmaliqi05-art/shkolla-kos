@@ -46,6 +46,7 @@ export default function ParentDashboard() {
   const [weekAttendance, setWeekAttendance] = useState<WeekDay[]>([]);
   const [announcements, setAnnouncements] = useState<Ann[]>([]);
   const [subjectAverages, setSubjectAverages] = useState<SubjectAvg[]>([]);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => { loadChildren(); }, [profile]);
   useEffect(() => { if (selectedChildId) loadChildData(selectedChildId); }, [selectedChildId]);
@@ -158,6 +159,12 @@ export default function ParentDashboard() {
           .limit(5),
       ]);
 
+      const firstError = [gradesRes, attRes, annRes].find(r => r.error)?.error;
+      if (firstError) {
+        console.error('ParentDashboard load error:', firstError);
+        setLoadError('Disa të dhëna nuk u ngarkuan. ' + firstError.message);
+      }
+
       const grades = gradesRes.data || [];
       const attRecords = attRes.data || [];
 
@@ -263,6 +270,15 @@ export default function ParentDashboard() {
 
   return (
     <div className="space-y-6">
+      {loadError && (
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-amber-900">Të dhëna të paplota</p>
+            <p className="text-xs text-amber-700 mt-0.5">{loadError}</p>
+          </div>
+        </div>
+      )}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Paneli Kryesor</h1>

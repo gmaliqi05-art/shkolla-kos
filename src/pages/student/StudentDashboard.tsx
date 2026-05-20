@@ -48,6 +48,7 @@ interface Ann {
 export default function StudentDashboard() {
   const { profile, isDemo } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [className, setClassName] = useState('');
   const [overallAvg, setOverallAvg] = useState('0');
   const [monthGrades, setMonthGrades] = useState(0);
@@ -114,6 +115,12 @@ export default function StudentDashboard() {
         supabase.from('grades').select('grade, subject_id, date, assessment_type, teacher_id, created_at, subjects(name)').eq('student_id', profile?.id).order('created_at', { ascending: false }),
         supabase.from('attendance').select('status').eq('student_id', profile?.id).in('status', ['mungon']),
       ]);
+
+      const firstError = [gradesRes, attRes].find(r => r.error)?.error;
+      if (firstError) {
+        console.error('StudentDashboard load error:', firstError);
+        setLoadError('Disa të dhëna nuk u ngarkuan. ' + firstError.message);
+      }
 
       const grades = gradesRes.data || [];
       setAbsences(attRes.data?.length || 0);
@@ -213,6 +220,15 @@ export default function StudentDashboard() {
 
   return (
     <div className="space-y-6">
+      {loadError && (
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-amber-900">Të dhëna të paplota</p>
+            <p className="text-xs text-amber-700 mt-0.5">{loadError}</p>
+          </div>
+        </div>
+      )}
       <div>
         <h1 className="text-2xl font-bold text-slate-900">Paneli Kryesor</h1>
         <p className="text-slate-500 mt-1">{className || 'Pa klase'} - Semestri II, 2025-2026</p>

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
-import { Loader2, Crown, Building2, Users, GraduationCap, School, BookOpen, Award, MapPin, TrendingUp, ArrowRight, UserCog, ChevronRight } from 'lucide-react';
+import { Loader2, Crown, Building2, Users, GraduationCap, School, BookOpen, Award, MapPin, TrendingUp, ArrowRight, UserCog, ChevronRight, AlertCircle } from 'lucide-react';
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 interface NationalStats {
@@ -33,6 +33,7 @@ export default function MinistriDashboard() {
   const [stats, setStats] = useState<NationalStats | null>(null);
   const [municipalities, setMunicipalities] = useState<MunicipalitySummary[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     load();
@@ -79,6 +80,12 @@ export default function MinistriDashboard() {
       supabase.from('grades').select('id', { count: 'exact', head: true }),
       supabase.from('attendance').select('id', { count: 'exact', head: true }),
     ]);
+
+    const firstError = [muns, schools, students, teachers, parents, directors, dkas, licensed, grades, attendance].find(r => r.error)?.error;
+    if (firstError) {
+      console.error('MinistriDashboard load error:', firstError);
+      setLoadError('Disa statistika nuk u ngarkuan. ' + firstError.message);
+    }
 
     const munList = muns.data || [];
     const schoolList = schools.data || [];
@@ -148,6 +155,15 @@ export default function MinistriDashboard() {
 
   return (
     <div className="space-y-6">
+      {loadError && (
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-amber-900">Të dhëna të paplota</p>
+            <p className="text-xs text-amber-700 mt-0.5">{loadError}</p>
+          </div>
+        </div>
+      )}
       <div className="bg-gradient-to-r from-purple-700 to-blue-700 rounded-2xl p-6 text-white">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div className="flex items-center gap-3">
