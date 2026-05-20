@@ -74,6 +74,20 @@ const DEMO_PROFILES: Record<UserRole, Profile> = {
     full_name: 'Elira Berisha',
     role: 'pedagog',
   },
+  drejtor_komunal: {
+    ...DEMO_PROFILE_DEFAULTS,
+    id: 'demo-dka',
+    email: 'dka@komuna.ks',
+    full_name: 'Besnik Krasniqi',
+    role: 'drejtor_komunal',
+  },
+  ministri: {
+    ...DEMO_PROFILE_DEFAULTS,
+    id: 'demo-ministri',
+    email: 'ministri@mashti.ks',
+    full_name: 'Hajrullah Çeku',
+    role: 'ministri',
+  },
 };
 
 export function AuthProvider({ children }: { children: ReactNode }) {

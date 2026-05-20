@@ -1,4 +1,4 @@
-export type UserRole = 'drejtor' | 'mesues' | 'nxenes' | 'prind' | 'pedagog';
+export type UserRole = 'drejtor' | 'mesues' | 'nxenes' | 'prind' | 'pedagog' | 'drejtor_komunal' | 'ministri';
 
 export type Gender = 'M' | 'F' | 'tjeter';
 
@@ -39,6 +39,9 @@ export interface Profile {
   subject_specialization?: string;
   hired_at?: string | null;
   preferred_language?: 'sq' | 'sr' | 'tr' | 'bs';
+  managed_municipality_id?: string | null;
+  managed_locality_id?: string | null;
+  school_id?: string | null;
 }
 
 export type LicenseLevel = 'fillestar' | 'karriere' | 'keshillues';
@@ -217,6 +220,25 @@ export interface Municipality {
   name: string;
   region: string;
   code: string;
+  created_at: string;
+}
+
+export type LocalityType = 'qytet' | 'fshat' | 'lagje' | 'komuna';
+
+export const LOCALITY_TYPE_LABELS: Record<LocalityType, string> = {
+  qytet: 'Qytet',
+  fshat: 'Fshat',
+  lagje: 'Lagje',
+  komuna: 'Komunë',
+};
+
+export interface Locality {
+  id: string;
+  name: string;
+  municipality_id: string;
+  type: LocalityType;
+  is_city_center: boolean;
+  postal_code: string;
   created_at: string;
 }
 
@@ -710,11 +732,13 @@ export interface Message {
 }
 
 export const ROLE_LABELS: Record<UserRole, string> = {
-  drejtor: 'Drejtor/e',
+  drejtor: 'Drejtor/e i Shkollës',
   mesues: 'Mesues/e',
   nxenes: 'Nxenes/e',
   prind: 'Prind',
   pedagog: 'Pedagog/e (Psikolog/Logoped)',
+  drejtor_komunal: 'Drejtor/e Komunal/e i/e Arsimit',
+  ministri: 'Ministër/e i/e Arsimit (MAShTI)',
 };
 
 export const ASSESSMENT_TYPE_LABELS: Record<AssessmentType, string> = {
@@ -1277,6 +1301,7 @@ export interface SchoolInfo {
   stamp_url: string | null;
   registration_number: string;
   municipality_id?: string | null;
+  locality_id?: string | null;
   school_type?: SchoolType;
   created_at: string;
   updated_at: string;

@@ -42,6 +42,12 @@ const DEMO_NOTIFS: Record<UserRole, NotifItem[]> = {
     { id: 'n1', type: 'message', title: 'Vleresim per nxenesin', preview: 'Kerkohet konsultim per Ardin...', from: 'Florentina Gashi', time: '1 ore', isRead: false },
     { id: 'n2', type: 'announcement', title: 'Trajnim profesional', preview: 'Trajnimi i ri per arsimin gjithperfshires', from: 'Arben Hoxha', time: '2 dite', isRead: true },
   ],
+  drejtor_komunal: [
+    { id: 'n1', type: 'announcement', title: 'Raport mujor DKA', preview: 'Raporti i frekuentimit per komunen eshte gati.', from: 'Sistemi', time: '1 dite', isRead: false },
+  ],
+  ministri: [
+    { id: 'n1', type: 'announcement', title: 'Raport kombetar', preview: 'Statistikat e arsimit per Q1 jane te gatshme.', from: 'Sistemi', time: '2 dite', isRead: false },
+  ],
 };
 
 export default function Header({ onMenuToggle }: HeaderProps) {
@@ -145,6 +151,8 @@ export default function Header({ onMenuToggle }: HeaderProps) {
       nxenes: '/nxenes/mesazhet',
       prind: '/prind/mesazhet',
       pedagog: '/pedagog/mesazhet',
+      drejtor_komunal: '/dka/mesazhet',
+      ministri: '/ministri/mesazhet',
     };
     return basePaths[profile.role];
   };

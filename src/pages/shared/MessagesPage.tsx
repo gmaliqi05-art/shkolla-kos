@@ -30,11 +30,13 @@ interface ContactItem {
 }
 
 const ROLE_CAN_MESSAGE: Record<UserRole, UserRole[]> = {
-  drejtor: ['mesues', 'nxenes', 'prind', 'pedagog'],
+  drejtor: ['mesues', 'nxenes', 'prind', 'pedagog', 'drejtor_komunal'],
   mesues: ['nxenes', 'prind', 'drejtor', 'pedagog'],
   nxenes: ['mesues', 'pedagog'],
   prind: ['mesues', 'pedagog'],
   pedagog: ['mesues', 'nxenes', 'prind', 'drejtor'],
+  drejtor_komunal: ['drejtor', 'ministri'],
+  ministri: ['drejtor_komunal', 'drejtor'],
 };
 
 const DEMO_MESSAGES: MessageItem[] = [
@@ -259,6 +261,8 @@ export default function MessagesPage() {
       nxenes: 'bg-cyan-100 text-cyan-700',
       prind: 'bg-slate-200 text-slate-700',
       pedagog: 'bg-pink-100 text-pink-700',
+      drejtor_komunal: 'bg-amber-100 text-amber-700',
+      ministri: 'bg-purple-100 text-purple-700',
     };
     return colors[role];
   };
@@ -270,6 +274,8 @@ export default function MessagesPage() {
       nxenes: 'from-cyan-500 to-cyan-600',
       prind: 'from-slate-500 to-slate-600',
       pedagog: 'from-pink-500 to-pink-600',
+      drejtor_komunal: 'from-amber-500 to-amber-600',
+      ministri: 'from-purple-500 to-purple-600',
     };
     return colors[role];
   };

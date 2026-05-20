@@ -22,6 +22,8 @@ const ROLE_COLORS: Record<UserRole, { bg: string; accent: string; text: string }
   nxenes: { bg: 'from-cyan-900 to-cyan-800', accent: 'bg-cyan-700', text: 'text-cyan-200' },
   prind: { bg: 'from-slate-900 to-slate-800', accent: 'bg-slate-700', text: 'text-slate-300' },
   pedagog: { bg: 'from-pink-900 to-pink-800', accent: 'bg-pink-700', text: 'text-pink-200' },
+  drejtor_komunal: { bg: 'from-amber-900 to-amber-800', accent: 'bg-amber-700', text: 'text-amber-200' },
+  ministri: { bg: 'from-purple-900 to-purple-800', accent: 'bg-purple-700', text: 'text-purple-200' },
 };
 
 const ROLE_LABELS: Record<UserRole, string> = {
@@ -30,6 +32,8 @@ const ROLE_LABELS: Record<UserRole, string> = {
   nxenes: 'Paneli i Nxenesit',
   prind: 'Paneli i Prindit',
   pedagog: 'Paneli i Pedagogut',
+  drejtor_komunal: 'Paneli i Drejtorit Komunal (DKA)',
+  ministri: 'Paneli i Ministrit (MAShTI)',
 };
 
 export default function Sidebar({ items, role, isOpen, onClose }: SidebarProps) {
