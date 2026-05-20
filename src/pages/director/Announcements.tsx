@@ -187,7 +187,7 @@ export default function Announcements() {
               <h3 className="text-lg font-semibold text-slate-900">
                 {editingId ? 'Edito Njoftimin' : 'Njoftim i Ri'}
               </h3>
-              <button onClick={resetForm} className="text-slate-400 hover:text-slate-600">
+              <button onClick={resetForm} aria-label="Mbyll" className="text-slate-400 hover:text-slate-600">
                 <X className="w-5 h-5" />
               </button>
             </div>

@@ -244,7 +244,7 @@ export default function ManageParents() {
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl">
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-lg font-semibold">Shto Prind të Ri</h2>
-              <button onClick={() => setShowAddModal(false)} className="p-1 rounded-lg hover:bg-slate-100"><X className="w-5 h-5" /></button>
+              <button onClick={() => setShowAddModal(false)} aria-label="Mbyll" className="p-1 rounded-lg hover:bg-slate-100"><X className="w-5 h-5" /></button>
             </div>
             {error && <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">{error}</div>}
             <div className="space-y-3">
@@ -283,7 +283,7 @@ export default function ManageParents() {
                 <h2 className="text-lg font-semibold">Lidh Fëmijë</h2>
                 <p className="text-sm text-slate-500 mt-0.5">për {selectedParent.full_name}</p>
               </div>
-              <button onClick={() => setShowLinkModal(false)} className="p-1 rounded-lg hover:bg-slate-100"><X className="w-5 h-5" /></button>
+              <button onClick={() => setShowLinkModal(false)} aria-label="Mbyll" className="p-1 rounded-lg hover:bg-slate-100"><X className="w-5 h-5" /></button>
             </div>
             {error && <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">{error}</div>}
             <div>
@@ -312,7 +312,7 @@ export default function ManageParents() {
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-green-700">✓ Llogaria u krijua!</h2>
-              <button onClick={() => setShowCredentials(false)} className="p-1 rounded-lg hover:bg-slate-100"><X className="w-5 h-5" /></button>
+              <button onClick={() => setShowCredentials(false)} aria-label="Mbyll" className="p-1 rounded-lg hover:bg-slate-100"><X className="w-5 h-5" /></button>
             </div>
             <p className="text-sm text-slate-600 mb-4">Ruajini këto kredenciale dhe jepjani prindit:</p>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 font-mono text-sm space-y-1">

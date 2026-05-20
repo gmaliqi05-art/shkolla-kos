@@ -257,7 +257,7 @@ export default function DisciplinePage() {
           <div className="bg-white rounded-2xl max-w-md w-full p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-slate-900">Shto Masë Disiplinore</h2>
-              <button onClick={() => setShowModal(false)} className="p-1 text-slate-400 hover:text-slate-600 rounded">
+              <button onClick={() => setShowModal(false)} aria-label="Mbyll" className="p-1 text-slate-400 hover:text-slate-600 rounded">
                 <X className="w-5 h-5" />
               </button>
             </div>
