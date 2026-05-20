@@ -88,6 +88,13 @@ const DEMO_PROFILES: Record<UserRole, Profile> = {
     full_name: 'Hajrullah Çeku',
     role: 'ministri',
   },
+  inspektor: {
+    ...DEMO_PROFILE_DEFAULTS,
+    id: 'demo-inspektor',
+    email: 'inspektor@inspektorati.ks',
+    full_name: 'Valdete Krasniqi',
+    role: 'inspektor',
+  },
 };
 
 export function AuthProvider({ children }: { children: ReactNode }) {

@@ -35,8 +35,9 @@ const ROLE_CAN_MESSAGE: Record<UserRole, UserRole[]> = {
   nxenes: ['mesues', 'pedagog'],
   prind: ['mesues', 'pedagog'],
   pedagog: ['mesues', 'nxenes', 'prind', 'drejtor'],
-  drejtor_komunal: ['drejtor', 'ministri'],
-  ministri: ['drejtor_komunal', 'drejtor'],
+  drejtor_komunal: ['drejtor', 'ministri', 'inspektor'],
+  ministri: ['drejtor_komunal', 'drejtor', 'inspektor'],
+  inspektor: ['drejtor', 'drejtor_komunal', 'ministri'],
 };
 
 const DEMO_MESSAGES: MessageItem[] = [
@@ -263,6 +264,7 @@ export default function MessagesPage() {
       pedagog: 'bg-pink-100 text-pink-700',
       drejtor_komunal: 'bg-amber-100 text-amber-700',
       ministri: 'bg-purple-100 text-purple-700',
+      inspektor: 'bg-orange-100 text-orange-700',
     };
     return colors[role];
   };
@@ -276,6 +278,7 @@ export default function MessagesPage() {
       pedagog: 'from-pink-500 to-pink-600',
       drejtor_komunal: 'from-amber-500 to-amber-600',
       ministri: 'from-purple-500 to-purple-600',
+      inspektor: 'from-orange-500 to-orange-600',
     };
     return colors[role];
   };

@@ -48,6 +48,9 @@ const DEMO_NOTIFS: Record<UserRole, NotifItem[]> = {
   ministri: [
     { id: 'n1', type: 'announcement', title: 'Raport kombetar', preview: 'Statistikat e arsimit per Q1 jane te gatshme.', from: 'Sistemi', time: '2 dite', isRead: false },
   ],
+  inspektor: [
+    { id: 'n1', type: 'message', title: 'Inspektim i ri', preview: 'Inspektimi i shkolles "Naim Frasheri" eshte planifikuar', from: 'Sistemi', time: '5 ore', isRead: false },
+  ],
 };
 
 export default function Header({ onMenuToggle }: HeaderProps) {
@@ -153,6 +156,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
       pedagog: '/pedagog/mesazhet',
       drejtor_komunal: '/dka/mesazhet',
       ministri: '/ministri/mesazhet',
+      inspektor: '/inspektor/mesazhet',
     };
     return basePaths[profile.role];
   };

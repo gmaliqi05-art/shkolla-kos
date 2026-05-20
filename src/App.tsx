@@ -32,6 +32,7 @@ import MinistriDashboard from './pages/ministri/MinistriDashboard';
 import DkaDashboard from './pages/dka/DkaDashboard';
 import SchoolsManagement from './pages/shared/SchoolsManagement';
 import LocalitiesManagement from './pages/shared/LocalitiesManagement';
+import InspectionsManagement from './pages/inspektor/InspectionsManagement';
 
 import TeacherDashboard from './pages/teacher/TeacherDashboard';
 import MyClasses from './pages/teacher/MyClasses';
@@ -99,6 +100,7 @@ const directorNav: NavItem[] = [
   { label: 'Biblioteka', path: '/drejtor/biblioteka', icon: Library },
   { label: '2FA / Siguria', path: '/drejtor/2fa', icon: ShieldCheck },
   { label: 'Dokumentet Ligjore', path: '/drejtor/dokumentet-ligjore', icon: Scale },
+  { label: 'Inspektimet', path: '/drejtor/inspektimet', icon: ClipboardCheck },
   { label: 'Njoftimet', path: '/drejtor/njoftime', icon: Megaphone },
   { label: 'Mesazhet', path: '/drejtor/mesazhet', icon: MessageSquare },
 ];
@@ -175,6 +177,15 @@ const ministriNav: NavItem[] = [
   { label: 'Dokumentet Ligjore', path: '/ministri/dokumentet-ligjore', icon: Scale },
 ];
 
+const inspektorNav: NavItem[] = [
+  { label: 'Paneli Kryesor', path: '/inspektor', icon: LayoutDashboard },
+  { label: 'Inspektimet', path: '/inspektor/inspektimet', icon: ClipboardCheck },
+  { label: 'Shkollat', path: '/inspektor/shkollat', icon: School },
+  { label: 'Mesazhet', path: '/inspektor/mesazhet', icon: MessageSquare },
+  { label: '2FA / Siguria', path: '/inspektor/2fa', icon: ShieldCheck },
+  { label: 'Dokumentet Ligjore', path: '/inspektor/dokumentet-ligjore', icon: Scale },
+];
+
 const pedagogNav: NavItem[] = [
   { label: 'Paneli Kryesor', path: '/pedagog', icon: LayoutDashboard },
   { label: 'NVA & PIA', path: '/pedagog/nva', icon: Heart },
@@ -233,6 +244,7 @@ function AppRoutes() {
           <Route path="/drejtor/biblioteka" element={<LibraryPage />} />
           <Route path="/drejtor/2fa" element={<TwoFactorSettings />} />
           <Route path="/drejtor/dokumentet-ligjore" element={<LegalDocuments />} />
+          <Route path="/drejtor/inspektimet" element={<InspectionsManagement />} />
           <Route path="/drejtor/disiplina" element={<DisciplinePage />} />
           <Route path="/drejtor/nva" element={<SpecialNeedsManagement />} />
           <Route path="/drejtor/keshillat" element={<SchoolCouncils />} />
@@ -359,6 +371,23 @@ function AppRoutes() {
           <Route path="/dka/dokumentet-ligjore" element={<LegalDocuments />} />
         </Route>
         <Route path="*" element={<Navigate to="/dka" replace />} />
+      </Routes>
+    );
+  }
+
+  if (profile.role === 'inspektor') {
+    return (
+      <Routes>
+        <Route path="/" element={<Navigate to="/inspektor" replace />} />
+        <Route element={<DashboardLayout navItems={inspektorNav} role="inspektor" />}>
+          <Route path="/inspektor" element={<InspectionsManagement />} />
+          <Route path="/inspektor/inspektimet" element={<InspectionsManagement />} />
+          <Route path="/inspektor/shkollat" element={<SchoolsManagement />} />
+          <Route path="/inspektor/mesazhet" element={<MessagesPage />} />
+          <Route path="/inspektor/2fa" element={<TwoFactorSettings />} />
+          <Route path="/inspektor/dokumentet-ligjore" element={<LegalDocuments />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/inspektor" replace />} />
       </Routes>
     );
   }

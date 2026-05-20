@@ -1,4 +1,4 @@
-export type UserRole = 'drejtor' | 'mesues' | 'nxenes' | 'prind' | 'pedagog' | 'drejtor_komunal' | 'ministri';
+export type UserRole = 'drejtor' | 'mesues' | 'nxenes' | 'prind' | 'pedagog' | 'drejtor_komunal' | 'ministri' | 'inspektor';
 
 export type Gender = 'M' | 'F' | 'tjeter';
 
@@ -739,7 +739,154 @@ export const ROLE_LABELS: Record<UserRole, string> = {
   pedagog: 'Pedagog/e (Psikolog/Logoped)',
   drejtor_komunal: 'Drejtor/e Komunal/e i/e Arsimit',
   ministri: 'Ministër/e i/e Arsimit (MAShTI)',
+  inspektor: 'Inspektor/e i/e Arsimit',
 };
+
+// === Paketa 23: Inspektimi Shkollor (Ligji 06/L-046) ===
+
+export type InspectionType = 'e_rregullt' | 'e_jashtezakonshme' | 'tematike' | 'ndjekje' | 'ankese';
+
+export const INSPECTION_TYPE_LABELS: Record<InspectionType, string> = {
+  e_rregullt: 'E rregullt',
+  e_jashtezakonshme: 'E jashtëzakonshme',
+  tematike: 'Tematike',
+  ndjekje: 'Ndjekje (follow-up)',
+  ankese: 'Ankesë',
+};
+
+export type InspectionStatus = 'planifikuar' | 'ne_proces' | 'perfunduar' | 'anuluar';
+
+export const INSPECTION_STATUS_LABELS: Record<InspectionStatus, string> = {
+  planifikuar: 'I planifikuar',
+  ne_proces: 'Në proces',
+  perfunduar: 'I përfunduar',
+  anuluar: 'I anuluar',
+};
+
+export const INSPECTION_STATUS_COLORS: Record<InspectionStatus, string> = {
+  planifikuar: 'bg-blue-100 text-blue-700',
+  ne_proces: 'bg-amber-100 text-amber-700',
+  perfunduar: 'bg-emerald-100 text-emerald-700',
+  anuluar: 'bg-rose-100 text-rose-700',
+};
+
+export type OverallRating = 'shkelqyer' | 'i_mire' | 'i_kenaqshem' | 'duhet_permiresuar' | 'i_papranueshem';
+
+export const OVERALL_RATING_LABELS: Record<OverallRating, string> = {
+  shkelqyer: 'Shkëlqyer',
+  i_mire: 'I mirë',
+  i_kenaqshem: 'I kënaqshëm',
+  duhet_permiresuar: 'Duhet përmirësim',
+  i_papranueshem: 'I papranueshëm',
+};
+
+export const OVERALL_RATING_COLORS: Record<OverallRating, string> = {
+  shkelqyer: 'bg-emerald-100 text-emerald-700',
+  i_mire: 'bg-blue-100 text-blue-700',
+  i_kenaqshem: 'bg-cyan-100 text-cyan-700',
+  duhet_permiresuar: 'bg-amber-100 text-amber-700',
+  i_papranueshem: 'bg-rose-100 text-rose-700',
+};
+
+export interface Inspection {
+  id: string;
+  school_id: string;
+  inspector_id: string;
+  inspection_type: InspectionType;
+  planned_date: string;
+  conducted_date: string | null;
+  duration_hours: number | null;
+  status: InspectionStatus;
+  scope: string;
+  overall_rating: OverallRating | null;
+  summary: string;
+  approved_by_director: boolean;
+  approved_at: string | null;
+  director_comments: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export type FindingCategory = 'infrastrukture' | 'dokumentacion' | 'mesimdhenie' | 'siguri' | 'administrim' | 'sjellje' | 'tjeter';
+
+export const FINDING_CATEGORY_LABELS: Record<FindingCategory, string> = {
+  infrastrukture: 'Infrastrukturë',
+  dokumentacion: 'Dokumentacion',
+  mesimdhenie: 'Mësimdhënie',
+  siguri: 'Siguri',
+  administrim: 'Administrim',
+  sjellje: 'Sjellje',
+  tjeter: 'Tjetër',
+};
+
+export type FindingSeverity = 'e_lehte' | 'mesatare' | 'e_rende' | 'kritike';
+
+export const FINDING_SEVERITY_LABELS: Record<FindingSeverity, string> = {
+  e_lehte: 'E lehtë',
+  mesatare: 'Mesatare',
+  e_rende: 'E rëndë',
+  kritike: 'Kritike',
+};
+
+export const FINDING_SEVERITY_COLORS: Record<FindingSeverity, string> = {
+  e_lehte: 'bg-blue-100 text-blue-700',
+  mesatare: 'bg-amber-100 text-amber-700',
+  e_rende: 'bg-orange-100 text-orange-700',
+  kritike: 'bg-rose-100 text-rose-700',
+};
+
+export interface InspectionFinding {
+  id: string;
+  inspection_id: string;
+  category: FindingCategory;
+  severity: FindingSeverity;
+  title: string;
+  description: string;
+  evidence: string;
+  legal_basis: string;
+  created_at: string;
+}
+
+export type RecommendationPriority = 'ulet' | 'mesatar' | 'larte' | 'urgjent';
+
+export const REC_PRIORITY_LABELS: Record<RecommendationPriority, string> = {
+  ulet: 'I ulët',
+  mesatar: 'Mesatar',
+  larte: 'I lartë',
+  urgjent: 'Urgjent',
+};
+
+export const REC_PRIORITY_COLORS: Record<RecommendationPriority, string> = {
+  ulet: 'bg-slate-100 text-slate-700',
+  mesatar: 'bg-blue-100 text-blue-700',
+  larte: 'bg-amber-100 text-amber-700',
+  urgjent: 'bg-rose-100 text-rose-700',
+};
+
+export type RecommendationStatus = 'i_papermbushur' | 'ne_proces' | 'i_permbushur' | 'jo_aplikuar';
+
+export const REC_STATUS_LABELS: Record<RecommendationStatus, string> = {
+  i_papermbushur: 'I papërmbushur',
+  ne_proces: 'Në proces',
+  i_permbushur: 'I përmbushur',
+  jo_aplikuar: 'Jo i aplikuar',
+};
+
+export interface InspectionRecommendation {
+  id: string;
+  inspection_id: string;
+  finding_id: string | null;
+  title: string;
+  description: string;
+  priority: RecommendationPriority;
+  deadline: string | null;
+  responsible: string;
+  status: RecommendationStatus;
+  completion_evidence: string;
+  completed_at: string | null;
+  verified_by: string | null;
+  created_at: string;
+}
 
 export const ASSESSMENT_TYPE_LABELS: Record<AssessmentType, string> = {
   vlersim: 'Vlerësim',
