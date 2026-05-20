@@ -8,7 +8,7 @@ import {
   type NationalTest,
   type NationalTestResult,
 } from '../../types/database';
-import { Loader2, GraduationCap, Trophy } from 'lucide-react';
+import { Loader2, GraduationCap, Trophy, Printer } from 'lucide-react';
 
 interface ChildOption {
   id: string;
@@ -87,6 +87,53 @@ export default function MyTestResults() {
     setLoading(false);
   };
 
+  const handlePrint = () => {
+    const studentName = isParent
+      ? children.find((c) => c.id === selectedStudent)?.full_name || ''
+      : profile?.full_name || '';
+    const today = new Date().toLocaleDateString('sq-AL', { year: 'numeric', month: 'long', day: 'numeric' });
+    const w = window.open('', '_blank');
+    if (!w) return;
+
+    const sections = data.map(({ test, results }) => {
+      const rows = results.map((r) => `
+        <tr>
+          <td>${r.subject_name}</td>
+          <td style="text-align:center">${r.score !== null ? `${r.score}/${r.max_score}` : '—'}</td>
+          <td style="text-align:center">${r.percentage !== null ? `${r.percentage.toFixed(0)}%` : '—'}</td>
+          <td>${r.level ? TEST_RESULT_LEVEL_LABELS[r.level] : '—'}</td>
+        </tr>`).join('');
+      return `
+        <h2>${test.name}</h2>
+        <p class="meta">Klasa ${test.grade_level}-të • ${test.test_date} • ${NATIONAL_TEST_STATUS_LABELS[test.status]}</p>
+        <table>
+          <thead><tr><th>Lënda</th><th style="text-align:center">Pikët</th><th style="text-align:center">Përqindja</th><th>Niveli</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>`;
+    }).join('');
+
+    w.document.write(`<!DOCTYPE html><html><head><title>Rezultatet e Testeve - ${studentName}</title><style>
+      body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:40px;color:#1e293b;max-width:900px;margin:0 auto}
+      h1{font-size:22px;margin-bottom:4px}
+      h2{font-size:16px;margin-top:24px;padding-bottom:6px;border-bottom:2px solid #e2e8f0}
+      .subtitle{color:#64748b;font-size:13px;margin-bottom:24px}
+      .meta{color:#64748b;font-size:12px;margin:4px 0 8px}
+      table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+      th,td{padding:8px 12px;border-bottom:1px solid #f1f5f9;text-align:left}
+      th{background:#f8fafc;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:#64748b;font-weight:600}
+      .footer{margin-top:40px;padding-top:16px;border-top:1px solid #e2e8f0;font-size:11px;color:#94a3b8;text-align:center}
+      @media print{body{padding:20px}}
+    </style></head><body>
+      <h1>Rezultatet e Testeve Kombëtare</h1>
+      <p class="subtitle">${studentName} • Gjeneruar: ${today}</p>
+      ${sections || '<p>Asnjë rezultat i regjistruar.</p>'}
+      <div class="footer">Sistemi i Menaxhimit Shkollor — Shkolla-Kos</div>
+    </body></html>`);
+    w.document.close();
+    w.focus();
+    setTimeout(() => w.print(), 250);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -105,14 +152,25 @@ export default function MyTestResults() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
-          <GraduationCap className="w-5 h-5 text-purple-600" />
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
+            <GraduationCap className="w-5 h-5 text-purple-600" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">Rezultatet e Testeve Kombëtare</h1>
+            <p className="text-slate-500 text-sm">Testi i Arritshmërisë Klasa V-të dhe IX-të</p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Rezultatet e Testeve Kombëtare</h1>
-          <p className="text-slate-500 text-sm">Testi i Arritshmërisë Klasa V-të dhe IX-të</p>
-        </div>
+        {data.length > 0 && (
+          <button
+            onClick={handlePrint}
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-xl hover:bg-purple-700"
+          >
+            <Printer className="w-4 h-4" />
+            Printo / PDF
+          </button>
+        )}
       </div>
 
       {isParent && children.length > 1 && (

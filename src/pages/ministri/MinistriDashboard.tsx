@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
-import { Loader2, Crown, Building2, Users, GraduationCap, School, BookOpen, Award, MapPin, TrendingUp } from 'lucide-react';
+import { Loader2, Crown, Building2, Users, GraduationCap, School, BookOpen, Award, MapPin, TrendingUp, ArrowRight, UserCog, ChevronRight } from 'lucide-react';
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 interface NationalStats {
@@ -28,6 +29,7 @@ interface MunicipalitySummary {
 
 export default function MinistriDashboard() {
   const { isDemo } = useAuth();
+  const navigate = useNavigate();
   const [stats, setStats] = useState<NationalStats | null>(null);
   const [municipalities, setMunicipalities] = useState<MunicipalitySummary[]>([]);
   const [loading, setLoading] = useState(true);
@@ -147,11 +149,29 @@ export default function MinistriDashboard() {
   return (
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-purple-700 to-blue-700 rounded-2xl p-6 text-white">
-        <div className="flex items-center gap-3">
-          <Crown className="w-8 h-8" />
-          <div>
-            <h1 className="text-2xl font-bold">Paneli i Ministrit të Arsimit</h1>
-            <p className="text-purple-100 text-sm">MAShTI — Statistika kombëtare të arsimit parauniversitar</p>
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-3">
+            <Crown className="w-8 h-8" />
+            <div>
+              <h1 className="text-2xl font-bold">Paneli i Ministrit të Arsimit</h1>
+              <p className="text-purple-100 text-sm">MAShTI — Statistika kombëtare të arsimit parauniversitar</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Link
+              to="/ministri/stafi"
+              className="inline-flex items-center gap-1.5 px-3 py-2 bg-white/15 hover:bg-white/25 rounded-lg text-sm font-medium"
+            >
+              <UserCog className="w-4 h-4" />
+              Stafi
+            </Link>
+            <Link
+              to="/ministri/komunat"
+              className="inline-flex items-center gap-1.5 px-3 py-2 bg-white/15 hover:bg-white/25 rounded-lg text-sm font-medium"
+            >
+              <Building2 className="w-4 h-4" />
+              Komunat
+            </Link>
           </div>
         </div>
       </div>
@@ -234,9 +254,15 @@ export default function MinistriDashboard() {
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
-        <div className="px-5 py-4 border-b border-slate-100 flex items-center gap-2">
-          <Building2 className="w-5 h-5 text-purple-600" />
-          <h2 className="font-semibold text-slate-900">Komunat sipas aktivitetit</h2>
+        <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Building2 className="w-5 h-5 text-purple-600" />
+            <h2 className="font-semibold text-slate-900">Komunat sipas aktivitetit</h2>
+          </div>
+          <Link to="/ministri/komunat" className="inline-flex items-center gap-1 text-sm text-purple-700 hover:text-purple-900 font-medium">
+            Shiko të gjitha
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
         <table className="w-full text-sm">
           <thead className="bg-slate-50">
@@ -246,16 +272,24 @@ export default function MinistriDashboard() {
               <th className="px-4 py-2 text-center">Shkolla</th>
               <th className="px-4 py-2 text-center">Nxënës</th>
               <th className="px-4 py-2 text-center">Mësues</th>
+              <th className="px-4 py-2 w-8"></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
             {municipalities.map((m) => (
-              <tr key={m.id} className="hover:bg-slate-50">
+              <tr
+                key={m.id}
+                onClick={() => navigate(`/ministri/shkollat?municipality=${m.id}`)}
+                className="hover:bg-purple-50/40 cursor-pointer transition-colors"
+              >
                 <td className="px-4 py-2 font-medium text-slate-900">{m.name}</td>
                 <td className="px-4 py-2 text-slate-600">{m.region}</td>
                 <td className="px-4 py-2 text-center">{m.schools_count}</td>
                 <td className="px-4 py-2 text-center">{m.students_count}</td>
                 <td className="px-4 py-2 text-center">{m.teachers_count}</td>
+                <td className="px-4 py-2 text-right text-slate-300">
+                  <ChevronRight className="w-4 h-4 inline" />
+                </td>
               </tr>
             ))}
           </tbody>

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
-import { Loader2, Building, School, Users, GraduationCap, MapPin, BarChart3 } from 'lucide-react';
+import { Loader2, Building, School, Users, GraduationCap, MapPin, BarChart3, ArrowRight, Plus, FileText, ChevronRight } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const DEMO_SCHOOLS = [
@@ -9,7 +10,7 @@ const DEMO_SCHOOLS = [
   { id: 'ds2', name: '"Faik Konica"', director_name: 'Mirjeta Krasniqi', locality_name: 'Hajvali', students_count: 312, teachers_count: 21 },
   { id: 'ds3', name: '"Asdreni"', director_name: 'Driton Berisha', locality_name: 'Llukar', students_count: 198, teachers_count: 14 },
   { id: 'ds4', name: '"Ismail Qemali"', director_name: 'Albulena Gashi', locality_name: 'Çagllavicë', students_count: 254, teachers_count: 18 },
-  { id: 'ds5', name: '"Hasan Prishtina"', director_name: 'Bekim Ramadani', locality_name: 'Bardhosh', studens_count: 167, teachers_count: 12 },
+  { id: 'ds5', name: '"Hasan Prishtina"', director_name: 'Bekim Ramadani', locality_name: 'Bardhosh', students_count: 167, teachers_count: 12 },
 ];
 
 interface DkaStats {
@@ -31,6 +32,7 @@ interface SchoolRow {
 
 export default function DkaDashboard() {
   const { profile, isDemo } = useAuth();
+  const navigate = useNavigate();
   const [stats, setStats] = useState<DkaStats | null>(null);
   const [schools, setSchools] = useState<SchoolRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -122,11 +124,29 @@ export default function DkaDashboard() {
   return (
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-amber-700 to-orange-700 rounded-2xl p-6 text-white">
-        <div className="flex items-center gap-3">
-          <Building className="w-8 h-8" />
-          <div>
-            <h1 className="text-2xl font-bold">Drejtoria Komunale e Arsimit</h1>
-            <p className="text-amber-100 text-sm">Komuna {stats?.municipalityName}</p>
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-3">
+            <Building className="w-8 h-8" />
+            <div>
+              <h1 className="text-2xl font-bold">Drejtoria Komunale e Arsimit</h1>
+              <p className="text-amber-100 text-sm">Komuna {stats?.municipalityName}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Link
+              to="/dka/shkollat"
+              className="inline-flex items-center gap-1.5 px-3 py-2 bg-white/15 hover:bg-white/25 rounded-lg text-sm font-medium"
+            >
+              <Plus className="w-4 h-4" />
+              Shto shkollë
+            </Link>
+            <Link
+              to="/dka/mesazhet"
+              className="inline-flex items-center gap-1.5 px-3 py-2 bg-white/15 hover:bg-white/25 rounded-lg text-sm font-medium"
+            >
+              <FileText className="w-4 h-4" />
+              Mesazhe
+            </Link>
           </div>
         </div>
       </div>
@@ -157,8 +177,12 @@ export default function DkaDashboard() {
       )}
 
       <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
-        <div className="px-5 py-4 border-b border-slate-100">
+        <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
           <h2 className="font-semibold text-slate-900">Shkollat e komunës</h2>
+          <Link to="/dka/shkollat" className="inline-flex items-center gap-1 text-sm text-amber-700 hover:text-amber-900 font-medium">
+            Shiko të gjitha
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
         {schools.length === 0 ? (
           <div className="px-6 py-12 text-center text-slate-400 text-sm">Asnjë shkollë e regjistruar në këtë komunë.</div>
@@ -171,11 +195,16 @@ export default function DkaDashboard() {
                 <th className="px-4 py-2">Drejtori</th>
                 <th className="px-4 py-2 text-center">Nxënës</th>
                 <th className="px-4 py-2 text-center">Mësues</th>
+                <th className="px-4 py-2 w-8"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {schools.map((s) => (
-                <tr key={s.id} className="hover:bg-slate-50">
+                <tr
+                  key={s.id}
+                  onClick={() => navigate(`/dka/shkollat?school=${s.id}`)}
+                  className="hover:bg-amber-50/40 cursor-pointer transition-colors"
+                >
                   <td className="px-4 py-2 font-medium text-slate-900">{s.name}</td>
                   <td className="px-4 py-2 text-slate-600">
                     {s.locality_name ? (
@@ -188,6 +217,9 @@ export default function DkaDashboard() {
                   <td className="px-4 py-2 text-slate-700">{s.director_name}</td>
                   <td className="px-4 py-2 text-center">{s.students_count}</td>
                   <td className="px-4 py-2 text-center">{s.teachers_count}</td>
+                  <td className="px-4 py-2 text-right text-slate-300">
+                    <ChevronRight className="w-4 h-4 inline" />
+                  </td>
                 </tr>
               ))}
             </tbody>
