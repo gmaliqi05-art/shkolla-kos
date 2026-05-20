@@ -25,6 +25,7 @@ import NationalTests from './pages/director/NationalTests';
 import Municipalities from './pages/director/Municipalities';
 import SchoolCalendar from './pages/director/SchoolCalendar';
 import AnnualPlan from './pages/director/AnnualPlan';
+import LibraryPage from './pages/director/Library';
 
 import TeacherDashboard from './pages/teacher/TeacherDashboard';
 import MyClasses from './pages/teacher/MyClasses';
@@ -88,6 +89,7 @@ const directorNav: NavItem[] = [
   { label: 'Komunat', path: '/drejtor/komunat', icon: MapPin },
   { label: 'Kalendari', path: '/drejtor/kalendari', icon: Calendar },
   { label: 'Plani Vjetor', path: '/drejtor/plani-vjetor', icon: FileSpreadsheet },
+  { label: 'Biblioteka', path: '/drejtor/biblioteka', icon: Library },
   { label: 'Njoftimet', path: '/drejtor/njoftime', icon: Megaphone },
   { label: 'Mesazhet', path: '/drejtor/mesazhet', icon: MessageSquare },
 ];
@@ -180,6 +182,7 @@ function AppRoutes() {
           <Route path="/drejtor/komunat" element={<Municipalities />} />
           <Route path="/drejtor/kalendari" element={<SchoolCalendar />} />
           <Route path="/drejtor/plani-vjetor" element={<AnnualPlan />} />
+          <Route path="/drejtor/biblioteka" element={<LibraryPage />} />
           <Route path="/drejtor/disiplina" element={<DisciplinePage />} />
           <Route path="/drejtor/nva" element={<SpecialNeedsManagement />} />
           <Route path="/drejtor/keshillat" element={<SchoolCouncils />} />

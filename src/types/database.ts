@@ -508,6 +508,70 @@ export interface PlanObjective {
   created_at: string;
 }
 
+// === Paketa 14: Biblioteka Shkollore ===
+
+export type BookCategory = 'letersi' | 'shkence' | 'matematike' | 'histori' | 'gjeografi' | 'gjuhe' | 'art' | 'biografi' | 'enciklopedi' | 'tekst_shkollor' | 'tjeter';
+
+export const BOOK_CATEGORY_LABELS: Record<BookCategory, string> = {
+  letersi: 'Letërsi',
+  shkence: 'Shkencë',
+  matematike: 'Matematikë',
+  histori: 'Histori',
+  gjeografi: 'Gjeografi',
+  gjuhe: 'Gjuhë',
+  art: 'Art',
+  biografi: 'Biografi',
+  enciklopedi: 'Enciklopedi',
+  tekst_shkollor: 'Tekst shkollor',
+  tjeter: 'Tjetër',
+};
+
+export interface LibraryBook {
+  id: string;
+  isbn: string | null;
+  title: string;
+  author: string;
+  publisher: string;
+  publication_year: number | null;
+  category: BookCategory;
+  language: string;
+  copies_total: number;
+  copies_available: number;
+  location: string;
+  cover_url: string | null;
+  description: string;
+  created_at: string;
+}
+
+export type BookLoanStatus = 'aktive' | 'kthyer' | 'vonuar' | 'humbur';
+
+export const BOOK_LOAN_STATUS_LABELS: Record<BookLoanStatus, string> = {
+  aktive: 'Aktive',
+  kthyer: 'Kthyer',
+  vonuar: 'Vonuar',
+  humbur: 'Humbur',
+};
+
+export const BOOK_LOAN_STATUS_COLORS: Record<BookLoanStatus, string> = {
+  aktive: 'bg-blue-100 text-blue-700',
+  kthyer: 'bg-emerald-100 text-emerald-700',
+  vonuar: 'bg-amber-100 text-amber-700',
+  humbur: 'bg-rose-100 text-rose-700',
+};
+
+export interface BookLoan {
+  id: string;
+  book_id: string;
+  borrower_id: string;
+  loan_date: string;
+  due_date: string;
+  returned_date: string | null;
+  status: BookLoanStatus;
+  notes: string;
+  issued_by: string | null;
+  created_at: string;
+}
+
 export const GENDER_LABELS: Record<Gender, string> = {
   M: 'Mashkull',
   F: 'Femër',
