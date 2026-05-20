@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import type { Profile } from '../../types/database';
-import { Search, Phone, BookOpen, MoreVertical, Plus, CreditCard as Edit2, Trash2, X, UserPlus, Loader2, Link2, Copy, Check as CheckIcon } from 'lucide-react';
+import { Search, Phone, BookOpen, MoreVertical, Plus, CreditCard as Edit2, Trash2, X, UserPlus, Loader2, Link2, Copy, Check as CheckIcon, FileDown } from 'lucide-react';
 import { useToast } from '../../components/ToastProvider';
+import { exportToCSV, csvDateStamp } from '../../lib/csvExport';
 
 interface TeacherFormData {
   full_name: string;
@@ -221,6 +222,21 @@ export default function ManageTeachers() {
     t.email.toLowerCase().includes(search.toLowerCase())
   );
 
+  const handleExportCSV = () => {
+    if (filtered.length === 0) {
+      toast.info('Asnjë mësues për të eksportuar.');
+      return;
+    }
+    exportToCSV(`mesuesit-${csvDateStamp()}`, [
+      { header: 'Emri i plotë', value: (t: TeacherWithAssignments) => t.full_name },
+      { header: 'Email', value: (t) => t.email },
+      { header: 'Telefon', value: (t) => t.phone || '' },
+      { header: 'Numri i licencës', value: (t) => t.license_number || '' },
+      { header: 'Lëndët / Klasat', value: (t) => t.assignments.map(a => `${a.class_name} (${a.subject_name})`).join('; ') },
+    ], filtered);
+    toast.success(`${filtered.length} mësues u eksportuan.`);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -236,13 +252,23 @@ export default function ManageTeachers() {
           <h1 className="text-2xl font-bold text-slate-900">Mesuesit</h1>
           <p className="text-slate-500 mt-1">{teachers.length} mesues gjithsej</p>
         </div>
-        <button
-          onClick={() => { setFormData({ full_name: '', email: '', phone: '' }); setShowAddModal(true); }}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-medium transition-colors shadow-lg shadow-teal-600/25"
-        >
-          <Plus className="w-5 h-5" />
-          Shto Mesues
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleExportCSV}
+            className="inline-flex items-center gap-2 px-3 py-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl font-medium text-sm"
+            title="Eksporto CSV"
+          >
+            <FileDown className="w-4 h-4" />
+            CSV
+          </button>
+          <button
+            onClick={() => { setFormData({ full_name: '', email: '', phone: '' }); setShowAddModal(true); }}
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-medium transition-colors shadow-lg shadow-teal-600/25"
+          >
+            <Plus className="w-5 h-5" />
+            Shto Mesues
+          </button>
+        </div>
       </div>
 
       <div className="relative max-w-md">
