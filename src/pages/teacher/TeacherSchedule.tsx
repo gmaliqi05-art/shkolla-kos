@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
+import { useToast } from '../../components/ToastProvider';
 import {
   Plus,
   Trash2,
@@ -203,6 +204,7 @@ const EMPTY_FORM: ScheduleForm = {
 
 export default function TeacherSchedule() {
   const { profile, isDemo } = useAuth();
+  const toast = useToast();
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -463,7 +465,8 @@ export default function TeacherSchedule() {
       return;
     }
     const { error } = await supabase.from('schedule').delete().eq('id', entry.id);
-    if (error) { alert('Gabim: ' + error.message); return; }
+    if (error) { toast.error('Gabim: ' + error.message); return; }
+    toast.success('Hyrja e orarit u fshi.');
     await loadScheduleForClass(selectedClassId);
   };
 
@@ -473,7 +476,7 @@ export default function TeacherSchedule() {
       return;
     }
     const { error } = await supabase.from('schedule').update({ is_active: !entry.is_active }).eq('id', entry.id);
-    if (error) { alert('Gabim: ' + error.message); return; }
+    if (error) { toast.error('Gabim: ' + error.message); return; }
     setSchedule(prev => prev.map(s => s.id === entry.id ? { ...s, is_active: !s.is_active } : s));
   };
 

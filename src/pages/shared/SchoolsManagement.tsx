@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
+import { useToast } from '../../components/ToastProvider';
 import {
   SCHOOL_TYPE_LABELS,
   type SchoolInfo,
@@ -18,6 +19,7 @@ interface SchoolRow extends SchoolInfo {
 
 export default function SchoolsManagement() {
   const { profile } = useAuth();
+  const toast = useToast();
   const isMinister = profile?.role === 'ministri';
   const isDka = profile?.role === 'drejtor_komunal';
   const canManage = isMinister || isDka;
@@ -218,8 +220,8 @@ export default function SchoolsManagement() {
   const remove = async (s: SchoolInfo) => {
     if (!confirm(`Fshij shkollën "${s.name}"? Të gjitha të dhënat e lidhura me të do të humbasin.`)) return;
     const { error } = await supabase.from('school_info').delete().eq('id', s.id);
-    if (error) alert('Gabim: ' + error.message);
-    else load();
+    if (error) toast.error('Gabim: ' + error.message);
+    else { toast.success('Shkolla u fshi.'); load(); }
   };
 
   const filtered = filterMunicipality

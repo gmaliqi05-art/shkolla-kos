@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
+import { useToast } from '../../components/ToastProvider';
 import {
   BOOK_CATEGORY_LABELS,
   BOOK_LOAN_STATUS_LABELS,
@@ -21,6 +22,7 @@ interface LoanRow extends BookLoan {
 
 export default function LibraryPage() {
   const { profile } = useAuth();
+  const toast = useToast();
   const [tab, setTab] = useState<Tab>('books');
   const [books, setBooks] = useState<LibraryBook[]>([]);
   const [loans, setLoans] = useState<LoanRow[]>([]);
@@ -153,8 +155,8 @@ export default function LibraryPage() {
   const removeBook = async (id: string) => {
     if (!confirm('Fshij këtë libër? Huazimet aktive duhet të kthehen së pari.')) return;
     const { error } = await supabase.from('library_books').delete().eq('id', id);
-    if (error) alert('Gabim: ' + error.message);
-    else load();
+    if (error) toast.error('Gabim: ' + error.message);
+    else { toast.success('Libri u fshi.'); load(); }
   };
 
   const openLoan = (b: LibraryBook) => {

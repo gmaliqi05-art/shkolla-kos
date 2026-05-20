@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
+import { useToast } from '../../components/ToastProvider';
 import {
   LOCALITY_TYPE_LABELS,
   type LocalityType,
@@ -16,6 +17,7 @@ interface LocalityRow extends Locality {
 
 export default function LocalitiesManagement() {
   const { profile } = useAuth();
+  const toast = useToast();
   const canManage = profile?.role === 'drejtor' || profile?.role === 'drejtor_komunal' || profile?.role === 'ministri';
 
   const [localities, setLocalities] = useState<LocalityRow[]>([]);
@@ -115,8 +117,8 @@ export default function LocalitiesManagement() {
   const remove = async (l: Locality) => {
     if (!confirm(`Fshij vendbanimin "${l.name}"?`)) return;
     const { error } = await supabase.from('localities').delete().eq('id', l.id);
-    if (error) alert('Gabim: ' + error.message);
-    else load();
+    if (error) toast.error('Gabim: ' + error.message);
+    else { toast.success('Vendbanimi u fshi.'); load(); }
   };
 
   const filtered = localities.filter((l) => {

@@ -3,6 +3,7 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import type { Profile } from '../../types/database';
 import { Search, Phone, BookOpen, MoreVertical, Plus, CreditCard as Edit2, Trash2, X, UserPlus, Loader2, Link2, Copy, Check as CheckIcon } from 'lucide-react';
+import { useToast } from '../../components/ToastProvider';
 
 interface TeacherFormData {
   full_name: string;
@@ -29,6 +30,7 @@ function generateSecurePassword() {
 
 export default function ManageTeachers() {
   const { profile } = useAuth();
+  const toast = useToast();
   const [teachers, setTeachers] = useState<TeacherWithAssignments[]>([]);
   const [classes, setClasses] = useState<ClassOption[]>([]);
   const [subjects, setSubjects] = useState<SubjectOption[]>([]);
@@ -126,7 +128,7 @@ export default function ManageTeachers() {
       email: formData.email, password: tempPassword,
     });
 
-    if (signUpError) { alert('Gabim: ' + signUpError.message); setSubmitting(false); return; }
+    if (signUpError) { toast.error('Gabim: ' + signUpError.message); setSubmitting(false); return; }
 
     if (authData.user) {
       const { error } = await supabase.from('profiles').insert({
@@ -134,8 +136,9 @@ export default function ManageTeachers() {
         school_id: profile?.school_id || null,
         must_change_password: true,
       });
-      if (error) { alert('Gabim: ' + error.message); }
+      if (error) { toast.error('Gabim: ' + error.message); }
       else {
+        toast.success('Mësuesi u shtua me sukses.');
         setShowAddModal(false);
         setFormData({ full_name: '', email: '', phone: '' });
         setNewCredentials({ email: formData.email, password: tempPassword });
@@ -153,20 +156,20 @@ export default function ManageTeachers() {
     const { error } = await supabase.from('profiles')
       .update({ full_name: formData.full_name, phone: formData.phone })
       .eq('id', selectedTeacher.id);
-    if (error) { alert('Gabim: ' + error.message); }
-    else { setShowEditModal(false); loadTeachers(); }
+    if (error) { toast.error('Gabim: ' + error.message); }
+    else { toast.success('Mësuesi u përditësua.'); setShowEditModal(false); loadTeachers(); }
     setSubmitting(false);
   };
 
   const handleDeleteTeacher = async (teacher: TeacherWithAssignments) => {
     if (!confirm(`Fshij mesuesin: ${teacher.full_name}?`)) return;
     const { error: csErr } = await supabase.from('class_subjects').delete().eq('teacher_id', teacher.id);
-    if (csErr) { alert('Gabim: ' + csErr.message); return; }
+    if (csErr) { toast.error('Gabim: ' + csErr.message); return; }
     const { error: schErr } = await supabase.from('schedule').delete().eq('teacher_id', teacher.id);
-    if (schErr) { alert('Gabim: ' + schErr.message); return; }
+    if (schErr) { toast.error('Gabim: ' + schErr.message); return; }
     const { error } = await supabase.from('profiles').delete().eq('id', teacher.id);
-    if (error) alert('Gabim: ' + error.message);
-    else loadTeachers();
+    if (error) toast.error('Gabim: ' + error.message);
+    else { toast.success('Mësuesi u fshi.'); loadTeachers(); }
     setActiveDropdown(null);
   };
 
@@ -177,13 +180,14 @@ export default function ManageTeachers() {
     const existing = selectedTeacher.assignments.find(
       a => a.class_id === assignClassId && a.subject_id === assignSubjectId
     );
-    if (existing) { alert('Ky caktim ekziston tashme!'); setSubmitting(false); return; }
+    if (existing) { toast.info('Ky caktim ekziston tashmë.'); setSubmitting(false); return; }
 
     const { error } = await supabase.from('class_subjects').insert({
       class_id: assignClassId, subject_id: assignSubjectId, teacher_id: selectedTeacher.id,
     });
-    if (error) alert('Gabim: ' + error.message);
+    if (error) toast.error('Gabim: ' + error.message);
     else {
+      toast.success('Caktimi u shtua.');
       setAssignClassId('');
       setAssignSubjectId('');
       loadTeachers();

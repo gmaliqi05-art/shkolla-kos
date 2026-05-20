@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
+import { useToast } from '../../components/ToastProvider';
 import {
   Plus,
   Pencil,
@@ -99,6 +100,7 @@ type ViewMode = 'grade' | 'cycle';
 export default function SubjectsPage() {
   const { isDemo } = useAuth();
   const navigate = useNavigate();
+  const toast = useToast();
 
   const [loading, setLoading] = useState(true);
   const [subjectGrades, setSubjectGrades] = useState<SubjectGrade[]>([]);
@@ -260,7 +262,8 @@ export default function SubjectsPage() {
       return;
     }
     const { error } = await supabase.from('subject_grades').delete().eq('id', entry.id);
-    if (error) { alert('Gabim: ' + error.message); return; }
+    if (error) { toast.error('Gabim: ' + error.message); return; }
+    toast.success('Lënda u hoq nga klasa.');
     await loadData();
   };
 

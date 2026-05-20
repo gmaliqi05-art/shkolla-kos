@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { I18nProvider } from './lib/i18n/I18nProvider';
+import { ToastProvider } from './components/ToastProvider';
 import LoginPage from './pages/LoginPage';
 import DashboardLayout from './components/layout/DashboardLayout';
 import type { NavItem } from './components/layout/Sidebar';
@@ -455,9 +456,11 @@ function App() {
   return (
     <BrowserRouter>
       <I18nProvider>
-        <AuthProvider>
-          <AppRoutes />
-        </AuthProvider>
+        <ToastProvider>
+          <AuthProvider>
+            <AppRoutes />
+          </AuthProvider>
+        </ToastProvider>
       </I18nProvider>
     </BrowserRouter>
   );

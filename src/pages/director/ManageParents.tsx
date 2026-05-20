@@ -7,6 +7,7 @@ import {
   Search, Plus, Trash2, X, UserPlus, Loader2, Mail, Phone,
   Link2, MoreVertical, Copy, Check as CheckIcon,
 } from 'lucide-react';
+import { useToast } from '../../components/ToastProvider';
 
 interface ParentFormData {
   full_name: string;
@@ -26,6 +27,7 @@ interface ParentWithChildren extends Profile {
 
 export default function ManageParents() {
   const { profile } = useAuth();
+  const toast = useToast();
   const [parents, setParents] = useState<ParentWithChildren[]>([]);
   const [students, setStudents] = useState<StudentOption[]>([]);
   const [search, setSearch] = useState('');
@@ -130,11 +132,12 @@ export default function ManageParents() {
   const handleDeleteParent = async (parent: ParentWithChildren) => {
     if (!confirm(`Fshi llogarinë e ${parent.full_name}?`)) return;
     const { error: e1 } = await supabase.from('messages').delete().or(`sender_id.eq.${parent.id},receiver_id.eq.${parent.id}`);
-    if (e1) { alert('Gabim gjate fshirjes se mesazheve: ' + e1.message); return; }
+    if (e1) { toast.error('Gabim gjatë fshirjes së mesazheve: ' + e1.message); return; }
     const { error: e2 } = await supabase.from('parent_students').delete().eq('parent_id', parent.id);
-    if (e2) { alert('Gabim gjate fshirjes se lidhjeve me femijet: ' + e2.message); return; }
+    if (e2) { toast.error('Gabim gjatë fshirjes së lidhjeve me fëmijët: ' + e2.message); return; }
     const { error: e3 } = await supabase.from('profiles').delete().eq('id', parent.id);
-    if (e3) { alert('Gabim gjate fshirjes se profilit: ' + e3.message); return; }
+    if (e3) { toast.error('Gabim gjatë fshirjes së profilit: ' + e3.message); return; }
+    toast.success('Llogaria u fshi.');
     await loadParents();
   };
 

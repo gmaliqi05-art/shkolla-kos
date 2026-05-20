@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { Check, X, Clock, AlertCircle, Save, Loader2 } from 'lucide-react';
+import { useToast } from '../../components/ToastProvider';
 
 type AttendanceStatus = 'prezent' | 'mungon' | 'vonese' | 'arsyeshme';
 
@@ -35,6 +36,7 @@ function extractName(rel: { name: string } | { name: string }[] | null): string 
 
 export default function AttendancePage() {
   const { profile, isDemo } = useAuth();
+  const toast = useToast();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -205,7 +207,7 @@ export default function AttendancePage() {
       setTimeout(() => setSaved(false), 3000);
     } catch (error) {
       console.error('Error saving attendance:', error);
-      alert('Gabim gjatë ruajtjes: ' + (error as Error).message);
+      toast.error('Gabim gjatë ruajtjes: ' + (error as Error).message);
     } finally {
       setSaving(false);
     }

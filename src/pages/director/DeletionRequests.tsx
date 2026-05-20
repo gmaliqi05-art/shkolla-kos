@@ -3,6 +3,7 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import { logAudit } from '../../lib/audit';
 import { Loader2, Trash2, Check, X, AlertTriangle } from 'lucide-react';
+import { useToast } from '../../components/ToastProvider';
 import {
   DELETION_REQUEST_STATUS_LABELS,
   type DataDeletionRequest,
@@ -23,6 +24,7 @@ const STATUS_COLORS: Record<DeletionRequestStatus, string> = {
 
 export default function DeletionRequests() {
   const { profile } = useAuth();
+  const toast = useToast();
   const [requests, setRequests] = useState<RequestRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [reviewing, setReviewing] = useState<RequestRow | null>(null);
@@ -82,7 +84,7 @@ export default function DeletionRequests() {
       })
       .eq('id', reviewing.id);
     if (error) {
-      alert('Gabim: ' + error.message);
+      toast.error('Gabim: ' + error.message);
     } else {
       await logAudit({
         actorId: profile.id,
