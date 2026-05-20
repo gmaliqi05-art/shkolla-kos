@@ -189,8 +189,12 @@ export default function MyTestResults() {
       )}
 
       {data.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-slate-100 px-6 py-12 text-center text-slate-400 text-sm">
-          Asnjë rezultat i regjistruar për teste kombëtare.
+        <div className="bg-white rounded-2xl border border-slate-100 px-6 py-12 text-center">
+          <GraduationCap className="w-12 h-12 text-slate-200 mx-auto mb-3" />
+          <p className="text-slate-700 font-medium mb-1">Asnjë rezultat i regjistruar për teste kombëtare</p>
+          <p className="text-slate-400 text-sm">
+            Rezultatet e Testit të Arritshmërisë (Klasa V dhe IX) shfaqen këtu pasi të publikohen nga shkolla.
+          </p>
         </div>
       ) : (
         <div className="space-y-4">

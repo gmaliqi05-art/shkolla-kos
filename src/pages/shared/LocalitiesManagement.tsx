@@ -181,8 +181,32 @@ export default function LocalitiesManagement() {
       </div>
 
       {grouped.size === 0 ? (
-        <div className="bg-white rounded-2xl border border-slate-100 px-6 py-12 text-center text-slate-400 text-sm">
-          Asnjë vendbanim me filtrat e zgjedhur.
+        <div className="bg-white rounded-2xl border border-slate-100 px-6 py-12 text-center">
+          <Building className="w-12 h-12 text-slate-200 mx-auto mb-3" />
+          <p className="text-slate-700 font-medium mb-1">
+            {(search || filterMunicipality) ? 'Asnjë vendbanim me filtrat e zgjedhur' : 'Asnjë vendbanim'}
+          </p>
+          <p className="text-slate-400 text-sm mb-4">
+            {(search || filterMunicipality)
+              ? 'Provoni të hiqni filtrat ose përdorni kërkim tjetër.'
+              : canManage ? 'Shto vendbanimin e parë për të filluar.' : 'Lista është bosh aktualisht.'}
+          </p>
+          {(search || filterMunicipality) ? (
+            <button
+              onClick={() => { setSearch(''); setFilterMunicipality(''); }}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-medium"
+            >
+              Pastro filtrat
+            </button>
+          ) : canManage && (
+            <button
+              onClick={openNew}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-medium"
+            >
+              <Plus className="w-4 h-4" />
+              Shto Vendbanim
+            </button>
+          )}
         </div>
       ) : (
         <div className="space-y-4">

@@ -269,8 +269,32 @@ export default function SchoolsManagement() {
 
       <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
         {filtered.length === 0 ? (
-          <div className="px-6 py-12 text-center text-slate-400 text-sm">
-            {schools.length === 0 ? 'Asnjë shkollë e regjistruar.' : 'Asnjë shkollë me filtrin e zgjedhur.'}
+          <div className="px-6 py-12 text-center">
+            <School className="w-12 h-12 text-slate-200 mx-auto mb-3" />
+            <p className="text-slate-700 font-medium mb-1">
+              {schools.length === 0 ? 'Asnjë shkollë e regjistruar' : 'Asnjë shkollë me filtrin e zgjedhur'}
+            </p>
+            <p className="text-slate-400 text-sm mb-4">
+              {schools.length === 0
+                ? canManage ? 'Shto shkollën e parë për të filluar.' : 'Lista është bosh aktualisht.'
+                : 'Provoni të hiqni filtrin.'}
+            </p>
+            {schools.length > 0 && filterMunicipality ? (
+              <button
+                onClick={() => setFilterMunicipality('')}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-medium"
+              >
+                Pastro filtrin
+              </button>
+            ) : schools.length === 0 && canManage && (
+              <button
+                onClick={openNew}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium"
+              >
+                <Plus className="w-4 h-4" />
+                Shto Shkollë
+              </button>
+            )}
           </div>
         ) : (
           <div className="overflow-x-auto">
