@@ -276,10 +276,12 @@ export default function TeacherSchedule() {
         .eq('teacher_id', profile.id);
       if (error) throw error;
 
+      type ClassRef = { id: string; name: string; grade_level: number };
+      type CSRow = { class_id: string; classes: ClassRef | ClassRef[] | null };
       const seen = new Set<string>();
       const classes: ClassOption[] = [];
-      (data || []).forEach((row: any) => {
-        const c = row.classes;
+      ((data as CSRow[] | null) || []).forEach((row) => {
+        const c = Array.isArray(row.classes) ? row.classes[0] : row.classes;
         if (c && !seen.has(c.id)) {
           seen.add(c.id);
           classes.push({ id: c.id, name: c.name, grade_level: c.grade_level });
@@ -358,8 +360,14 @@ export default function TeacherSchedule() {
         .order('start_time');
       if (error) throw error;
 
+      type SchedRow = {
+        id: string; class_id: string; subject_id: string; day_of_week: number;
+        start_time: string; end_time: string; room: string | null; is_active: boolean;
+        classes: { name: string } | { name: string }[] | null;
+        subjects: { name: string } | { name: string }[] | null;
+      };
       setSchedule(
-        (data || []).map((s: any) => ({
+        ((data as SchedRow[] | null) || []).map((s) => ({
           id: s.id,
           class_id: s.class_id,
           subject_id: s.subject_id,
@@ -368,8 +376,8 @@ export default function TeacherSchedule() {
           end_time: s.end_time.substring(0, 5),
           room: s.room || '',
           is_active: s.is_active,
-          class_name: s.classes?.name || '',
-          subject_name: s.subjects?.name || '',
+          class_name: (Array.isArray(s.classes) ? s.classes[0] : s.classes)?.name || '',
+          subject_name: (Array.isArray(s.subjects) ? s.subjects[0] : s.subjects)?.name || '',
         }))
       );
     } catch (err) {
@@ -441,8 +449,8 @@ export default function TeacherSchedule() {
       }
       closeModal();
       await loadScheduleForClass(selectedClassId);
-    } catch (err: any) {
-      setFormError(err.message || 'Gabim gjate ruajtjes.');
+    } catch (err) {
+      setFormError(err instanceof Error ? err.message : 'Gabim gjate ruajtjes.');
     } finally {
       setSaving(false);
     }

@@ -122,11 +122,13 @@ export default function ManageStudents() {
       .from('student_classes')
       .select('student_id, class_id, classes(name)');
 
+    type EnrollRow = { student_id: string; class_id: string; classes: { name: string } | { name: string }[] | null };
     const enrollMap = new Map<string, { class_id: string; class_name: string }>();
-    enrollments?.forEach((e: any) => {
+    (enrollments as EnrollRow[] | null)?.forEach((e) => {
+      const cls = Array.isArray(e.classes) ? e.classes[0] : e.classes;
       enrollMap.set(e.student_id, {
         class_id: e.class_id,
-        class_name: e.classes?.name || '',
+        class_name: cls?.name || '',
       });
     });
 

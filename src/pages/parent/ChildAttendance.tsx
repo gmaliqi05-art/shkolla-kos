@@ -109,7 +109,9 @@ export default function ChildAttendance() {
 
       const cId = parentStudent.student_id;
       setChildId(cId);
-      setChildName((parentStudent as any).profiles?.full_name || '');
+      const ps = parentStudent as { student_id: string; profiles: { full_name: string } | { full_name: string }[] | null };
+      const prof = Array.isArray(ps.profiles) ? ps.profiles[0] : ps.profiles;
+      setChildName(prof?.full_name || '');
       const childId = cId;
 
       const { data: records } = await supabase

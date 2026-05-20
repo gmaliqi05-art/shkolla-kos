@@ -67,10 +67,14 @@ export default function ParentDashboard() {
         .select('student_id, profiles:student_id(id, full_name)')
         .eq('parent_id', profile.id);
 
-      const childList = (data || []).map((ps: any) => ({
-        id: ps.student_id,
-        name: ps.profiles?.full_name || '',
-      }));
+      type ParentStudentRow = { student_id: string; profiles: { id: string; full_name: string } | { id: string; full_name: string }[] | null };
+      const childList = ((data as ParentStudentRow[] | null) || []).map((ps) => {
+        const prof = Array.isArray(ps.profiles) ? ps.profiles[0] : ps.profiles;
+        return {
+          id: ps.student_id,
+          name: prof?.full_name || '',
+        };
+      });
 
       setChildren(childList);
       if (childList.length > 0) setSelectedChildId(childList[0].id);
@@ -132,7 +136,11 @@ export default function ParentDashboard() {
         .eq('student_id', childId)
         .maybeSingle();
 
-      if (enrollment) setClassName((enrollment as any).classes?.name || '');
+      if (enrollment) {
+        const en = enrollment as { classes: { name: string } | { name: string }[] | null };
+        const cls = Array.isArray(en.classes) ? en.classes[0] : en.classes;
+        setClassName(cls?.name || '');
+      }
 
       const [gradesRes, attRes, annRes] = await Promise.all([
         supabase.from('grades')
@@ -163,9 +171,11 @@ export default function ParentDashboard() {
         monthAgo.setMonth(monthAgo.getMonth() - 1);
         setMonthGrades(grades.filter(g => new Date(g.created_at) >= monthAgo).length);
 
+        type GradeRow = { grade: number; subject_id: string; date: string; assessment_type: string; created_at: string; subjects: { name: string } | { name: string }[] | null };
         const subjectMap: Record<string, { total: number; count: number; name: string }> = {};
-        grades.forEach((g: any) => {
-          const sName = g.subjects?.name || '';
+        (grades as GradeRow[]).forEach((g) => {
+          const subj = Array.isArray(g.subjects) ? g.subjects[0] : g.subjects;
+          const sName = subj?.name || '';
           if (!subjectMap[g.subject_id]) subjectMap[g.subject_id] = { total: 0, count: 0, name: sName };
           subjectMap[g.subject_id].total += g.grade;
           subjectMap[g.subject_id].count += 1;
@@ -183,12 +193,13 @@ export default function ParentDashboard() {
         const today = new Date().toISOString().split('T')[0];
         const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
 
-        setRecentGrades(grades.slice(0, 5).map((g: any) => {
+        setRecentGrades((grades as GradeRow[]).slice(0, 5).map((g) => {
           let dateLabel = new Date(g.date).toLocaleDateString('sq-AL');
           if (g.date === today) dateLabel = 'Sot';
           else if (g.date === yesterday) dateLabel = 'Dje';
+          const subj = Array.isArray(g.subjects) ? g.subjects[0] : g.subjects;
           return {
-            subject: g.subjects?.name || '',
+            subject: subj?.name || '',
             grade: g.grade,
             type: TYPE_LABELS[g.assessment_type] || g.assessment_type,
             date: dateLabel,

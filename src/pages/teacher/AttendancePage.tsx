@@ -146,13 +146,17 @@ export default function AttendancePage() {
         existingAttendance?.map(a => [a.student_id, a.status]) || []
       );
 
+      type StudentProfile = { id: string; full_name: string };
       const studentsData = enrollments
         ?.filter(e => e.profiles != null)
-        .map(e => ({
-          id: (e.profiles as any).id,
-          full_name: (e.profiles as any).full_name,
-          status: attendanceMap.get((e.profiles as any).id) || 'prezent',
-        })) || [];
+        .map(e => {
+          const prof = (Array.isArray(e.profiles) ? e.profiles[0] : e.profiles) as StudentProfile;
+          return {
+            id: prof.id,
+            full_name: prof.full_name,
+            status: attendanceMap.get(prof.id) || 'prezent',
+          };
+        }) || [];
 
       setStudents(studentsData);
     } catch (error) {

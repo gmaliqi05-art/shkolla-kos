@@ -104,16 +104,26 @@ export default function MySchedule() {
 
       if (schedError) throw schedError;
 
-      const formattedSchedule = scheduleData?.map((item: any) => ({
-        id: item.id,
-        subject_name: item.subjects?.name || '',
-        teacher_name: item.profiles?.full_name || '',
-        room: item.room,
-        start_time: item.start_time.substring(0, 5),
-        end_time: item.end_time.substring(0, 5),
-        day_of_week: item.day_of_week,
-        color: SUBJECT_COLORS[item.subjects?.name || ''] || 'bg-slate-100 text-slate-800 border-slate-200',
-      })) || [];
+      type ScheduleRow = {
+        id: string; room: string; start_time: string; end_time: string; day_of_week: number;
+        subjects: { name: string } | { name: string }[] | null;
+        profiles: { full_name: string } | { full_name: string }[] | null;
+      };
+      const formattedSchedule = (scheduleData as ScheduleRow[] | null)?.map((item) => {
+        const subj = Array.isArray(item.subjects) ? item.subjects[0] : item.subjects;
+        const prof = Array.isArray(item.profiles) ? item.profiles[0] : item.profiles;
+        const subjectName = subj?.name || '';
+        return {
+          id: item.id,
+          subject_name: subjectName,
+          teacher_name: prof?.full_name || '',
+          room: item.room,
+          start_time: item.start_time.substring(0, 5),
+          end_time: item.end_time.substring(0, 5),
+          day_of_week: item.day_of_week,
+          color: SUBJECT_COLORS[subjectName] || 'bg-slate-100 text-slate-800 border-slate-200',
+        };
+      }) || [];
 
       setSchedule(formattedSchedule);
     } catch (error) {

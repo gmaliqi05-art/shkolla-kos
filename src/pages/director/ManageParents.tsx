@@ -62,13 +62,20 @@ export default function ManageParents() {
     const { data: enrollments } = await supabase
       .from('student_classes').select('student_id, classes(name)');
 
+    type EnrollRow = { student_id: string; classes: { name: string } | { name: string }[] | null };
+    type LinkRow = { parent_id: string; student_id: string; profiles: { id: string; full_name: string } | { id: string; full_name: string }[] | null };
+
     const classMap = new Map<string, string>();
-    enrollments?.forEach((e: any) => { if (e.classes?.name) classMap.set(e.student_id, e.classes.name); });
+    (enrollments as EnrollRow[] | null)?.forEach((e) => {
+      const cls = Array.isArray(e.classes) ? e.classes[0] : e.classes;
+      if (cls?.name) classMap.set(e.student_id, cls.name);
+    });
 
     const childrenMap = new Map<string, StudentOption[]>();
-    links?.forEach((l: any) => {
+    (links as LinkRow[] | null)?.forEach((l) => {
       const list = childrenMap.get(l.parent_id) || [];
-      list.push({ id: l.student_id, full_name: l.profiles?.full_name || '', class_name: classMap.get(l.student_id) });
+      const prof = Array.isArray(l.profiles) ? l.profiles[0] : l.profiles;
+      list.push({ id: l.student_id, full_name: prof?.full_name || '', class_name: classMap.get(l.student_id) });
       childrenMap.set(l.parent_id, list);
     });
 

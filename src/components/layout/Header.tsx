@@ -100,23 +100,27 @@ export default function Header({ onMenuToggle }: HeaderProps) {
 
       const items: NotifItem[] = [];
 
-      (msgRes.data || []).forEach((m: any) => {
+      type MsgRow = { id: string; subject: string; content: string; is_read: boolean; created_at: string; sender: { full_name: string } | { full_name: string }[] | null };
+      type AnnRow = { id: string; title: string; content: string; created_at: string };
+
+      (msgRes.data as MsgRow[] || []).forEach((m) => {
         const diff = Date.now() - new Date(m.created_at).getTime();
         const hours = Math.floor(diff / 3600000);
         const timeStr = hours < 1 ? 'Tani' : hours < 24 ? `${hours} ore` : `${Math.floor(hours / 24)} dite`;
 
+        const senderName = Array.isArray(m.sender) ? m.sender[0]?.full_name : m.sender?.full_name;
         items.push({
           id: `msg-${m.id}`,
           type: 'message',
           title: m.subject,
           preview: m.content.substring(0, 80),
-          from: m.sender?.full_name || '',
+          from: senderName || '',
           time: timeStr,
           isRead: m.is_read,
         });
       });
 
-      (annRes.data || []).forEach((a: any) => {
+      (annRes.data as AnnRow[] || []).forEach((a) => {
         const diff = Date.now() - new Date(a.created_at).getTime();
         const hours = Math.floor(diff / 3600000);
         const timeStr = hours < 1 ? 'Tani' : hours < 24 ? `${hours} ore` : `${Math.floor(hours / 24)} dite`;

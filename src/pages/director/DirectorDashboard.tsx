@@ -166,10 +166,12 @@ export default function DirectorDashboard() {
         .select('class_id, grade, classes(name)');
 
       if (classGrades && classGrades.length > 0) {
+        type GradeRow = { class_id: string; grade: number; classes: { name: string } | { name: string }[] | null };
         const classMap: Record<string, { name: string; total: number; count: number }> = {};
-        classGrades.forEach((g: any) => {
+        (classGrades as GradeRow[]).forEach((g) => {
           if (!classMap[g.class_id]) {
-            classMap[g.class_id] = { name: g.classes?.name || '', total: 0, count: 0 };
+            const cls = Array.isArray(g.classes) ? g.classes[0] : g.classes;
+            classMap[g.class_id] = { name: cls?.name || '', total: 0, count: 0 };
           }
           classMap[g.class_id].total += g.grade;
           classMap[g.class_id].count += 1;

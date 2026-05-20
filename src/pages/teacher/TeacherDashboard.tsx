@@ -149,14 +149,23 @@ export default function TeacherDashboard() {
           classAvgs[key].count += 1;
         });
 
-        const classInfos: ClassInfo[] = classSubjects.map((cs: any) => {
+        type CSRow = {
+          id: string; class_id: string; subject_id: string;
+          classes: { name: string } | { name: string }[] | null;
+          subjects: { name: string } | { name: string }[] | null;
+        };
+        const pickName = (v: { name: string } | { name: string }[] | null) => {
+          const r = Array.isArray(v) ? v[0] : v;
+          return r?.name || '';
+        };
+        const classInfos: ClassInfo[] = (classSubjects as CSRow[]).map((cs) => {
           const key = `${cs.class_id}_${cs.subject_id}`;
           const gradeData = classAvgs[key];
           return {
             classSubjectId: cs.id,
             classId: cs.class_id,
-            className: cs.classes?.name || '',
-            subjectName: cs.subjects?.name || '',
+            className: pickName(cs.classes),
+            subjectName: pickName(cs.subjects),
             studentCount: enrollMap[cs.class_id] || 0,
             avgGrade: gradeData ? Number((gradeData.total / gradeData.count).toFixed(1)) : 0,
           };
@@ -174,9 +183,9 @@ export default function TeacherDashboard() {
         profiles?.forEach(p => { profileMap[p.id] = p.full_name; });
 
         const subjectMap: Record<string, string> = {};
-        classSubjects.forEach((cs: any) => { subjectMap[cs.subject_id] = cs.subjects?.name || ''; });
+        (classSubjects as CSRow[]).forEach((cs) => { subjectMap[cs.subject_id] = pickName(cs.subjects); });
         const classNameMap: Record<string, string> = {};
-        classSubjects.forEach((cs: any) => { classNameMap[cs.class_id] = cs.classes?.name || ''; });
+        (classSubjects as CSRow[]).forEach((cs) => { classNameMap[cs.class_id] = pickName(cs.classes); });
 
         const TYPE_LABELS: Record<string, string> = {
           vlersim: 'Vlersim',
@@ -202,11 +211,20 @@ export default function TeacherDashboard() {
         });
         setRecentGrades(recentGradesList);
       } else {
-        setMyClasses(classSubjects.map((cs: any) => ({
+        type CSRow2 = {
+          id: string; class_id: string; subject_id: string;
+          classes: { name: string } | { name: string }[] | null;
+          subjects: { name: string } | { name: string }[] | null;
+        };
+        const pickName2 = (v: { name: string } | { name: string }[] | null) => {
+          const r = Array.isArray(v) ? v[0] : v;
+          return r?.name || '';
+        };
+        setMyClasses((classSubjects as CSRow2[]).map((cs) => ({
           classSubjectId: cs.id,
           classId: cs.class_id,
-          className: cs.classes?.name || '',
-          subjectName: cs.subjects?.name || '',
+          className: pickName2(cs.classes),
+          subjectName: pickName2(cs.subjects),
           studentCount: enrollMap[cs.class_id] || 0,
           avgGrade: 0,
         })));
@@ -224,10 +242,19 @@ export default function TeacherDashboard() {
           .order('start_time');
 
         if (schedData) {
-          setTodaySchedule(schedData.map((s: any) => ({
+          type SchedRow = {
+            start_time: string; end_time: string; room: string | null;
+            subjects: { name: string } | { name: string }[] | null;
+            classes: { name: string } | { name: string }[] | null;
+          };
+          const pickN = (v: { name: string } | { name: string }[] | null) => {
+            const r = Array.isArray(v) ? v[0] : v;
+            return r?.name || '';
+          };
+          setTodaySchedule((schedData as SchedRow[]).map((s) => ({
             time: `${s.start_time.substring(0, 5)} - ${s.end_time.substring(0, 5)}`,
-            subject: s.subjects?.name || '',
-            className: s.classes?.name || '',
+            subject: pickN(s.subjects),
+            className: pickN(s.classes),
             room: s.room || '',
           })));
         }

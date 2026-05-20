@@ -146,17 +146,25 @@ export default function SubjectsPage() {
       if (sgRes.error) throw sgRes.error;
       if (subRes.error) throw subRes.error;
 
+      type SubjectRef = { name: string; code: string; description?: string };
+      type SGRow = {
+        id: string; subject_id: string; grade_level: number; hours_per_week: number;
+        subjects: SubjectRef | SubjectRef[] | null;
+      };
       setSubjectGrades(
-        (sgRes.data || []).map((row: any) => ({
-          id: row.id,
-          subject_id: row.subject_id,
-          grade_level: row.grade_level,
-          hours_per_week: row.hours_per_week,
-          subject_name: row.subjects?.name || '',
-          subject_code: row.subjects?.code || '',
-          subject_description: row.subjects?.description || '',
-          is_active: true,
-        }))
+        ((sgRes.data as SGRow[] | null) || []).map((row) => {
+          const subj = Array.isArray(row.subjects) ? row.subjects[0] : row.subjects;
+          return {
+            id: row.id,
+            subject_id: row.subject_id,
+            grade_level: row.grade_level,
+            hours_per_week: row.hours_per_week,
+            subject_name: subj?.name || '',
+            subject_code: subj?.code || '',
+            subject_description: subj?.description || '',
+            is_active: true,
+          };
+        })
       );
       setAllSubjects(subRes.data || []);
     } catch (err) {
@@ -238,8 +246,8 @@ export default function SubjectsPage() {
       }
       closeModal();
       await loadData();
-    } catch (err: any) {
-      setFormError(err.message || 'Gabim gjatë ruajtjes.');
+    } catch (err) {
+      setFormError(err instanceof Error ? err.message : 'Gabim gjatë ruajtjes.');
     } finally {
       setSaving(false);
     }
