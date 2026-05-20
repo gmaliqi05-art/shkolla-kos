@@ -213,6 +213,49 @@ export const translations = {
   'profile.new_password': { sq: 'Fjalëkalimi i ri', sr: 'Nova lozinka', tr: 'Yeni şifre', bs: 'Nova lozinka' },
   'profile.confirm_password': { sq: 'Konfirmo fjalëkalimin e ri', sr: 'Potvrdi novu lozinku', tr: 'Yeni şifreyi onayla', bs: 'Potvrdi novu lozinku' },
   'profile.min_chars': { sq: 'Të paktën 8 karaktere', sr: 'Najmanje 8 znakova', tr: 'En az 8 karakter', bs: 'Najmanje 8 znakova' },
+
+  // === MESSAGES / DIALOGS ===
+  'msg.confirm_delete': { sq: 'Jeni i sigurt që doni të fshini?', sr: 'Da li ste sigurni da želite da obrišete?', tr: 'Silmek istediğinize emin misiniz?', bs: 'Jeste li sigurni da želite obrisati?' },
+  'msg.action_irreversible': { sq: 'Ky veprim nuk mund të kthehet.', sr: 'Ova akcija se ne može poništiti.', tr: 'Bu işlem geri alınamaz.', bs: 'Ova radnja se ne može poništiti.' },
+  'msg.deleted_successfully': { sq: 'U fshi me sukses.', sr: 'Uspešno obrisano.', tr: 'Başarıyla silindi.', bs: 'Uspješno obrisano.' },
+  'msg.saved_successfully': { sq: 'U ruajt me sukses.', sr: 'Uspešno sačuvano.', tr: 'Başarıyla kaydedildi.', bs: 'Uspješno sačuvano.' },
+  'msg.something_wrong': { sq: 'Diçka shkoi keq. Provoni përsëri.', sr: 'Nešto je pošlo po zlu. Pokušajte ponovo.', tr: 'Bir şeyler ters gitti. Tekrar deneyin.', bs: 'Nešto je pošlo po zlu. Pokušajte ponovo.' },
+  'msg.required_field': { sq: 'Kjo fushë është e detyrueshme.', sr: 'Ovo polje je obavezno.', tr: 'Bu alan zorunludur.', bs: 'Ovo polje je obavezno.' },
+  'msg.invalid_email': { sq: 'Email-i nuk është i vlefshëm.', sr: 'Email nije važeći.', tr: 'E-posta geçersiz.', bs: 'Email nije važeći.' },
+  'msg.passwords_dont_match': { sq: 'Fjalëkalimet nuk përputhen.', sr: 'Lozinke se ne podudaraju.', tr: 'Şifreler eşleşmiyor.', bs: 'Lozinke se ne podudaraju.' },
+
+  // === BUTTONS (extended) ===
+  'btn.add': { sq: 'Shto', sr: 'Dodaj', tr: 'Ekle', bs: 'Dodaj' },
+  'btn.edit': { sq: 'Edito', sr: 'Uredi', tr: 'Düzenle', bs: 'Uredi' },
+  'btn.delete': { sq: 'Fshi', sr: 'Obriši', tr: 'Sil', bs: 'Obriši' },
+  'btn.save': { sq: 'Ruaj', sr: 'Sačuvaj', tr: 'Kaydet', bs: 'Sačuvaj' },
+  'btn.cancel': { sq: 'Anulo', sr: 'Otkaži', tr: 'İptal', bs: 'Otkaži' },
+  'btn.confirm': { sq: 'Konfirmo', sr: 'Potvrdi', tr: 'Onayla', bs: 'Potvrdi' },
+  'btn.close': { sq: 'Mbyll', sr: 'Zatvori', tr: 'Kapat', bs: 'Zatvori' },
+  'btn.submit': { sq: 'Dërgo', sr: 'Pošalji', tr: 'Gönder', bs: 'Pošalji' },
+  'btn.send': { sq: 'Dërgo', sr: 'Pošalji', tr: 'Gönder', bs: 'Pošalji' },
+  'btn.upload': { sq: 'Ngarko', sr: 'Otpremi', tr: 'Yükle', bs: 'Otpremi' },
+  'btn.download': { sq: 'Shkarko', sr: 'Preuzmi', tr: 'İndir', bs: 'Preuzmi' },
+  'btn.export': { sq: 'Eksporto', sr: 'Izvezi', tr: 'Dışa aktar', bs: 'Izvezi' },
+  'btn.print': { sq: 'Printo', sr: 'Štampaj', tr: 'Yazdır', bs: 'Štampaj' },
+  'btn.search': { sq: 'Kërko', sr: 'Pretraži', tr: 'Ara', bs: 'Pretraži' },
+  'btn.filter': { sq: 'Filtro', sr: 'Filtriraj', tr: 'Filtrele', bs: 'Filtriraj' },
+  'btn.clear_filters': { sq: 'Pastro filtrat', sr: 'Obriši filtere', tr: 'Filtreleri temizle', bs: 'Obriši filtere' },
+  'btn.back': { sq: 'Kthehu', sr: 'Nazad', tr: 'Geri', bs: 'Nazad' },
+  'btn.view_all': { sq: 'Shiko të gjitha', sr: 'Vidi sve', tr: 'Tümünü gör', bs: 'Vidi sve' },
+  'btn.refresh': { sq: 'Rifresko', sr: 'Osveži', tr: 'Yenile', bs: 'Osvježi' },
+
+  // === ENTITIES (add/edit forms) ===
+  'locality.add': { sq: 'Shto Vendbanim', sr: 'Dodaj naselje', tr: 'Yerleşim ekle', bs: 'Dodaj naselje' },
+  'locality.edit': { sq: 'Edito Vendbanimin', sr: 'Uredi naselje', tr: 'Yerleşimi düzenle', bs: 'Uredi naselje' },
+  'locality.new': { sq: 'Vendbanim i Ri', sr: 'Novo naselje', tr: 'Yeni yerleşim', bs: 'Novo naselje' },
+  'locality.count_in_municipalities': { sq: 'vendbanime në 38 komuna', sr: 'naselja u 38 opština', tr: '38 belediyede yerleşim', bs: 'naselja u 38 opština' },
+  'school.add': { sq: 'Shto Shkollë', sr: 'Dodaj školu', tr: 'Okul ekle', bs: 'Dodaj školu' },
+  'school.edit': { sq: 'Edito Shkollën', sr: 'Uredi školu', tr: 'Okulu düzenle', bs: 'Uredi školu' },
+  'student.add': { sq: 'Shto Nxënës', sr: 'Dodaj učenika', tr: 'Öğrenci ekle', bs: 'Dodaj učenika' },
+  'teacher.add': { sq: 'Shto Mësues', sr: 'Dodaj nastavnika', tr: 'Öğretmen ekle', bs: 'Dodaj nastavnika' },
+  'parent.add': { sq: 'Shto Prind', sr: 'Dodaj roditelja', tr: 'Veli ekle', bs: 'Dodaj roditelja' },
+  'class.add': { sq: 'Krijo Klasë', sr: 'Kreiraj razred', tr: 'Sınıf oluştur', bs: 'Kreiraj razred' },
 } as const;
 
 export type TranslationKey = keyof typeof translations;
