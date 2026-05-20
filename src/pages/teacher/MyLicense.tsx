@@ -8,6 +8,7 @@ import {
   type ZHPMCategory,
 } from '../../types/database';
 import { Loader2, Award, Plus, X, CheckCircle, AlertTriangle, GraduationCap } from 'lucide-react';
+import FileUpload from '../../components/FileUpload';
 
 export default function MyLicense() {
   const { profile } = useAuth();
@@ -255,8 +256,17 @@ export default function MyLicense() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">URL e certifikatës</label>
-                <input type="url" value={form.certificate_url} onChange={(e) => setForm({ ...form, certificate_url: e.target.value })} placeholder="https://..." className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500" />
+                <label className="block text-sm font-medium text-slate-700 mb-1">Certifikata (PDF ose foto)</label>
+                <FileUpload
+                  bucket="documents"
+                  folder={profile?.id}
+                  accept="image/*,application/pdf"
+                  maxSizeMB={10}
+                  currentUrl={form.certificate_url || null}
+                  label="Ngarko certifikatën"
+                  onUploaded={(url) => setForm({ ...form, certificate_url: url })}
+                  onRemoved={() => setForm({ ...form, certificate_url: '' })}
+                />
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Shënime</label>

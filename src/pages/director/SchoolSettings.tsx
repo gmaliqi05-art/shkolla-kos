@@ -4,6 +4,7 @@ import { logAudit } from '../../lib/audit';
 import { useAuth } from '../../contexts/AuthContext';
 import { Loader2, Building2, Save } from 'lucide-react';
 import { SCHOOL_TYPE_LABELS, type SchoolInfo, type SchoolType, type Municipality } from '../../types/database';
+import FileUpload from '../../components/FileUpload';
 
 export default function SchoolSettings() {
   const { profile } = useAuth();
@@ -248,30 +249,39 @@ export default function SchoolSettings() {
         <section>
           <h2 className="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
             <span className="w-1 h-4 bg-purple-500 rounded-full"></span>
-            Logo & Vula (URL të imazheve)
+            Logo & Vula e Shkollës
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">URL e logos</label>
-              <input
-                type="url"
-                value={form.logo_url}
-                onChange={(e) => setForm({ ...form, logo_url: e.target.value })}
-                placeholder="https://..."
-                className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+              <label className="block text-sm font-medium text-slate-700 mb-2">Logo e shkollës</label>
+              <FileUpload
+                bucket="school-assets"
+                folder="logos"
+                accept="image/*"
+                maxSizeMB={2}
+                currentUrl={form.logo_url || null}
+                label="Ngarko logo"
+                onUploaded={(url) => setForm({ ...form, logo_url: url })}
+                onRemoved={() => setForm({ ...form, logo_url: '' })}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">URL e vulës</label>
-              <input
-                type="url"
-                value={form.stamp_url}
-                onChange={(e) => setForm({ ...form, stamp_url: e.target.value })}
-                placeholder="https://..."
-                className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+              <label className="block text-sm font-medium text-slate-700 mb-2">Vula e shkollës</label>
+              <FileUpload
+                bucket="school-assets"
+                folder="stamps"
+                accept="image/*"
+                maxSizeMB={2}
+                currentUrl={form.stamp_url || null}
+                label="Ngarko vulën"
+                onUploaded={(url) => setForm({ ...form, stamp_url: url })}
+                onRemoved={() => setForm({ ...form, stamp_url: '' })}
               />
             </div>
           </div>
+          <p className="text-xs text-slate-500 mt-2">
+            Imazhet janë publike (lexim) — duhen për dëftesa dhe diploma zyrtare. Format i pranuar: PNG, JPG, WebP, SVG. Maksimumi 2 MB.
+          </p>
         </section>
 
         <div className="flex justify-end pt-2 border-t border-slate-100">

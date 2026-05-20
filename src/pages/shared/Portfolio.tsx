@@ -9,6 +9,7 @@ import {
   type StudentPortfolio,
 } from '../../types/database';
 import { Loader2, FolderOpen, Plus, X, Trash2, FileText } from 'lucide-react';
+import FileUpload from '../../components/FileUpload';
 
 interface StudentOption { id: string; full_name: string }
 interface SubjectOption { id: string; name: string }
@@ -342,8 +343,17 @@ export default function Portfolio() {
                 <textarea rows={4} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500 resize-none" placeholder="Përshkruani këtë punim, çfarë mësuat, etj." />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">URL e bashkëngjitjes</label>
-                <input type="url" value={form.attachment_url} onChange={(e) => setForm({ ...form, attachment_url: e.target.value })} placeholder="https://..." className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500" />
+                <label className="block text-sm font-medium text-slate-700 mb-1">Bashkëngjitja (foto, video, PDF)</label>
+                <FileUpload
+                  bucket="portfolio"
+                  folder={profile?.id}
+                  accept="image/*,video/*,application/pdf"
+                  maxSizeMB={10}
+                  currentUrl={form.attachment_url || null}
+                  label="Ngarko bashkëngjitje"
+                  onUploaded={(url) => setForm({ ...form, attachment_url: url })}
+                  onRemoved={() => setForm({ ...form, attachment_url: '' })}
+                />
               </div>
               <div className="flex gap-3 pt-3">
                 <button type="button" onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium">Anulo</button>
