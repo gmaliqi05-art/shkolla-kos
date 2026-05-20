@@ -9,6 +9,7 @@ import {
   type Locality,
 } from '../../types/database';
 import { Loader2, Plus, X, School, Edit2, Trash2, MapPin, Phone, Mail, Building, Copy, Check as CheckIcon, UserCheck } from 'lucide-react';
+import SearchableSelect from '../../components/SearchableSelect';
 
 interface SchoolRow extends SchoolInfo {
   municipality_name?: string;
@@ -254,16 +255,13 @@ export default function SchoolsManagement() {
       {isMinister && (
         <div className="bg-white rounded-2xl border border-slate-100 p-4">
           <label className="block text-xs font-medium text-slate-500 mb-1">Filtro sipas komunës</label>
-          <select
+          <SearchableSelect
             value={filterMunicipality}
-            onChange={(e) => setFilterMunicipality(e.target.value)}
-            className="px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Të gjitha komunat</option>
-            {municipalities.map((m) => (
-              <option key={m.id} value={m.id}>{m.name}</option>
-            ))}
-          </select>
+            onChange={setFilterMunicipality}
+            placeholder="Të gjitha komunat"
+            groupBy
+            options={municipalities.map((m) => ({ value: m.id, label: m.name, group: m.region || 'Pa rajon' }))}
+          />
         </div>
       )}
 
@@ -409,34 +407,36 @@ export default function SchoolsManagement() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Komuna *</label>
-                  <select
+                  <SearchableSelect
                     required
-                    value={form.municipality_id}
-                    onChange={(e) => setForm({ ...form, municipality_id: e.target.value, locality_id: '' })}
                     disabled={isDka}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-50"
-                  >
-                    <option value="">— Zgjidh —</option>
-                    {municipalities.map((m) => (
-                      <option key={m.id} value={m.id}>{m.name}</option>
-                    ))}
-                  </select>
+                    value={form.municipality_id}
+                    onChange={(v) => setForm({ ...form, municipality_id: v, locality_id: '' })}
+                    placeholder="Kërko ose zgjidh komunën"
+                    groupBy
+                    options={municipalities.map((m) => ({
+                      value: m.id,
+                      label: m.name,
+                      group: m.region || 'Pa rajon',
+                    }))}
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Fshati / Qyteti</label>
-                  <select
-                    value={form.locality_id}
-                    onChange={(e) => setForm({ ...form, locality_id: e.target.value })}
+                  <SearchableSelect
                     disabled={!form.municipality_id}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-50"
-                  >
-                    <option value="">— Zgjidh vendin —</option>
-                    {localities
+                    value={form.locality_id}
+                    onChange={(v) => setForm({ ...form, locality_id: v })}
+                    placeholder="Kërko ose zgjidh vendin"
+                    options={localities
                       .filter((l) => l.municipality_id === form.municipality_id)
-                      .map((l) => (
-                        <option key={l.id} value={l.id}>{l.name} ({l.is_city_center ? 'qendër' : l.type})</option>
-                      ))}
-                  </select>
+                      .map((l) => ({
+                        value: l.id,
+                        label: l.name,
+                        description: l.is_city_center ? 'Qendër e komunës' : l.type,
+                      }))}
+                    emptyText={form.municipality_id ? 'Asnjë vendbanim' : 'Zgjidh komunën fillimisht'}
+                  />
                 </div>
               </div>
 
