@@ -26,6 +26,7 @@ import Municipalities from './pages/director/Municipalities';
 import SchoolCalendar from './pages/director/SchoolCalendar';
 import AnnualPlan from './pages/director/AnnualPlan';
 import LibraryPage from './pages/director/Library';
+import TwoFactorSettings from './pages/TwoFactorSettings';
 
 import TeacherDashboard from './pages/teacher/TeacherDashboard';
 import MyClasses from './pages/teacher/MyClasses';
@@ -65,7 +66,7 @@ import {
   Megaphone, BookOpen, ClipboardCheck, CalendarCheck, Award,
   Calendar, Clock, Star, MessageSquare, Library, UserCog, Shield,
   Activity, Trash2, Lock, Heart, Sparkles, Briefcase, FileCheck, Building2,
-  Trophy, MapPin, NotebookPen, FileText, Stethoscope, FolderOpen, FileSpreadsheet,
+  Trophy, MapPin, NotebookPen, FileText, Stethoscope, FolderOpen, FileSpreadsheet, ShieldCheck,
 } from 'lucide-react';
 
 const directorNav: NavItem[] = [
@@ -90,6 +91,7 @@ const directorNav: NavItem[] = [
   { label: 'Kalendari', path: '/drejtor/kalendari', icon: Calendar },
   { label: 'Plani Vjetor', path: '/drejtor/plani-vjetor', icon: FileSpreadsheet },
   { label: 'Biblioteka', path: '/drejtor/biblioteka', icon: Library },
+  { label: '2FA / Siguria', path: '/drejtor/2fa', icon: ShieldCheck },
   { label: 'Njoftimet', path: '/drejtor/njoftime', icon: Megaphone },
   { label: 'Mesazhet', path: '/drejtor/mesazhet', icon: MessageSquare },
 ];
@@ -109,6 +111,7 @@ const teacherNav: NavItem[] = [
   { label: 'Licenca Ime', path: '/mesues/licenca', icon: Award },
   { label: 'Aktivitetet', path: '/mesues/aktivitete', icon: Trophy },
   { label: 'Takimet me Prindër', path: '/mesues/takimet', icon: Users },
+  { label: '2FA / Siguria', path: '/mesues/2fa', icon: ShieldCheck },
   { label: 'Ditari i Klasës', path: '/mesues/ditari', icon: NotebookPen },
   { label: 'Detyrat e Shtëpisë', path: '/mesues/detyrat', icon: FileText },
   { label: 'Vlerësimi Diagnostikues', path: '/mesues/diagnostik', icon: Stethoscope },
@@ -183,6 +186,7 @@ function AppRoutes() {
           <Route path="/drejtor/kalendari" element={<SchoolCalendar />} />
           <Route path="/drejtor/plani-vjetor" element={<AnnualPlan />} />
           <Route path="/drejtor/biblioteka" element={<LibraryPage />} />
+          <Route path="/drejtor/2fa" element={<TwoFactorSettings />} />
           <Route path="/drejtor/disiplina" element={<DisciplinePage />} />
           <Route path="/drejtor/nva" element={<SpecialNeedsManagement />} />
           <Route path="/drejtor/keshillat" element={<SchoolCouncils />} />
@@ -216,6 +220,7 @@ function AppRoutes() {
           <Route path="/mesues/takimet" element={<ParentMeetings />} />
           <Route path="/mesues/ditari" element={<ClassDiary />} />
           <Route path="/mesues/detyrat" element={<HomeworkPage />} />
+          <Route path="/mesues/2fa" element={<TwoFactorSettings />} />
           <Route path="/mesues/diagnostik" element={<DiagnosticAssessments />} />
           <Route path="/mesues/portofoli" element={<Portfolio />} />
           <Route path="/mesues/frekuentimi" element={<AttendancePage />} />
