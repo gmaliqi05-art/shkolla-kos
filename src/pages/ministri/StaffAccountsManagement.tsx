@@ -119,6 +119,15 @@ export default function StaffAccountsManagement() {
     const { data: authData, error: signUpError } = await supabase.auth.signUp({
       email: form.email,
       password: tempPassword,
+      options: {
+        data: {
+          full_name: form.full_name,
+          phone: form.phone,
+          role: form.role,
+          managed_municipality_id: form.role === 'drejtor_komunal' ? (form.managed_municipality_id || null) : null,
+          must_change_password: true,
+        },
+      },
     });
 
     if (signUpError) {
@@ -128,20 +137,8 @@ export default function StaffAccountsManagement() {
     }
 
     if (authData.user) {
-      const { error: profileError } = await supabase.from('profiles').insert({
-        id: authData.user.id,
-        email: form.email,
-        full_name: form.full_name,
-        phone: form.phone,
-        role: form.role,
-        managed_municipality_id: form.role === 'drejtor_komunal' ? (form.managed_municipality_id || null) : null,
-        must_change_password: true,
-      });
-      if (profileError) {
-        setError(profileError.message);
-        setSubmitting(false);
-        return;
-      }
+      // Profili krijohet automatikisht nga trigger handle_new_user
+      // (shih migration 20260520090000_auto_create_profile_on_signup)
       await logAudit({
         actorId: profile.id,
         actorRole: profile.role,
