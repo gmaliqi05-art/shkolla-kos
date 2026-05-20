@@ -289,8 +289,12 @@ export default function Header({ onMenuToggle }: HeaderProps) {
           className="flex items-center gap-3 ml-2 pl-4 border-l border-slate-200 hover:bg-slate-50 rounded-xl px-2 py-1 transition-colors group"
           title="Profili Im"
         >
-          <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-teal-500 rounded-xl flex items-center justify-center text-white text-sm font-bold">
-            {profile?.full_name?.charAt(0)?.toUpperCase() || <User className="w-4 h-4" />}
+          <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-teal-500 rounded-xl flex items-center justify-center text-white text-sm font-bold overflow-hidden">
+            {profile?.avatar_url ? (
+              <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+            ) : (
+              profile?.full_name?.charAt(0)?.toUpperCase() || <User className="w-4 h-4" />
+            )}
           </div>
           <div className="hidden sm:block">
             <p className="text-sm font-medium text-slate-900 leading-tight group-hover:text-blue-700">
