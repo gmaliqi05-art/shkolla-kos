@@ -149,6 +149,19 @@ const parentNav: NavItem[] = [
   { label: 'Dokumentet Ligjore', path: '/prind/dokumentet-ligjore', icon: Scale },
 ];
 
+const pedagogNav: NavItem[] = [
+  { label: 'Paneli Kryesor', path: '/pedagog', icon: LayoutDashboard },
+  { label: 'NVA & PIA', path: '/pedagog/nva', icon: Heart },
+  { label: 'Vlerësimi Diagnostikues', path: '/pedagog/diagnostik', icon: Stethoscope },
+  { label: 'Portofoli', path: '/pedagog/portofoli', icon: FolderOpen },
+  { label: 'Organet Shkollore', path: '/pedagog/keshillat', icon: Briefcase },
+  { label: 'Aktivitetet', path: '/pedagog/aktivitete', icon: Trophy },
+  { label: 'Takimet me Prindër', path: '/pedagog/takimet', icon: Users },
+  { label: 'Mesazhet', path: '/pedagog/mesazhet', icon: MessageSquare },
+  { label: '2FA / Siguria', path: '/pedagog/2fa', icon: ShieldCheck },
+  { label: 'Dokumentet Ligjore', path: '/pedagog/dokumentet-ligjore', icon: Scale },
+];
+
 function AppRoutes() {
   const { profile, loading } = useAuth();
 
@@ -281,6 +294,27 @@ function AppRoutes() {
           <Route path="/prind/dokumentet-ligjore" element={<LegalDocuments />} />
         </Route>
         <Route path="*" element={<Navigate to="/prind" replace />} />
+      </Routes>
+    );
+  }
+
+  if (profile.role === 'pedagog') {
+    return (
+      <Routes>
+        <Route path="/" element={<Navigate to="/pedagog" replace />} />
+        <Route element={<DashboardLayout navItems={pedagogNav} role="pedagog" />}>
+          <Route path="/pedagog" element={<DirectorDashboard />} />
+          <Route path="/pedagog/nva" element={<SpecialNeedsManagement />} />
+          <Route path="/pedagog/diagnostik" element={<DiagnosticAssessments />} />
+          <Route path="/pedagog/portofoli" element={<Portfolio />} />
+          <Route path="/pedagog/keshillat" element={<MyCouncils />} />
+          <Route path="/pedagog/aktivitete" element={<Activities />} />
+          <Route path="/pedagog/takimet" element={<ParentMeetings />} />
+          <Route path="/pedagog/mesazhet" element={<MessagesPage />} />
+          <Route path="/pedagog/2fa" element={<TwoFactorSettings />} />
+          <Route path="/pedagog/dokumentet-ligjore" element={<LegalDocuments />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/pedagog" replace />} />
       </Routes>
     );
   }

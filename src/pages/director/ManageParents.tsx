@@ -117,12 +117,12 @@ export default function ManageParents() {
 
   const handleDeleteParent = async (parent: ParentWithChildren) => {
     if (!confirm(`Fshi llogarinë e ${parent.full_name}?`)) return;
-    await supabase.from('messages').delete().or(`sender_id.eq.${parent.id},receiver_id.eq.${parent.id}`);
-    await supabase.from('parent_students').delete().eq('parent_id', parent.id);
-    await supabase.from('parent_students').delete().eq('parent_id', parent.id);
-    await supabase.from('messages').delete().eq('sender_id', parent.id);
-    await supabase.from('messages').delete().eq('receiver_id', parent.id);
-    await supabase.from('profiles').delete().eq('id', parent.id);
+    const { error: e1 } = await supabase.from('messages').delete().or(`sender_id.eq.${parent.id},receiver_id.eq.${parent.id}`);
+    if (e1) { alert('Gabim gjate fshirjes se mesazheve: ' + e1.message); return; }
+    const { error: e2 } = await supabase.from('parent_students').delete().eq('parent_id', parent.id);
+    if (e2) { alert('Gabim gjate fshirjes se lidhjeve me femijet: ' + e2.message); return; }
+    const { error: e3 } = await supabase.from('profiles').delete().eq('id', parent.id);
+    if (e3) { alert('Gabim gjate fshirjes se profilit: ' + e3.message); return; }
     await loadParents();
   };
 
