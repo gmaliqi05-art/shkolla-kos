@@ -369,7 +369,7 @@ export default function InspectionDetail() {
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-slate-900">{editingFinding ? 'Edito Gjetjen' : 'Shto Gjetje'}</h2>
-              <button onClick={() => setShowFindingModal(false)}><X className="w-5 h-5 text-slate-400" /></button>
+              <button onClick={() => setShowFindingModal(false)} aria-label="Mbyll"><X className="w-5 h-5 text-slate-400" /></button>
             </div>
             {error && <div className="mb-3 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl px-3 py-2">{error}</div>}
             <form onSubmit={submitFinding} className="space-y-3">
@@ -425,7 +425,7 @@ export default function InspectionDetail() {
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-slate-900">{editingRec ? 'Edito Rekomandimin' : 'Shto Rekomandim'}</h2>
-              <button onClick={() => setShowRecModal(false)}><X className="w-5 h-5 text-slate-400" /></button>
+              <button onClick={() => setShowRecModal(false)} aria-label="Mbyll"><X className="w-5 h-5 text-slate-400" /></button>
             </div>
             {error && <div className="mb-3 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl px-3 py-2">{error}</div>}
             <form onSubmit={submitRec} className="space-y-3">

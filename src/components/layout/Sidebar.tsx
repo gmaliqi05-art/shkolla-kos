@@ -69,7 +69,7 @@ export default function Sidebar({ items, role, isOpen, onClose }: SidebarProps) 
               <p className={`text-xs ${colors.text}`}>{t(ROLE_LABEL_KEYS[role])}</p>
             </div>
           </div>
-          <button onClick={onClose} className="lg:hidden text-white/70 hover:text-white">
+          <button onClick={onClose} aria-label="Mbyll menunë" className="lg:hidden text-white/70 hover:text-white">
             <X className="w-5 h-5" />
           </button>
         </div>

@@ -528,6 +528,7 @@ export default function SubjectsPage() {
               </h2>
               <button
                 onClick={closeModal}
+                aria-label="Mbyll"
                 className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-100 transition-colors"
               >
                 <X className="w-4 h-4" />
