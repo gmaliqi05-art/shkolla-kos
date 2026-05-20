@@ -8,6 +8,7 @@ import {
   type Municipality,
 } from '../../types/database';
 import { Loader2, Plus, X, MapPin, Edit2, Trash2, Building } from 'lucide-react';
+import SearchableSelect from '../../components/SearchableSelect';
 
 interface LocalityRow extends Locality {
   municipality_name?: string;
@@ -165,17 +166,16 @@ export default function LocalitiesManagement() {
           placeholder="Kërko vendbanim..."
           className="flex-1 min-w-[200px] px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
         />
-        <select
-          value={filterMunicipality}
-          onChange={(e) => setFilterMunicipality(e.target.value)}
-          disabled={profile?.role === 'drejtor_komunal'}
-          className="px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 text-sm disabled:bg-slate-50"
-        >
-          <option value="">Të gjitha komunat</option>
-          {municipalities.map((m) => (
-            <option key={m.id} value={m.id}>{m.name}</option>
-          ))}
-        </select>
+        <div className="min-w-[220px]">
+          <SearchableSelect
+            value={filterMunicipality}
+            onChange={setFilterMunicipality}
+            disabled={profile?.role === 'drejtor_komunal'}
+            placeholder="Të gjitha komunat"
+            groupBy
+            options={municipalities.map((m) => ({ value: m.id, label: m.name, group: m.region || 'Pa rajon' }))}
+          />
+        </div>
       </div>
 
       {grouped.size === 0 ? (
@@ -238,18 +238,15 @@ export default function LocalitiesManagement() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Komuna *</label>
-                <select
+                <SearchableSelect
                   required
-                  value={form.municipality_id}
-                  onChange={(e) => setForm({ ...form, municipality_id: e.target.value })}
                   disabled={profile?.role === 'drejtor_komunal'}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 disabled:bg-slate-50"
-                >
-                  <option value="">— Zgjidh —</option>
-                  {municipalities.map((m) => (
-                    <option key={m.id} value={m.id}>{m.name}</option>
-                  ))}
-                </select>
+                  value={form.municipality_id}
+                  onChange={(v) => setForm({ ...form, municipality_id: v })}
+                  placeholder="Kërko ose zgjidh komunën"
+                  groupBy
+                  options={municipalities.map((m) => ({ value: m.id, label: m.name, group: m.region || 'Pa rajon' }))}
+                />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>

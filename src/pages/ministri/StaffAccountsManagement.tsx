@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { logAudit } from '../../lib/audit';
 import type { Profile, Municipality, UserRole } from '../../types/database';
 import { Loader2, Plus, X, Building, Edit2, Trash2, Search, Mail, Phone, Copy, Check as CheckIcon, UserCheck, Crown } from 'lucide-react';
+import SearchableSelect from '../../components/SearchableSelect';
 
 interface DkaRow extends Profile {
   municipality_name?: string;
@@ -341,12 +342,14 @@ export default function StaffAccountsManagement() {
               {form.role === 'drejtor_komunal' && (
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-3">
                   <label className="block text-sm font-medium text-amber-900 mb-1">Komuna që do menaxhojë *</label>
-                  <select required value={form.managed_municipality_id} onChange={(e) => setForm({ ...form, managed_municipality_id: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500">
-                    <option value="">— Zgjidh komunën —</option>
-                    {municipalities.map((m) => (
-                      <option key={m.id} value={m.id}>{m.name}</option>
-                    ))}
-                  </select>
+                  <SearchableSelect
+                    required
+                    value={form.managed_municipality_id}
+                    onChange={(v) => setForm({ ...form, managed_municipality_id: v })}
+                    placeholder="Kërko ose zgjidh komunën"
+                    groupBy
+                    options={municipalities.map((m) => ({ value: m.id, label: m.name, group: m.region || 'Pa rajon' }))}
+                  />
                   <p className="text-xs text-amber-700 mt-2">DKA do të menaxhojë vetëm shkollat e kësaj komune.</p>
                 </div>
               )}

@@ -5,6 +5,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Loader2, Building2, Save } from 'lucide-react';
 import { SCHOOL_TYPE_LABELS, type SchoolInfo, type SchoolType, type Municipality, type Locality } from '../../types/database';
 import FileUpload from '../../components/FileUpload';
+import SearchableSelect from '../../components/SearchableSelect';
 
 export default function SchoolSettings() {
   const { profile } = useAuth();
@@ -198,32 +199,30 @@ export default function SchoolSettings() {
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Komuna</label>
-              <select
+              <SearchableSelect
                 value={form.municipality_id}
-                onChange={(e) => setForm({ ...form, municipality_id: e.target.value, locality_id: '' })}
-                className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">— Zgjidh komunën —</option>
-                {municipalities.map((m) => (
-                  <option key={m.id} value={m.id}>{m.name}</option>
-                ))}
-              </select>
+                onChange={(v) => setForm({ ...form, municipality_id: v, locality_id: '' })}
+                placeholder="Kërko ose zgjidh komunën"
+                groupBy
+                options={municipalities.map((m) => ({ value: m.id, label: m.name, group: m.region || 'Pa rajon' }))}
+              />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Fshati / Qyteti</label>
-              <select
-                value={form.locality_id}
-                onChange={(e) => setForm({ ...form, locality_id: e.target.value })}
+              <SearchableSelect
                 disabled={!form.municipality_id}
-                className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-50"
-              >
-                <option value="">— Zgjidh vendin —</option>
-                {localities
+                value={form.locality_id}
+                onChange={(v) => setForm({ ...form, locality_id: v })}
+                placeholder="Kërko ose zgjidh vendin"
+                options={localities
                   .filter((l) => l.municipality_id === form.municipality_id)
-                  .map((l) => (
-                    <option key={l.id} value={l.id}>{l.name} {l.is_city_center ? '(qendër)' : `(${l.type})`}</option>
-                  ))}
-              </select>
+                  .map((l) => ({
+                    value: l.id,
+                    label: l.name,
+                    description: l.is_city_center ? 'Qendër e komunës' : l.type,
+                  }))}
+                emptyText={form.municipality_id ? 'Asnjë vendbanim' : 'Zgjidh komunën fillimisht'}
+              />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Tipi i shkollës</label>
