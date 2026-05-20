@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../contexts/AuthContext';
 import type { Profile, Gender, EnrollmentStatus } from '../../types/database';
 import { GENDER_LABELS, ENROLLMENT_STATUS_LABELS } from '../../types/database';
 import { Search, Mail, Plus, CreditCard as Edit2, Trash2, X, UserPlus, MoreVertical, Phone, Loader2, BookOpen, Copy, Check as CheckIcon } from 'lucide-react';
@@ -68,6 +69,7 @@ interface StudentWithClass extends Profile {
 }
 
 export default function ManageStudents() {
+  const { profile: currentProfile } = useAuth();
   const [students, setStudents] = useState<StudentWithClass[]>([]);
   const [classes, setClasses] = useState<ClassOption[]>([]);
   const [search, setSearch] = useState('');
@@ -103,12 +105,13 @@ export default function ManageStudents() {
   };
 
   const loadStudents = async () => {
-    const { data: profiles } = await supabase
+    let q = supabase
       .from('profiles')
       .select('*')
       .eq('role', 'nxenes')
-      .is('deleted_at', null)
-      .order('full_name');
+      .is('deleted_at', null);
+    if (currentProfile?.school_id) q = q.eq('school_id', currentProfile.school_id);
+    const { data: profiles } = await q.order('full_name');
 
     if (!profiles || profiles.length === 0) {
       setStudents([]);
@@ -211,6 +214,7 @@ export default function ManageStudents() {
         id: authData.user.id,
         role: 'nxenes',
         must_change_password: true,
+        school_id: currentProfile?.school_id || null,
         ...buildProfilePayload(),
       });
 
