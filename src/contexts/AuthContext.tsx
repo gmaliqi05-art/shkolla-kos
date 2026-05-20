@@ -177,10 +177,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (isDemo) {
       setProfile(null);
       setIsDemo(false);
+      setSession(null);
+      setUser(null);
       return;
     }
     await supabase.auth.signOut();
     setProfile(null);
+    setSession(null);
+    setUser(null);
   };
 
   const demoSignIn = (role: UserRole) => {

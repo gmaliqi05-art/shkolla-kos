@@ -12,9 +12,25 @@ const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 const STORAGE_KEY = 'shkolla-kos-language';
 
+function safeGetItem(key: string): string | null {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function safeSetItem(key: string, value: string): void {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    // localStorage e padisponueshme (Incognito, Safari në privacy mode, etj.)
+  }
+}
+
 function getInitialLanguage(): Language {
   if (typeof window === 'undefined') return 'sq';
-  const stored = localStorage.getItem(STORAGE_KEY);
+  const stored = safeGetItem(STORAGE_KEY);
   if (stored === 'sq' || stored === 'sr' || stored === 'tr' || stored === 'bs') return stored;
   const browserLang = navigator.language.slice(0, 2);
   if (browserLang === 'sr' || browserLang === 'tr' || browserLang === 'bs') return browserLang;
@@ -37,7 +53,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       if (data?.preferred_language) {
         const lang = data.preferred_language as Language;
         setLanguageState(lang);
-        localStorage.setItem(STORAGE_KEY, lang);
+        safeSetItem(STORAGE_KEY, lang);
         document.documentElement.lang = lang;
       }
     })();
@@ -49,7 +65,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
-    localStorage.setItem(STORAGE_KEY, lang);
+    safeSetItem(STORAGE_KEY, lang);
     document.documentElement.lang = lang;
     // Persist to profile if signed in
     (async () => {
