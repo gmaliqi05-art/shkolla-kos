@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
-import { BookOpen, Users, TrendingUp, Clock, Loader2, AlertCircle } from 'lucide-react';
+import { BookOpen, Users, TrendingUp, Clock, Loader2, AlertCircle, ClipboardCheck, NotebookPen, Calendar, Star } from 'lucide-react';
 
 interface ClassData {
   id: string;
@@ -198,7 +199,7 @@ export default function MyClasses() {
             )}
 
             {cls.nextLesson && (
-              <div className="pt-3 border-t border-slate-50 flex items-center justify-between">
+              <div className="pt-3 border-t border-slate-50 flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2 text-xs text-slate-500">
                   <Clock className="w-3.5 h-3.5" />
                   Ora e ardhshme: {cls.nextLesson}
@@ -206,6 +207,25 @@ export default function MyClasses() {
                 <span className="text-xs text-slate-400">{cls.room}</span>
               </div>
             )}
+
+            <div className="grid grid-cols-2 gap-2 pt-3 border-t border-slate-100">
+              <Link to="/mesues/nota" className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-medium">
+                <ClipboardCheck className="w-3.5 h-3.5" />
+                Vendos Nota
+              </Link>
+              <Link to="/mesues/frekuentimi" className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-xs font-medium">
+                <Calendar className="w-3.5 h-3.5" />
+                Frekuentimi
+              </Link>
+              <Link to="/mesues/ditari" className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg text-xs font-medium">
+                <NotebookPen className="w-3.5 h-3.5" />
+                Ditari
+              </Link>
+              <Link to="/mesues/sjellja" className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-lg text-xs font-medium">
+                <Star className="w-3.5 h-3.5" />
+                Sjellja
+              </Link>
+            </div>
           </div>
         ))}
       </div>
