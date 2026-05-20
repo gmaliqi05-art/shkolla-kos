@@ -27,6 +27,7 @@ import SchoolCalendar from './pages/director/SchoolCalendar';
 import AnnualPlan from './pages/director/AnnualPlan';
 import LibraryPage from './pages/director/Library';
 import TwoFactorSettings from './pages/TwoFactorSettings';
+import LegalDocuments from './pages/shared/LegalDocuments';
 
 import TeacherDashboard from './pages/teacher/TeacherDashboard';
 import MyClasses from './pages/teacher/MyClasses';
@@ -66,7 +67,7 @@ import {
   Megaphone, BookOpen, ClipboardCheck, CalendarCheck, Award,
   Calendar, Clock, Star, MessageSquare, Library, UserCog, Shield,
   Activity, Trash2, Lock, Heart, Sparkles, Briefcase, FileCheck, Building2,
-  Trophy, MapPin, NotebookPen, FileText, Stethoscope, FolderOpen, FileSpreadsheet, ShieldCheck,
+  Trophy, MapPin, NotebookPen, FileText, Stethoscope, FolderOpen, FileSpreadsheet, ShieldCheck, Scale,
 } from 'lucide-react';
 
 const directorNav: NavItem[] = [
@@ -92,6 +93,7 @@ const directorNav: NavItem[] = [
   { label: 'Plani Vjetor', path: '/drejtor/plani-vjetor', icon: FileSpreadsheet },
   { label: 'Biblioteka', path: '/drejtor/biblioteka', icon: Library },
   { label: '2FA / Siguria', path: '/drejtor/2fa', icon: ShieldCheck },
+  { label: 'Dokumentet Ligjore', path: '/drejtor/dokumentet-ligjore', icon: Scale },
   { label: 'Njoftimet', path: '/drejtor/njoftime', icon: Megaphone },
   { label: 'Mesazhet', path: '/drejtor/mesazhet', icon: MessageSquare },
 ];
@@ -112,6 +114,7 @@ const teacherNav: NavItem[] = [
   { label: 'Aktivitetet', path: '/mesues/aktivitete', icon: Trophy },
   { label: 'Takimet me Prindër', path: '/mesues/takimet', icon: Users },
   { label: '2FA / Siguria', path: '/mesues/2fa', icon: ShieldCheck },
+  { label: 'Dokumentet Ligjore', path: '/mesues/dokumentet-ligjore', icon: Scale },
   { label: 'Ditari i Klasës', path: '/mesues/ditari', icon: NotebookPen },
   { label: 'Detyrat e Shtëpisë', path: '/mesues/detyrat', icon: FileText },
   { label: 'Vlerësimi Diagnostikues', path: '/mesues/diagnostik', icon: Stethoscope },
@@ -128,6 +131,7 @@ const studentNav: NavItem[] = [
   { label: 'Testet Kombëtare', path: '/nxenes/testet-kombetare', icon: GraduationCap },
   { label: 'Portofoli Im', path: '/nxenes/portofoli', icon: FolderOpen },
   { label: 'Vetëvlerësimi', path: '/nxenes/vetevleresimi', icon: Heart },
+  { label: 'Dokumentet Ligjore', path: '/nxenes/dokumentet-ligjore', icon: Scale },
 ];
 
 const parentNav: NavItem[] = [
@@ -142,6 +146,7 @@ const parentNav: NavItem[] = [
   { label: 'Testet Kombëtare', path: '/prind/testet-kombetare', icon: GraduationCap },
   { label: 'Portofoli', path: '/prind/portofoli', icon: FolderOpen },
   { label: 'Privatësia', path: '/prind/privatesia', icon: Lock },
+  { label: 'Dokumentet Ligjore', path: '/prind/dokumentet-ligjore', icon: Scale },
 ];
 
 function AppRoutes() {
@@ -162,6 +167,7 @@ function AppRoutes() {
     return (
       <Routes>
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/dokumentet-ligjore" element={<LegalDocuments />} />
         <Route path="*" element={<LoginPage />} />
       </Routes>
     );
@@ -187,6 +193,7 @@ function AppRoutes() {
           <Route path="/drejtor/plani-vjetor" element={<AnnualPlan />} />
           <Route path="/drejtor/biblioteka" element={<LibraryPage />} />
           <Route path="/drejtor/2fa" element={<TwoFactorSettings />} />
+          <Route path="/drejtor/dokumentet-ligjore" element={<LegalDocuments />} />
           <Route path="/drejtor/disiplina" element={<DisciplinePage />} />
           <Route path="/drejtor/nva" element={<SpecialNeedsManagement />} />
           <Route path="/drejtor/keshillat" element={<SchoolCouncils />} />
@@ -221,6 +228,7 @@ function AppRoutes() {
           <Route path="/mesues/ditari" element={<ClassDiary />} />
           <Route path="/mesues/detyrat" element={<HomeworkPage />} />
           <Route path="/mesues/2fa" element={<TwoFactorSettings />} />
+          <Route path="/mesues/dokumentet-ligjore" element={<LegalDocuments />} />
           <Route path="/mesues/diagnostik" element={<DiagnosticAssessments />} />
           <Route path="/mesues/portofoli" element={<Portfolio />} />
           <Route path="/mesues/frekuentimi" element={<AttendancePage />} />
@@ -247,6 +255,7 @@ function AppRoutes() {
           <Route path="/nxenes/testet-kombetare" element={<MyTestResults />} />
           <Route path="/nxenes/portofoli" element={<Portfolio />} />
           <Route path="/nxenes/vetevleresimi" element={<SelfAssessmentPage />} />
+          <Route path="/nxenes/dokumentet-ligjore" element={<LegalDocuments />} />
         </Route>
         <Route path="*" element={<Navigate to="/nxenes" replace />} />
       </Routes>
@@ -269,6 +278,7 @@ function AppRoutes() {
           <Route path="/prind/testet-kombetare" element={<MyTestResults />} />
           <Route path="/prind/portofoli" element={<Portfolio />} />
           <Route path="/prind/privatesia" element={<PrivacySettings />} />
+          <Route path="/prind/dokumentet-ligjore" element={<LegalDocuments />} />
         </Route>
         <Route path="*" element={<Navigate to="/prind" replace />} />
       </Routes>
