@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
-import { Loader2, Building, School, Users, GraduationCap, MapPin, BarChart3, ArrowRight, Plus, FileText, ChevronRight } from 'lucide-react';
+import { Loader2, Building, School, Users, GraduationCap, MapPin, BarChart3, ArrowRight, Plus, FileText, ChevronRight, AlertCircle } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const DEMO_SCHOOLS = [
@@ -36,6 +36,7 @@ export default function DkaDashboard() {
   const [stats, setStats] = useState<DkaStats | null>(null);
   const [schools, setSchools] = useState<SchoolRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     if (profile?.id) load();
@@ -76,6 +77,12 @@ export default function DkaDashboard() {
     const studentsRes = await supabase.from('profiles').select('id, school_id').eq('role', 'nxenes').is('deleted_at', null).in('school_id', schoolIds.length > 0 ? schoolIds : ['00000000-0000-0000-0000-000000000000']);
     const teachersRes = await supabase.from('profiles').select('id, school_id').eq('role', 'mesues').is('deleted_at', null).in('school_id', schoolIds.length > 0 ? schoolIds : ['00000000-0000-0000-0000-000000000000']);
     const directorsRes = await supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'drejtor').is('deleted_at', null).in('school_id', schoolIds.length > 0 ? schoolIds : ['00000000-0000-0000-0000-000000000000']);
+
+    const firstError = [munRes, schoolsRes, studentsRes, teachersRes, directorsRes].find(r => r.error)?.error;
+    if (firstError) {
+      console.error('DkaDashboard load error:', firstError);
+      setLoadError('Disa të dhëna nuk u ngarkuan. ' + firstError.message);
+    }
 
     const studentsBySchool = new Map<string, number>();
     (studentsRes.data || []).forEach((s) => { if (s.school_id) studentsBySchool.set(s.school_id, (studentsBySchool.get(s.school_id) || 0) + 1); });
@@ -123,6 +130,15 @@ export default function DkaDashboard() {
 
   return (
     <div className="space-y-6">
+      {loadError && (
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-amber-900">Të dhëna të paplota</p>
+            <p className="text-xs text-amber-700 mt-0.5">{loadError}</p>
+          </div>
+        </div>
+      )}
       <div className="bg-gradient-to-r from-amber-700 to-orange-700 rounded-2xl p-6 text-white">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div className="flex items-center gap-3">

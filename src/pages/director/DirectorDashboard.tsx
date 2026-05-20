@@ -71,6 +71,7 @@ export default function DirectorDashboard() {
   const [recentAnnouncements, setRecentAnnouncements] = useState<RecentAnnouncement[]>([]);
   const [alerts, setAlerts] = useState<AlertItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     loadAllData();
@@ -115,6 +116,12 @@ export default function DirectorDashboard() {
         supabase.from('classes').select('id', { count: 'exact', head: true }),
         supabase.from('subjects').select('id', { count: 'exact', head: true }),
       ]);
+
+      const firstError = [studentsRes, teachersRes, classesRes, subjectsRes].find(r => r.error)?.error;
+      if (firstError) {
+        console.error('DirectorDashboard load error:', firstError);
+        setLoadError('Disa statistika nuk u ngarkuan. ' + firstError.message);
+      }
 
       setStats({
         totalStudents: studentsRes.count || 0,
@@ -232,6 +239,15 @@ export default function DirectorDashboard() {
 
   return (
     <div className="space-y-6">
+      {loadError && (
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-amber-900">Të dhëna të paplota</p>
+            <p className="text-xs text-amber-700 mt-0.5">{loadError}</p>
+          </div>
+        </div>
+      )}
       <div>
         <h1 className="text-2xl font-bold text-slate-900">Paneli Kryesor</h1>
         <p className="text-slate-500 mt-1">Pasqyra e pergjithshme e shkolles - Republika e Kosoves</p>

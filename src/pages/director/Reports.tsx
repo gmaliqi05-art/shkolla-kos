@@ -112,6 +112,12 @@ export default function Reports() {
         supabase.from('classes').select('id, name, grade_level, section'),
       ]);
 
+      const firstError = [gradesRes, attendanceRes, subjectsRes, classesRes].find(r => r.error)?.error;
+      if (firstError) {
+        console.error('Reports load error:', firstError);
+        throw firstError;
+      }
+
       const grades = gradesRes.data || [];
       const attendance = attendanceRes.data || [];
       const subjects = subjectsRes.data || [];
