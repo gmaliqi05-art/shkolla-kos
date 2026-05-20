@@ -240,7 +240,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
               <div className="fixed sm:absolute left-2 right-2 top-16 sm:left-auto sm:right-0 sm:top-12 sm:w-96 max-w-[calc(100vw-1rem)] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-50">
               <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
                 <h3 className="text-sm font-semibold text-slate-900">Njoftimet</h3>
-                <button onClick={() => setShowNotifs(false)} className="text-slate-400 hover:text-slate-600">
+                <button onClick={() => setShowNotifs(false)} aria-label="Mbyll" className="text-slate-400 hover:text-slate-600">
                   <X className="w-4 h-4" />
                 </button>
               </div>

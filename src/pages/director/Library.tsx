@@ -420,7 +420,7 @@ export default function LibraryPage() {
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-slate-900">{editingBook ? 'Edito Librin' : 'Shto Libër të Ri'}</h2>
-              <button onClick={() => setShowBookModal(false)}><X className="w-5 h-5 text-slate-400" /></button>
+              <button onClick={() => setShowBookModal(false)} aria-label="Mbyll"><X className="w-5 h-5 text-slate-400" /></button>
             </div>
             {error && <div className="mb-3 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl px-3 py-2">{error}</div>}
             <form onSubmit={saveBook} className="space-y-3">
@@ -491,7 +491,7 @@ export default function LibraryPage() {
                 <h2 className="text-lg font-bold text-slate-900">Huazo Librin</h2>
                 <p className="text-sm text-slate-500">{showLoanModal.title}</p>
               </div>
-              <button onClick={() => setShowLoanModal(null)}><X className="w-5 h-5 text-slate-400" /></button>
+              <button onClick={() => setShowLoanModal(null)} aria-label="Mbyll"><X className="w-5 h-5 text-slate-400" /></button>
             </div>
             {error && <div className="mb-3 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl px-3 py-2">{error}</div>}
             <form onSubmit={submitLoan} className="space-y-3">

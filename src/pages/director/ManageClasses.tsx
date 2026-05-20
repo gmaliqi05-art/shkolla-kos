@@ -303,6 +303,7 @@ export default function ManageClasses() {
               </div>
               <button
                 onClick={() => setShowAddModal(false)}
+                aria-label="Mbyll"
                 className="p-1 text-slate-400 hover:text-slate-600 rounded"
               >
                 <X className="w-5 h-5" />
@@ -404,6 +405,7 @@ export default function ManageClasses() {
               </div>
               <button
                 onClick={() => setShowEditModal(false)}
+                aria-label="Mbyll"
                 className="p-1 text-slate-400 hover:text-slate-600 rounded"
               >
                 <X className="w-5 h-5" />

@@ -521,7 +521,7 @@ export default function ManageStudents() {
           <div className="bg-white rounded-2xl max-w-md w-full p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-slate-900">Kredencialet e Reja</h2>
-              <button onClick={() => setShowCredentials(false)} className="p-1 text-slate-400 hover:text-slate-600 rounded">
+              <button onClick={() => setShowCredentials(false)} aria-label="Mbyll" className="p-1 text-slate-400 hover:text-slate-600 rounded">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -566,6 +566,7 @@ export default function ManageStudents() {
               </div>
               <button
                 onClick={() => { setShowAddModal(false); setShowEditModal(false); setFormError(''); }}
+                aria-label="Mbyll"
                 className="p-1 text-slate-400 hover:text-slate-600 rounded"
               >
                 <X className="w-5 h-5" />

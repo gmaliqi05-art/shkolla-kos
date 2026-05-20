@@ -363,7 +363,7 @@ export default function ManageTeachers() {
                 </div>
                 <h2 className="text-xl font-bold text-slate-900">Shto Mesues te Ri</h2>
               </div>
-              <button onClick={() => setShowAddModal(false)} className="p-1 text-slate-400 hover:text-slate-600 rounded">
+              <button onClick={() => setShowAddModal(false)} aria-label="Mbyll" className="p-1 text-slate-400 hover:text-slate-600 rounded">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -405,7 +405,7 @@ export default function ManageTeachers() {
                 </div>
                 <h2 className="text-xl font-bold text-slate-900">Edito Mesuesin</h2>
               </div>
-              <button onClick={() => setShowEditModal(false)} className="p-1 text-slate-400 hover:text-slate-600 rounded">
+              <button onClick={() => setShowEditModal(false)} aria-label="Mbyll" className="p-1 text-slate-400 hover:text-slate-600 rounded">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -441,7 +441,7 @@ export default function ManageTeachers() {
           <div className="bg-white rounded-2xl max-w-md w-full p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-slate-900">Kredencialet e Reja</h2>
-              <button onClick={() => setShowCredentials(false)} className="p-1 text-slate-400 hover:text-slate-600 rounded">
+              <button onClick={() => setShowCredentials(false)} aria-label="Mbyll" className="p-1 text-slate-400 hover:text-slate-600 rounded">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -485,7 +485,7 @@ export default function ManageTeachers() {
                   <p className="text-sm text-slate-500">{selectedTeacher.full_name}</p>
                 </div>
               </div>
-              <button onClick={() => setShowAssignModal(false)} className="p-1 text-slate-400 hover:text-slate-600 rounded">
+              <button onClick={() => setShowAssignModal(false)} aria-label="Mbyll" className="p-1 text-slate-400 hover:text-slate-600 rounded">
                 <X className="w-5 h-5" />
               </button>
             </div>
