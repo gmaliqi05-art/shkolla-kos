@@ -126,26 +126,29 @@ export default function ManageTeachers() {
     const tempPassword = generateSecurePassword();
 
     const { data: authData, error: signUpError } = await supabase.auth.signUp({
-      email: formData.email, password: tempPassword,
+      email: formData.email,
+      password: tempPassword,
+      options: {
+        data: {
+          full_name: formData.full_name,
+          phone: formData.phone,
+          role: 'mesues',
+          school_id: profile?.school_id || null,
+          must_change_password: true,
+        },
+      },
     });
 
     if (signUpError) { toast.error('Gabim: ' + signUpError.message); setSubmitting(false); return; }
 
     if (authData.user) {
-      const { error } = await supabase.from('profiles').insert({
-        id: authData.user.id, email: formData.email, full_name: formData.full_name, phone: formData.phone, role: 'mesues',
-        school_id: profile?.school_id || null,
-        must_change_password: true,
-      });
-      if (error) { toast.error('Gabim: ' + error.message); }
-      else {
-        toast.success('Mësuesi u shtua me sukses.');
-        setShowAddModal(false);
-        setFormData({ full_name: '', email: '', phone: '' });
-        setNewCredentials({ email: formData.email, password: tempPassword });
-        setShowCredentials(true);
-        loadTeachers();
-      }
+      // Profili krijohet automatikisht nga trigger handle_new_user
+      toast.success('Mësuesi u shtua me sukses.');
+      setShowAddModal(false);
+      setFormData({ full_name: '', email: '', phone: '' });
+      setNewCredentials({ email: formData.email, password: tempPassword });
+      setShowCredentials(true);
+      loadTeachers();
     }
     setSubmitting(false);
   };

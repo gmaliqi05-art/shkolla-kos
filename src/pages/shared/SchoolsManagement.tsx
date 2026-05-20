@@ -180,6 +180,15 @@ export default function SchoolsManagement() {
       const { data: authData, error: signUpError } = await supabase.auth.signUp({
         email: directorForm.email,
         password: tempPassword,
+        options: {
+          data: {
+            full_name: directorForm.full_name,
+            phone: directorForm.phone,
+            role: 'drejtor',
+            school_id: createdSchoolId,
+            must_change_password: true,
+          },
+        },
       });
 
       if (signUpError) {
@@ -189,20 +198,7 @@ export default function SchoolsManagement() {
       }
 
       if (authData.user) {
-        const { error: profileError } = await supabase.from('profiles').insert({
-          id: authData.user.id,
-          email: directorForm.email,
-          full_name: directorForm.full_name,
-          phone: directorForm.phone,
-          role: 'drejtor',
-          school_id: createdSchoolId,
-          must_change_password: true,
-        });
-        if (profileError) {
-          setError(`Shkolla u krijua por gabim te profili i drejtorit: ${profileError.message}`);
-          setSubmitting(false);
-          return;
-        }
+        // Profili krijohet automatikisht nga trigger handle_new_user
         // Update school with director name
         await supabase.from('school_info').update({ director_name: directorForm.full_name }).eq('id', createdSchoolId);
         setNewCredentials({ email: directorForm.email, password: tempPassword });
