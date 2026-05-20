@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
+import { useI18n } from '../lib/i18n/I18nProvider';
 import type { UserRole } from '../types/database';
 import { GraduationCap, Eye, EyeOff, BookOpen, Users, BarChart3, Shield, Loader2, CircleUser as UserCircle, School, User, UserCheck, ArrowLeft, CheckCircle, Crown, Building, Heart, ClipboardCheck } from 'lucide-react';
 import LanguageSwitcher from '../components/LanguageSwitcher';
@@ -26,6 +27,7 @@ const DEMO_USERS: { role: UserRole; name: string; icon: typeof UserCircle; color
 
 export default function LoginPage() {
   const { signIn, signUp, demoSignIn } = useAuth();
+  const { t } = useI18n();
   const [isRegister, setIsRegister] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -173,7 +175,7 @@ export default function LoginPage() {
               onClick={handleMfaCancel}
               className="w-full px-4 py-2 text-sm text-slate-600 hover:text-slate-900"
             >
-              Anulo dhe dil
+              {t('btn.cancel')}
             </button>
           </form>
         </div>
@@ -402,7 +404,7 @@ export default function LoginPage() {
                     onClick={() => { setShowReset(true); setError(''); }}
                     className="text-xs text-blue-600 hover:text-blue-800 font-medium transition-colors"
                   >
-                    Keni harruar fjalekalimin?
+                    {t('login.forgot_password')}
                   </button>
                 </div>
               )}

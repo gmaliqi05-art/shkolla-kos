@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { logAudit } from '../lib/audit';
+import { useI18n } from '../lib/i18n/I18nProvider';
 import { Loader2, Shield, ShieldCheck, ShieldOff, AlertTriangle, Copy, Check } from 'lucide-react';
 
 interface MFAFactor {
@@ -14,6 +15,7 @@ interface MFAFactor {
 
 export default function TwoFactorSettings() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const [loading, setLoading] = useState(true);
   const [factors, setFactors] = useState<MFAFactor[]>([]);
 
@@ -285,7 +287,7 @@ export default function TwoFactorSettings() {
               onClick={() => { setEnrolling(false); setQrCode(''); setSecret(''); setFactorId(''); }}
               className="px-4 py-2 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium"
             >
-              Anulo
+              {t('btn.cancel')}
             </button>
             <button
               onClick={verifyEnrollment}
