@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../contexts/AuthContext';
 import type { Profile } from '../../types/database';
 import { Search, Phone, BookOpen, MoreVertical, Plus, CreditCard as Edit2, Trash2, X, UserPlus, Loader2, Link2, Copy, Check as CheckIcon } from 'lucide-react';
 
@@ -27,6 +28,7 @@ function generateSecurePassword() {
 }
 
 export default function ManageTeachers() {
+  const { profile } = useAuth();
   const [teachers, setTeachers] = useState<TeacherWithAssignments[]>([]);
   const [classes, setClasses] = useState<ClassOption[]>([]);
   const [subjects, setSubjects] = useState<SubjectOption[]>([]);
@@ -62,11 +64,13 @@ export default function ManageTeachers() {
   };
 
   const loadTeachers = async () => {
-    const { data: profiles } = await supabase
+    let q = supabase
       .from('profiles')
       .select('*')
       .eq('role', 'mesues')
-      .order('full_name');
+      .is('deleted_at', null);
+    if (profile?.school_id) q = q.eq('school_id', profile.school_id);
+    const { data: profiles } = await q.order('full_name');
 
     if (!profiles || profiles.length === 0) {
       setTeachers([]);
@@ -117,6 +121,8 @@ export default function ManageTeachers() {
     if (authData.user) {
       const { error } = await supabase.from('profiles').insert({
         id: authData.user.id, email: formData.email, full_name: formData.full_name, phone: formData.phone, role: 'mesues',
+        school_id: profile?.school_id || null,
+        must_change_password: true,
       });
       if (error) { alert('Gabim: ' + error.message); }
       else {

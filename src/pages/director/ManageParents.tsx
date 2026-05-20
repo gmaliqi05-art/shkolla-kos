@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../contexts/AuthContext';
 import { generateSecurePassword } from '../../lib/utils';
 import type { Profile } from '../../types/database';
 import {
@@ -24,6 +25,7 @@ interface ParentWithChildren extends Profile {
 }
 
 export default function ManageParents() {
+  const { profile } = useAuth();
   const [parents, setParents] = useState<ParentWithChildren[]>([]);
   const [students, setStudents] = useState<StudentOption[]>([]);
   const [search, setSearch] = useState('');
@@ -48,8 +50,9 @@ export default function ManageParents() {
   };
 
   const loadParents = async () => {
-    const { data: profiles } = await supabase
-      .from('profiles').select('*').eq('role', 'prind').order('full_name');
+    let q = supabase.from('profiles').select('*').eq('role', 'prind').is('deleted_at', null);
+    if (profile?.school_id) q = q.eq('school_id', profile.school_id);
+    const { data: profiles } = await q.order('full_name');
     if (!profiles || profiles.length === 0) { setParents([]); return; }
 
     const { data: links } = await supabase
@@ -93,6 +96,8 @@ export default function ManageParents() {
     const { error: profileError } = await supabase.from('profiles').insert({
       id: authData.user.id, email: formData.email,
       full_name: formData.full_name.trim(), role: 'prind', phone: formData.phone.trim(),
+      school_id: profile?.school_id || null,
+      must_change_password: true,
     });
     if (profileError) { setError(profileError.message); setSubmitting(false); return; }
     setNewCredentials({ email: formData.email, password });
