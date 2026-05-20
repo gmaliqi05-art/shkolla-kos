@@ -5,10 +5,9 @@ import { generateSecurePassword } from '../../lib/utils';
 import type { Profile } from '../../types/database';
 import {
   Search, Plus, Trash2, X, UserPlus, Loader2, Mail, Phone,
-  Link2, MoreVertical, Copy, Check as CheckIcon, FileDown,
+  Link2, MoreVertical, Copy, Check as CheckIcon,
 } from 'lucide-react';
 import { useToast } from '../../components/ToastProvider';
-import { exportToCSV, csvDateStamp } from '../../lib/csvExport';
 
 interface ParentFormData {
   full_name: string;
@@ -147,20 +146,6 @@ export default function ManageParents() {
     p.email.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleExportCSV = () => {
-    if (filtered.length === 0) {
-      toast.info('Asnjë prind për të eksportuar.');
-      return;
-    }
-    exportToCSV(`prinderit-${csvDateStamp()}`, [
-      { header: 'Emri i plotë', value: (p: ParentWithChildren) => p.full_name },
-      { header: 'Email', value: (p) => p.email },
-      { header: 'Telefon', value: (p) => p.phone || '' },
-      { header: 'Fëmijët', value: (p) => p.children.map(c => `${c.full_name}${c.class_name ? ` (${c.class_name})` : ''}`).join('; ') },
-    ], filtered);
-    toast.success(`${filtered.length} prind u eksportuan.`);
-  };
-
   if (loading) return <div className="flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-blue-500" /></div>;
 
   return (
@@ -170,18 +155,9 @@ export default function ManageParents() {
           <h1 className="text-2xl font-semibold text-slate-800">Prindërit</h1>
           <p className="text-slate-500 text-sm mt-1">{parents.length} prindër të regjistruar</p>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleExportCSV}
-            className="flex items-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 px-3 py-2 rounded-lg text-sm font-medium"
-            title="Eksporto CSV"
-          >
-            <FileDown className="w-4 h-4" /> CSV
-          </button>
-          <button onClick={() => { setShowAddModal(true); setError(''); }} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-            <UserPlus className="w-4 h-4" /> Shto Prind
-          </button>
-        </div>
+        <button onClick={() => { setShowAddModal(true); setError(''); }} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+          <UserPlus className="w-4 h-4" /> Shto Prind
+        </button>
       </div>
 
       <div className="relative mb-4">

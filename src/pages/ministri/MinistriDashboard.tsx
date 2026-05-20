@@ -4,7 +4,6 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import { Crown, Building2, Users, GraduationCap, School, BookOpen, Award, MapPin, TrendingUp, ArrowRight, UserCog, ChevronRight, AlertCircle } from 'lucide-react';
 import { DashboardSkeleton } from '../../components/Skeleton';
-import { useI18n } from '../../lib/i18n/I18nProvider';
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 interface NationalStats {
@@ -32,7 +31,6 @@ interface MunicipalitySummary {
 export default function MinistriDashboard() {
   const { isDemo } = useAuth();
   const navigate = useNavigate();
-  const { t } = useI18n();
   const [stats, setStats] = useState<NationalStats | null>(null);
   const [municipalities, setMunicipalities] = useState<MunicipalitySummary[]>([]);
   const [loading, setLoading] = useState(true);
@@ -196,14 +194,14 @@ export default function MinistriDashboard() {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        <StatCard icon={Building2} label={t('stat.municipalities')} value={stats.totalMunicipalities} color="purple" />
-        <StatCard icon={School} label={t('stat.schools')} value={stats.totalSchools} color="blue" />
-        <StatCard icon={Users} label={t('stat.students')} value={stats.totalStudents} color="cyan" />
-        <StatCard icon={GraduationCap} label={t('stat.teachers')} value={stats.totalTeachers} color="teal" />
-        <StatCard icon={Award} label={t('stat.licensed')} value={`${licensePercentage}%`} subtitle={`${stats.licensedTeachers}/${stats.totalTeachers}`} color="emerald" />
-        <StatCard icon={Users} label={t('stat.parents')} value={stats.totalParents} color="slate" />
-        <StatCard icon={Crown} label={t('stat.dka_directors')} value={stats.totalDKAs} color="amber" />
-        <StatCard icon={Crown} label={t('stat.directors')} value={stats.totalDirectors} color="indigo" />
+        <StatCard icon={Building2} label="Komuna" value={stats.totalMunicipalities} color="purple" />
+        <StatCard icon={School} label="Shkolla" value={stats.totalSchools} color="blue" />
+        <StatCard icon={Users} label="Nxënës" value={stats.totalStudents} color="cyan" />
+        <StatCard icon={GraduationCap} label="Mësues" value={stats.totalTeachers} color="teal" />
+        <StatCard icon={Award} label="Të licencuar" value={`${licensePercentage}%`} subtitle={`${stats.licensedTeachers}/${stats.totalTeachers}`} color="emerald" />
+        <StatCard icon={Users} label="Prindër" value={stats.totalParents} color="slate" />
+        <StatCard icon={Crown} label="Drejtorë DKA" value={stats.totalDKAs} color="amber" />
+        <StatCard icon={Crown} label="Drejtorë shkollash" value={stats.totalDirectors} color="indigo" />
         <StatCard icon={BookOpen} label="Nota të regjistruara" value={stats.totalGrades.toLocaleString()} color="rose" />
         <StatCard icon={MapPin} label="Regjistrime frekuentimi" value={stats.totalAttendance.toLocaleString()} color="violet" />
       </div>

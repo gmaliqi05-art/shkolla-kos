@@ -3,13 +3,12 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { formatRelative } from '../../lib/formatDate';
-import { DashboardSkeleton } from '../../components/Skeleton';
 import StatCard from '../../components/StatCard';
 import { getGradeBgColor } from '../../types/database';
 import {
   Award, TrendingUp, Calendar, BookOpen, ChevronRight, Star,
   AlertCircle, Check, X, Clock, Megaphone, Loader2, Users, ChevronDown,
-  MessageSquare, GraduationCap, Heart, Trophy,
+  MessageSquare, GraduationCap,
 } from 'lucide-react';
 
 type AttStatus = 'prezent' | 'mungon' | 'vonese' | 'arsyeshme';
@@ -50,8 +49,8 @@ export default function ParentDashboard() {
   const [subjectAverages, setSubjectAverages] = useState<SubjectAvg[]>([]);
   const [loadError, setLoadError] = useState<string | null>(null);
 
-  useEffect(() => { loadChildren(); }, [profile, isDemo]);
-  useEffect(() => { if (selectedChildId) loadChildData(selectedChildId); }, [selectedChildId, isDemo]);
+  useEffect(() => { loadChildren(); }, [profile]);
+  useEffect(() => { if (selectedChildId) loadChildData(selectedChildId); }, [selectedChildId]);
 
   const loadChildren = async () => {
     if (!profile) return;
@@ -242,7 +241,11 @@ export default function ParentDashboard() {
   };
 
   if (loading) {
-    return <DashboardSkeleton />;
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 text-slate-500 animate-spin" />
+      </div>
+    );
   }
 
   if (children.length === 0) {
@@ -452,9 +455,7 @@ export default function ParentDashboard() {
                 { to: '/prind/nota', icon: <Award className="w-4 h-4" />, label: 'Notat e Fëmijës', desc: 'Shiko notat sipas lëndës', color: 'bg-blue-50 text-blue-600' },
                 { to: '/prind/frekuentimi', icon: <Calendar className="w-4 h-4" />, label: 'Frekuentimi', desc: 'Mungesa dhe prezenca', color: 'bg-emerald-50 text-emerald-600' },
                 { to: '/prind/mesazhet', icon: <MessageSquare className="w-4 h-4" />, label: 'Kontakto Mësuesin', desc: 'Dërgo mesazh direkt', color: 'bg-teal-50 text-teal-600' },
-                { to: '/prind/pia', icon: <Heart className="w-4 h-4" />, label: 'PIA i Fëmijës', desc: 'Plani Individual i Arsimimit', color: 'bg-pink-50 text-pink-600' },
-                { to: '/prind/takimet', icon: <Users className="w-4 h-4" />, label: 'Takimet me Mësues', desc: 'Takime të planifikuara', color: 'bg-indigo-50 text-indigo-600' },
-                { to: '/prind/aktivitete', icon: <Trophy className="w-4 h-4" />, label: 'Aktivitetet', desc: 'Aktivitete jashtëshkollore', color: 'bg-amber-50 text-amber-600' },
+                { to: '/prind/mesazhet', icon: <Megaphone className="w-4 h-4" />, label: 'Mesazhe nga Shkolla', desc: 'Lexo njoftimet e reja', color: 'bg-amber-50 text-amber-600' },
               ].map(item => (
                 <Link key={item.label} to={item.to} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group border border-slate-50 hover:border-slate-200">
                   <div className={`w-9 h-9 ${item.color} rounded-xl flex items-center justify-center`}>

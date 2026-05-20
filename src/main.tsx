@@ -8,13 +8,3 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </StrictMode>
 );
-
-// Regjistro Service Worker për PWA / offline support
-if ('serviceWorker' in navigator && import.meta.env.PROD) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch((err) => {
-      console.warn('SW registration failed:', err);
-    });
-  });
-}
-

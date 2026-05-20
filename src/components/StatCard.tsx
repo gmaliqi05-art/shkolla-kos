@@ -1,5 +1,4 @@
 import type { LucideIcon } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 interface StatCardProps {
   label: string;
@@ -7,7 +6,6 @@ interface StatCardProps {
   icon: LucideIcon;
   color: 'blue' | 'teal' | 'amber' | 'rose' | 'green' | 'cyan' | 'slate';
   trend?: { value: string; positive: boolean };
-  to?: string;
 }
 
 const COLOR_MAP = {
@@ -20,31 +18,25 @@ const COLOR_MAP = {
   slate: { bg: 'bg-slate-50', icon: 'bg-slate-500', text: 'text-slate-600' },
 };
 
-export default function StatCard({ label, value, icon: Icon, color, trend, to }: StatCardProps) {
+export default function StatCard({ label, value, icon: Icon, color, trend }: StatCardProps) {
   const c = COLOR_MAP[color];
 
-  const content = (
-    <div className="flex items-start justify-between">
-      <div className="flex-1">
-        <p className="text-sm text-slate-500 font-medium">{label}</p>
-        <p className="text-3xl font-bold text-slate-900 mt-2 tracking-tight">{value}</p>
-        {trend && (
-          <p className={`text-xs mt-2 font-medium ${trend.positive ? 'text-emerald-600' : 'text-rose-600'}`}>
-            {trend.positive ? '+' : ''}{trend.value}
-          </p>
-        )}
-      </div>
-      <div className={`${c.bg} p-3 rounded-xl group-hover:scale-110 transition-transform duration-300`}>
-        <Icon className={`w-6 h-6 ${c.text}`} />
+  return (
+    <div className="bg-white rounded-2xl border border-slate-100 p-5 hover:shadow-lg hover:shadow-slate-100 transition-all duration-300 group">
+      <div className="flex items-start justify-between">
+        <div className="flex-1">
+          <p className="text-sm text-slate-500 font-medium">{label}</p>
+          <p className="text-3xl font-bold text-slate-900 mt-2 tracking-tight">{value}</p>
+          {trend && (
+            <p className={`text-xs mt-2 font-medium ${trend.positive ? 'text-emerald-600' : 'text-rose-600'}`}>
+              {trend.positive ? '+' : ''}{trend.value}
+            </p>
+          )}
+        </div>
+        <div className={`${c.bg} p-3 rounded-xl group-hover:scale-110 transition-transform duration-300`}>
+          <Icon className={`w-6 h-6 ${c.text}`} />
+        </div>
       </div>
     </div>
-  );
-
-  const wrapperClass = "bg-white rounded-2xl border border-slate-100 p-5 hover:shadow-lg hover:shadow-slate-100 transition-all duration-300 group block";
-
-  return to ? (
-    <Link to={to} className={wrapperClass}>{content}</Link>
-  ) : (
-    <div className={wrapperClass}>{content}</div>
   );
 }

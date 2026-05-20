@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Menu, Bell, LogOut, User, MessageSquare, Megaphone, Clock, X } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
@@ -20,17 +20,6 @@ interface NotifItem {
   time: string;
   isRead: boolean;
 }
-
-const ROLE_TO_URL_PREFIX: Record<UserRole, string> = {
-  drejtor: 'drejtor',
-  mesues: 'mesues',
-  nxenes: 'nxenes',
-  prind: 'prind',
-  pedagog: 'pedagog',
-  drejtor_komunal: 'dka',
-  ministri: 'ministri',
-  inspektor: 'inspektor',
-};
 
 const DEMO_NOTIFS: Record<UserRole, NotifItem[]> = {
   drejtor: [
@@ -74,19 +63,6 @@ export default function Header({ onMenuToggle }: HeaderProps) {
   useEffect(() => {
     loadNotifs();
   }, [profile]);
-
-  // Real-time: rifresko notifications kur ka mesazhe ose njoftime të reja
-  useEffect(() => {
-    if (!profile || isDemo) return;
-    const channel = supabase
-      .channel(`notifs-${profile.id}`)
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `receiver_id=eq.${profile.id}` }, loadNotifs)
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'announcements' }, loadNotifs)
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [profile, isDemo]);
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -194,7 +170,6 @@ export default function Header({ onMenuToggle }: HeaderProps) {
       <div className="flex items-center gap-3">
         <button
           onClick={onMenuToggle}
-          aria-label="Hap menunë"
           className="lg:hidden p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors"
         >
           <Menu className="w-5 h-5" />
@@ -213,7 +188,6 @@ export default function Header({ onMenuToggle }: HeaderProps) {
         <LanguageSwitcher compact />
         <button
           onClick={() => navigate(getMessagePath())}
-          aria-label="Mesazhet"
           className="relative p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors"
           title="Mesazhet"
         >
@@ -223,7 +197,6 @@ export default function Header({ onMenuToggle }: HeaderProps) {
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setShowNotifs(!showNotifs)}
-            aria-label={unreadCount > 0 ? `${unreadCount} njoftime të reja` : 'Njoftimet'}
             className="relative p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors"
           >
             <Bell className="w-5 h-5" />
@@ -300,32 +273,24 @@ export default function Header({ onMenuToggle }: HeaderProps) {
           )}
         </div>
 
-        <Link
-          to={profile ? `/${ROLE_TO_URL_PREFIX[profile.role] || 'drejtor'}/profili` : '/'}
-          className="flex items-center gap-3 ml-2 pl-4 border-l border-slate-200 hover:bg-slate-50 rounded-xl px-2 py-1 transition-colors group"
-          title="Profili Im"
-        >
-          <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-teal-500 rounded-xl flex items-center justify-center text-white text-sm font-bold overflow-hidden">
-            {profile?.avatar_url ? (
-              <img src={profile.avatar_url} alt="Avatar" loading="lazy" className="w-full h-full object-cover" />
-            ) : (
-              profile?.full_name?.charAt(0)?.toUpperCase() || <User className="w-4 h-4" />
-            )}
+        <div className="flex items-center gap-3 ml-2 pl-4 border-l border-slate-200">
+          <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-teal-500 rounded-xl flex items-center justify-center text-white text-sm font-bold">
+            {profile?.full_name?.charAt(0)?.toUpperCase() || <User className="w-4 h-4" />}
           </div>
           <div className="hidden sm:block">
-            <p className="text-sm font-medium text-slate-900 leading-tight group-hover:text-blue-700">
+            <p className="text-sm font-medium text-slate-900 leading-tight">
               {profile?.full_name}
             </p>
             <p className="text-xs text-slate-500">{profile?.email}</p>
           </div>
-        </Link>
-        <button
-          onClick={signOut}
-          className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
-          title="Dilni"
-        >
-          <LogOut className="w-4 h-4" />
-        </button>
+          <button
+            onClick={signOut}
+            className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+            title="Dilni"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
+        </div>
       </div>
     </header>
   );

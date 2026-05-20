@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { formatRelative, formatDayMonth } from '../../lib/formatDate';
-import { DashboardSkeleton } from '../../components/Skeleton';
 import StatCard from '../../components/StatCard';
 import { getGradeBgColor } from '../../types/database';
 import {
@@ -14,11 +13,10 @@ import {
   BookOpen,
   ChevronRight,
   Star,
+  Loader2,
   AlertCircle,
   MessageSquare,
   Megaphone,
-  FolderOpen,
-  GraduationCap,
 } from 'lucide-react';
 
 interface SubjectAvg {
@@ -209,7 +207,11 @@ export default function StudentDashboard() {
   };
 
   if (loading) {
-    return <DashboardSkeleton />;
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 text-cyan-500 animate-spin" />
+      </div>
+    );
   }
 
   return (
@@ -388,8 +390,6 @@ export default function StudentDashboard() {
               { to: '/nxenes/orari', icon: <Clock className="w-4 h-4" />, label: 'Orari Javor', desc: 'Shiko orarin e plotë' },
               { to: '/nxenes/frekuentimi', icon: <Calendar className="w-4 h-4" />, label: 'Frekuentimi Im', desc: 'Shiko mungesat dhe prezencën' },
               { to: '/nxenes/mesazhet', icon: <MessageSquare className="w-4 h-4" />, label: 'Mesazhe — Mësuesi', desc: 'Dërgo mesazh mësuesit tënd' },
-              { to: '/nxenes/portofoli', icon: <FolderOpen className="w-4 h-4" />, label: 'Portofoli Im', desc: 'Punimet dhe arritjet e mia' },
-              { to: '/nxenes/testet-kombetare', icon: <GraduationCap className="w-4 h-4" />, label: 'Testet Kombëtare', desc: 'Rezultatet e Testit të Arritshmërisë' },
             ].map(item => (
               <Link key={item.to} to={item.to} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group">
                 <div className="w-9 h-9 bg-cyan-50 rounded-xl flex items-center justify-center text-cyan-600 group-hover:bg-cyan-100 transition-colors">

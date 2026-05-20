@@ -68,7 +68,6 @@ const MessagesPage = lazy(() => import('./pages/shared/MessagesPage'));
 const PrivacyPolicy = lazy(() => import('./pages/shared/PrivacyPolicy'));
 const MyCouncils = lazy(() => import('./pages/shared/MyCouncils'));
 const MyTestResults = lazy(() => import('./pages/shared/MyTestResults'));
-const ProfileSettings = lazy(() => import('./pages/shared/ProfileSettings'));
 const Portfolio = lazy(() => import('./pages/shared/Portfolio'));
 const SelfAssessmentPage = lazy(() => import('./pages/student/SelfAssessment'));
 
@@ -273,7 +272,6 @@ function AppRoutes() {
             <Route path="/drejtor/kerkesa-fshirje" element={<DeletionRequests />} />
             <Route path="/drejtor/njoftime" element={<Announcements />} />
             <Route path="/drejtor/mesazhet" element={<MessagesPage />} />
-            <Route path="/drejtor/profili" element={<ProfileSettings />} />
           </Route>
           <Route path="*" element={<Navigate to="/drejtor" replace />} />
         </Routes>
@@ -307,7 +305,6 @@ function AppRoutes() {
             <Route path="/mesues/lendet" element={<SubjectsPage />} />
             <Route path="/mesues/orari" element={<TeacherSchedule />} />
             <Route path="/mesues/mesazhet" element={<MessagesPage />} />
-            <Route path="/mesues/profili" element={<ProfileSettings />} />
           </Route>
           <Route path="*" element={<Navigate to="/mesues" replace />} />
         </Routes>
@@ -326,7 +323,6 @@ function AppRoutes() {
             <Route path="/nxenes/orari" element={<MySchedule />} />
             <Route path="/nxenes/frekuentimi" element={<MyAttendance />} />
             <Route path="/nxenes/mesazhet" element={<MessagesPage />} />
-            <Route path="/nxenes/profili" element={<ProfileSettings />} />
             <Route path="/nxenes/keshillat" element={<MyCouncils />} />
             <Route path="/nxenes/testet-kombetare" element={<MyTestResults />} />
             <Route path="/nxenes/portofoli" element={<Portfolio />} />
@@ -349,7 +345,6 @@ function AppRoutes() {
             <Route path="/prind/nota" element={<ChildGrades />} />
             <Route path="/prind/frekuentimi" element={<ChildAttendance />} />
             <Route path="/prind/mesazhet" element={<MessagesPage />} />
-            <Route path="/prind/profili" element={<ProfileSettings />} />
             <Route path="/prind/pia" element={<ChildIEP />} />
             <Route path="/prind/aktivitete" element={<Activities />} />
             <Route path="/prind/takimet" element={<ParentMeetings />} />
@@ -379,7 +374,6 @@ function AppRoutes() {
             <Route path="/pedagog/aktivitete" element={<Activities />} />
             <Route path="/pedagog/takimet" element={<ParentMeetings />} />
             <Route path="/pedagog/mesazhet" element={<MessagesPage />} />
-            <Route path="/pedagog/profili" element={<ProfileSettings />} />
             <Route path="/pedagog/2fa" element={<TwoFactorSettings />} />
             <Route path="/pedagog/dokumentet-ligjore" element={<LegalDocuments />} />
           </Route>
@@ -399,7 +393,6 @@ function AppRoutes() {
             <Route path="/dka/shkollat" element={<SchoolsManagement />} />
             <Route path="/dka/vendbanimet" element={<LocalitiesManagement />} />
             <Route path="/dka/mesazhet" element={<MessagesPage />} />
-            <Route path="/dka/profili" element={<ProfileSettings />} />
             <Route path="/dka/komunat" element={<Municipalities />} />
             <Route path="/dka/2fa" element={<TwoFactorSettings />} />
             <Route path="/dka/dokumentet-ligjore" element={<LegalDocuments />} />
@@ -421,7 +414,6 @@ function AppRoutes() {
             <Route path="/inspektor/inspektimet/:id" element={<InspectionDetail />} />
             <Route path="/inspektor/shkollat" element={<SchoolsManagement />} />
             <Route path="/inspektor/mesazhet" element={<MessagesPage />} />
-            <Route path="/inspektor/profili" element={<ProfileSettings />} />
             <Route path="/inspektor/2fa" element={<TwoFactorSettings />} />
             <Route path="/inspektor/dokumentet-ligjore" element={<LegalDocuments />} />
           </Route>
@@ -443,7 +435,6 @@ function AppRoutes() {
             <Route path="/ministri/vendbanimet" element={<LocalitiesManagement />} />
             <Route path="/ministri/komunat" element={<Municipalities />} />
             <Route path="/ministri/mesazhet" element={<MessagesPage />} />
-            <Route path="/ministri/profili" element={<ProfileSettings />} />
             <Route path="/ministri/audit" element={<AuditLogs />} />
             <Route path="/ministri/2fa" element={<TwoFactorSettings />} />
             <Route path="/ministri/dokumentet-ligjore" element={<LegalDocuments />} />
