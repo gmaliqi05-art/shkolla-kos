@@ -120,7 +120,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setSession(s);
         setUser(s?.user ?? null);
         if (s?.user) {
-          fetchProfile(s.user.id).then(() => setLoading(false));
+          fetchProfile(s.user.id).catch((err) => console.error('Profile fetch error:', err)).finally(() => setLoading(false));
         } else {
           setLoading(false);
         }

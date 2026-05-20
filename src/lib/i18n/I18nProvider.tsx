@@ -25,20 +25,23 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>(getInitialLanguage);
 
   useEffect(() => {
-    // Try to load saved language from user profile
     (async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-      const { data } = await supabase
-        .from('profiles')
-        .select('preferred_language')
-        .eq('id', user.id)
-        .maybeSingle();
-      if (data?.preferred_language) {
-        const lang = data.preferred_language as Language;
-        setLanguageState(lang);
-        localStorage.setItem(STORAGE_KEY, lang);
-        document.documentElement.lang = lang;
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+        const { data } = await supabase
+          .from('profiles')
+          .select('preferred_language')
+          .eq('id', user.id)
+          .maybeSingle();
+        if (data?.preferred_language) {
+          const lang = data.preferred_language as Language;
+          setLanguageState(lang);
+          localStorage.setItem(STORAGE_KEY, lang);
+          document.documentElement.lang = lang;
+        }
+      } catch {
+        // Silently ignore - use default language
       }
     })();
   }, []);
@@ -51,11 +54,14 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     setLanguageState(lang);
     localStorage.setItem(STORAGE_KEY, lang);
     document.documentElement.lang = lang;
-    // Persist to profile if signed in
     (async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        await supabase.from('profiles').update({ preferred_language: lang }).eq('id', user.id);
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          await supabase.from('profiles').update({ preferred_language: lang }).eq('id', user.id);
+        }
+      } catch {
+        // Silently ignore persistence errors
       }
     })();
   };
