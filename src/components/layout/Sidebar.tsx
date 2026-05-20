@@ -2,9 +2,12 @@ import { NavLink } from 'react-router-dom';
 import { GraduationCap, X } from 'lucide-react';
 import type { UserRole } from '../../types/database';
 import type { LucideIcon } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
+import type { TranslationKey } from '../../lib/i18n/translations';
 
 export interface NavItem {
   label: string;
+  labelKey?: TranslationKey;
   path: string;
   icon: LucideIcon;
 }
@@ -27,18 +30,19 @@ const ROLE_COLORS: Record<UserRole, { bg: string; accent: string; text: string }
   inspektor: { bg: 'from-orange-900 to-orange-800', accent: 'bg-orange-700', text: 'text-orange-200' },
 };
 
-const ROLE_LABELS: Record<UserRole, string> = {
-  drejtor: 'Paneli i Drejtorit',
-  mesues: 'Paneli i Mesuesit',
-  nxenes: 'Paneli i Nxenesit',
-  prind: 'Paneli i Prindit',
-  pedagog: 'Paneli i Pedagogut',
-  drejtor_komunal: 'Paneli i Drejtorit Komunal (DKA)',
-  ministri: 'Paneli i Ministrit (MAShTI)',
-  inspektor: 'Paneli i Inspektorit',
+const ROLE_LABEL_KEYS: Record<UserRole, TranslationKey> = {
+  drejtor: 'sidebar.role.drejtor',
+  mesues: 'sidebar.role.mesues',
+  nxenes: 'sidebar.role.nxenes',
+  prind: 'sidebar.role.prind',
+  pedagog: 'sidebar.role.pedagog',
+  drejtor_komunal: 'sidebar.role.drejtor_komunal',
+  ministri: 'sidebar.role.ministri',
+  inspektor: 'sidebar.role.inspektor',
 };
 
 export default function Sidebar({ items, role, isOpen, onClose }: SidebarProps) {
+  const { t } = useI18n();
   const colors = ROLE_COLORS[role];
 
   return (
@@ -62,7 +66,7 @@ export default function Sidebar({ items, role, isOpen, onClose }: SidebarProps) 
             </div>
             <div>
               <h1 className="text-lg font-bold">Shkolla</h1>
-              <p className={`text-xs ${colors.text}`}>{ROLE_LABELS[role]}</p>
+              <p className={`text-xs ${colors.text}`}>{t(ROLE_LABEL_KEYS[role])}</p>
             </div>
           </div>
           <button onClick={onClose} className="lg:hidden text-white/70 hover:text-white">
@@ -85,14 +89,14 @@ export default function Sidebar({ items, role, isOpen, onClose }: SidebarProps) 
               }
             >
               <item.icon className="w-5 h-5 flex-shrink-0" />
-              {item.label}
+              {item.labelKey ? t(item.labelKey) : item.label}
             </NavLink>
           ))}
         </nav>
 
         <div className="p-4 border-t border-white/10">
           <div className={`text-xs ${colors.text} text-center`}>
-            Viti Akademik 2025-2026
+            {t('sidebar.academic_year')} 2025-2026
           </div>
         </div>
       </aside>

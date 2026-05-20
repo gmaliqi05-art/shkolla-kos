@@ -136,6 +136,38 @@ export const translations = {
   'settings.language_changed': { sq: 'Gjuha u ndryshua', sr: 'Jezik je promenjen', tr: 'Dil değiştirildi', bs: 'Jezik je promijenjen' },
   'settings.logout': { sq: 'Dilni', sr: 'Odjavi se', tr: 'Çıkış yap', bs: 'Odjavi se' },
   'settings.profile': { sq: 'Profili', sr: 'Profil', tr: 'Profil', bs: 'Profil' },
+
+  // === SIDEBAR ===
+  'sidebar.role.drejtor': { sq: 'Paneli i Drejtorit', sr: 'Panel direktora', tr: 'Müdür Paneli', bs: 'Panel direktora' },
+  'sidebar.role.mesues': { sq: 'Paneli i Mësuesit', sr: 'Panel nastavnika', tr: 'Öğretmen Paneli', bs: 'Panel nastavnika' },
+  'sidebar.role.nxenes': { sq: 'Paneli i Nxënësit', sr: 'Panel učenika', tr: 'Öğrenci Paneli', bs: 'Panel učenika' },
+  'sidebar.role.prind': { sq: 'Paneli i Prindit', sr: 'Panel roditelja', tr: 'Veli Paneli', bs: 'Panel roditelja' },
+  'sidebar.role.pedagog': { sq: 'Paneli i Pedagogut', sr: 'Panel pedagoga', tr: 'Pedagog Paneli', bs: 'Panel pedagoga' },
+  'sidebar.role.drejtor_komunal': { sq: 'Paneli i DKA-së', sr: 'Panel DKA', tr: 'DKA Paneli', bs: 'Panel DKA' },
+  'sidebar.role.ministri': { sq: 'Paneli i MAShTI-së', sr: 'Panel MOND-a', tr: 'MAShTI Paneli', bs: 'Panel MOND-a' },
+  'sidebar.role.inspektor': { sq: 'Paneli i Inspektorit', sr: 'Panel inspektora', tr: 'Müfettiş Paneli', bs: 'Panel inspektora' },
+  'sidebar.academic_year': { sq: 'Viti Akademik', sr: 'Akademska godina', tr: 'Akademik Yıl', bs: 'Akademska godina' },
+
+  // === NAV (extended) ===
+  'nav.my_lessons': { sq: 'Lëndët Mësimore', sr: 'Predmeti', tr: 'Dersler', bs: 'Predmeti' },
+  'nav.lesson_schedule': { sq: 'Orari Mësimor', sr: 'Raspored časova', tr: 'Ders Programı', bs: 'Raspored časova' },
+  'nav.licenses': { sq: 'Licencat', sr: 'Licence', tr: 'Lisanslar', bs: 'Licence' },
+  'nav.class_diary': { sq: 'Ditari i Klasës', sr: 'Razredni dnevnik', tr: 'Sınıf Günlüğü', bs: 'Razredni dnevnik' },
+  'nav.homework': { sq: 'Detyrat e Shtëpisë', sr: 'Domaći zadaci', tr: 'Ev Ödevleri', bs: 'Domaće zadaće' },
+  'nav.diagnostic': { sq: 'Vlerësimi Diagnostikues', sr: 'Dijagnostičko ocenjivanje', tr: 'Tanı Değerlendirmesi', bs: 'Dijagnostičko ocjenjivanje' },
+  'nav.portfolio': { sq: 'Portofoli', sr: 'Portfolio', tr: 'Portföy', bs: 'Portfolio' },
+  'nav.my_portfolio': { sq: 'Portofoli Im', sr: 'Moj portfolio', tr: 'Portföyüm', bs: 'Moj portfolio' },
+  'nav.self_assessment': { sq: 'Vetëvlerësimi', sr: 'Samoprocena', tr: 'Öz değerlendirme', bs: 'Samoprocjena' },
+  'nav.calendar': { sq: 'Kalendari', sr: 'Kalendar', tr: 'Takvim', bs: 'Kalendar' },
+  'nav.annual_plan': { sq: 'Plani Vjetor', sr: 'Godišnji plan', tr: 'Yıllık Plan', bs: 'Godišnji plan' },
+  'nav.library': { sq: 'Biblioteka', sr: 'Biblioteka', tr: 'Kütüphane', bs: 'Biblioteka' },
+  'nav.legal_documents': { sq: 'Dokumentet Ligjore', sr: 'Pravni dokumenti', tr: 'Yasal Belgeler', bs: 'Pravni dokumenti' },
+  'nav.two_factor': { sq: '2FA / Siguria', sr: '2FA / Sigurnost', tr: '2FA / Güvenlik', bs: '2FA / Sigurnost' },
+  'nav.schools': { sq: 'Shkollat', sr: 'Škole', tr: 'Okullar', bs: 'Škole' },
+  'nav.localities': { sq: 'Vendbanimet', sr: 'Mesta', tr: 'Yerleşim Yerleri', bs: 'Mjesta' },
+  'nav.municipalities': { sq: 'Komunat', sr: 'Opštine', tr: 'Belediyeler', bs: 'Opštine' },
+  'nav.staff': { sq: 'Stafi Administrativ', sr: 'Administrativno osoblje', tr: 'İdari Personel', bs: 'Administrativno osoblje' },
+  'nav.inspections': { sq: 'Inspektimet', sr: 'Inspekcije', tr: 'Denetimler', bs: 'Inspekcije' },
 } as const;
 
 export type TranslationKey = keyof typeof translations;
