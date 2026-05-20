@@ -207,6 +207,15 @@ export default function ManageStudents() {
     const { data: authData, error: signUpError } = await supabase.auth.signUp({
       email: formData.email,
       password: tempPassword,
+      options: {
+        data: {
+          full_name: formData.full_name,
+          phone: formData.phone,
+          role: 'nxenes',
+          school_id: currentProfile?.school_id || null,
+          must_change_password: true,
+        },
+      },
     });
 
     if (signUpError) {
@@ -216,13 +225,11 @@ export default function ManageStudents() {
     }
 
     if (authData.user) {
-      const { error: profileError } = await supabase.from('profiles').insert({
-        id: authData.user.id,
-        role: 'nxenes',
-        must_change_password: true,
-        school_id: currentProfile?.school_id || null,
-        ...buildProfilePayload(),
-      });
+      // Trigger handle_new_user krijon profilin bazë. Tani UPDATE shtesat:
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update(buildProfilePayload())
+        .eq('id', authData.user.id);
 
       if (profileError) {
         setFormError('Gabim profili: ' + profileError.message);

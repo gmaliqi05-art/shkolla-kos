@@ -101,15 +101,21 @@ export default function ManageParents() {
     if (!formData.full_name.trim() || !formData.email.trim()) { setError('Emri dhe email-i janë të detyrueshme.'); return; }
     setSubmitting(true); setError('');
     const password = generateSecurePassword();
-    const { data: authData, error: authError } = await supabase.auth.signUp({ email: formData.email, password });
-    if (authError || !authData.user) { setError(authError?.message || 'Gabim gjatë krijimit.'); setSubmitting(false); return; }
-    const { error: profileError } = await supabase.from('profiles').insert({
-      id: authData.user.id, email: formData.email,
-      full_name: formData.full_name.trim(), role: 'prind', phone: formData.phone.trim(),
-      school_id: profile?.school_id || null,
-      must_change_password: true,
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email: formData.email,
+      password,
+      options: {
+        data: {
+          full_name: formData.full_name.trim(),
+          phone: formData.phone.trim(),
+          role: 'prind',
+          school_id: profile?.school_id || null,
+          must_change_password: true,
+        },
+      },
     });
-    if (profileError) { setError(profileError.message); setSubmitting(false); return; }
+    if (authError || !authData.user) { setError(authError?.message || 'Gabim gjatë krijimit.'); setSubmitting(false); return; }
+    // Profili krijohet automatikisht nga trigger handle_new_user
     setNewCredentials({ email: formData.email, password });
     setShowAddModal(false); setShowCredentials(true);
     setFormData({ full_name: '', email: '', phone: '' }); setSubmitting(false);
