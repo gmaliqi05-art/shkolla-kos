@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import type { Class } from '../../types/database';
 import { Search, Users, BookOpen, Plus, CreditCard as Edit2, Trash2, X, FolderPlus, MoreVertical } from 'lucide-react';
+import { useToast } from '../../components/ToastProvider';
 
 interface ClassFormData {
   name: string;
@@ -11,6 +12,7 @@ interface ClassFormData {
 }
 
 export default function ManageClasses() {
+  const toast = useToast();
   const [classes, setClasses] = useState<Class[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
@@ -59,9 +61,9 @@ export default function ManageClasses() {
     });
 
     if (error) {
-      alert('Gabim gjate krijimit te klases: ' + error.message);
+      toast.error('Gabim gjatë krijimit të klasës: ' + error.message);
     } else {
-      alert('Klasa u krijua me sukses!');
+      toast.success('Klasa u krijua me sukses!');
       setShowAddModal(false);
       setFormData({ name: '', grade_level: 1, section: 'A', max_students: 30 });
       loadClasses();
@@ -87,9 +89,9 @@ export default function ManageClasses() {
       .eq('id', selectedClass.id);
 
     if (error) {
-      alert('Gabim gjate perditesimit: ' + error.message);
+      toast.error('Gabim gjatë përditësimit: ' + error.message);
     } else {
-      alert('Klasa u perditesua me sukses!');
+      toast.success('Klasa u përditësua me sukses!');
       setShowEditModal(false);
       setSelectedClass(null);
       setFormData({ name: '', grade_level: 1, section: 'A', max_students: 30 });
@@ -112,7 +114,7 @@ export default function ManageClasses() {
     for (const t of tables) {
       const { error: e } = await supabase.from(t.name).delete().eq('class_id', cls.id);
       if (e) {
-        alert(`Gabim gjate fshirjes se ${t.label}: ${e.message}\nKlasa NUK u fshi.`);
+        toast.error(`Gabim gjatë fshirjes së ${t.label}: ${e.message}. Klasa NUK u fshi.`);
         return;
       }
     }
@@ -120,9 +122,9 @@ export default function ManageClasses() {
     const { error } = await supabase.from('classes').delete().eq('id', cls.id);
 
     if (error) {
-      alert('Gabim gjate fshirjes: ' + error.message);
+      toast.error('Gabim gjatë fshirjes: ' + error.message);
     } else {
-      alert('Klasa u fshi me sukses!');
+      toast.success('Klasa u fshi me sukses!');
       loadClasses();
     }
   };

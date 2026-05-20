@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import type { Profile, Gender, EnrollmentStatus } from '../../types/database';
 import { GENDER_LABELS, ENROLLMENT_STATUS_LABELS } from '../../types/database';
 import { Search, Mail, Plus, CreditCard as Edit2, Trash2, X, UserPlus, MoreVertical, Phone, Loader2, BookOpen, Copy, Check as CheckIcon } from 'lucide-react';
+import { useToast } from '../../components/ToastProvider';
 
 function generateSecurePassword() {
   const chars = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -70,6 +71,7 @@ interface StudentWithClass extends Profile {
 
 export default function ManageStudents() {
   const { profile: currentProfile } = useAuth();
+  const toast = useToast();
   const [students, setStudents] = useState<StudentWithClass[]>([]);
   const [classes, setClasses] = useState<ClassOption[]>([]);
   const [search, setSearch] = useState('');
@@ -299,7 +301,7 @@ export default function ManageStudents() {
       .eq('id', student.id);
 
     if (error) {
-      alert('Gabim: ' + error.message);
+      toast.error('Gabim: ' + error.message);
       return;
     }
 

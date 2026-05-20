@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import { logAudit } from '../../lib/audit';
+import { useToast } from '../../components/ToastProvider';
 import {
   GRADE_LABELS,
   PERIOD_LABELS,
@@ -40,6 +41,7 @@ export default function ReportCardView() {
   const { studentId, classId, period: periodStr, type: typeStr } = useParams();
   const navigate = useNavigate();
   const { profile } = useAuth();
+  const toast = useToast();
 
   const period = periodStr ? Number(periodStr) : null;
   const cardType = (typeStr as ReportCardType) || 'periudhshme';
@@ -204,7 +206,7 @@ export default function ReportCardView() {
       });
       setIssued(true);
     } else if (error.code !== '23505') {
-      alert('Gabim: ' + error.message);
+      toast.error('Gabim: ' + error.message);
     } else {
       setIssued(true);
     }
