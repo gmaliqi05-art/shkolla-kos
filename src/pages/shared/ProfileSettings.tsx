@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { useToast } from '../../components/ToastProvider';
-import { User, Phone, Mail, Lock, Save, Loader2 } from 'lucide-react';
+import FileUpload from '../../components/FileUpload';
+import { User, Phone, Mail, Lock, Save, Loader2, Camera } from 'lucide-react';
 
 export default function ProfileSettings() {
   const { profile, isDemo } = useAuth();
@@ -10,12 +11,51 @@ export default function ProfileSettings() {
 
   const [fullName, setFullName] = useState(profile?.full_name || '');
   const [phone, setPhone] = useState(profile?.phone || '');
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(profile?.avatar_url || null);
   const [savingInfo, setSavingInfo] = useState(false);
 
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [savingPassword, setSavingPassword] = useState(false);
+
+  const handleAvatarUploaded = async (publicUrl: string) => {
+    if (!profile) return;
+    if (isDemo) {
+      setAvatarUrl(publicUrl);
+      toast.info('Modaliteti demo — ndryshimet nuk ruhen.');
+      return;
+    }
+    const { error } = await supabase
+      .from('profiles')
+      .update({ avatar_url: publicUrl })
+      .eq('id', profile.id);
+    if (error) {
+      toast.error('Gabim gjatë ruajtjes së fotos: ' + error.message);
+      return;
+    }
+    setAvatarUrl(publicUrl);
+    toast.success('Fotografia u përditësua.');
+  };
+
+  const handleAvatarRemoved = async () => {
+    if (!profile) return;
+    if (isDemo) {
+      setAvatarUrl(null);
+      toast.info('Modaliteti demo — ndryshimet nuk ruhen.');
+      return;
+    }
+    const { error } = await supabase
+      .from('profiles')
+      .update({ avatar_url: null })
+      .eq('id', profile.id);
+    if (error) {
+      toast.error('Gabim: ' + error.message);
+      return;
+    }
+    setAvatarUrl(null);
+    toast.success('Fotografia u hoq.');
+  };
 
   const handleSaveInfo = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,6 +124,36 @@ export default function ProfileSettings() {
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Profili Im</h1>
           <p className="text-slate-500 text-sm">Menaxho informacionin personal dhe sigurinë e llogarisë</p>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-2xl border border-slate-100 p-5 space-y-4">
+        <h2 className="font-semibold text-slate-900 flex items-center gap-2">
+          <Camera className="w-4 h-4 text-slate-500" />
+          Fotografia e profilit
+        </h2>
+        <div className="flex items-center gap-4">
+          <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center text-white text-3xl font-bold overflow-hidden flex-shrink-0">
+            {avatarUrl ? (
+              <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+            ) : (
+              profile?.full_name?.charAt(0)?.toUpperCase() || <User className="w-10 h-10" />
+            )}
+          </div>
+          <div className="flex-1">
+            <FileUpload
+              bucket="avatars"
+              folder={profile?.id}
+              accept="image/*"
+              maxSizeMB={2}
+              currentUrl={avatarUrl}
+              onUploaded={handleAvatarUploaded}
+              onRemoved={avatarUrl ? handleAvatarRemoved : undefined}
+              label="Ngarko fotografi"
+              preview={false}
+            />
+            <p className="text-xs text-slate-400 mt-2">JPG, PNG ose WebP. Maksimum 2 MB.</p>
+          </div>
         </div>
       </div>
 
