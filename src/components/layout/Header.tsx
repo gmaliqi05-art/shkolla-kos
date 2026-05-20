@@ -75,6 +75,19 @@ export default function Header({ onMenuToggle }: HeaderProps) {
     loadNotifs();
   }, [profile]);
 
+  // Real-time: rifresko notifications kur ka mesazhe ose njoftime të reja
+  useEffect(() => {
+    if (!profile || isDemo) return;
+    const channel = supabase
+      .channel(`notifs-${profile.id}`)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `receiver_id=eq.${profile.id}` }, loadNotifs)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'announcements' }, loadNotifs)
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [profile, isDemo]);
+
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
