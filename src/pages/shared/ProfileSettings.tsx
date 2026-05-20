@@ -3,11 +3,13 @@ import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { useToast } from '../../components/ToastProvider';
 import FileUpload from '../../components/FileUpload';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 import { User, Phone, Mail, Lock, Save, Loader2, Camera } from 'lucide-react';
 
 export default function ProfileSettings() {
   const { profile, isDemo } = useAuth();
   const toast = useToast();
+  const { t } = useI18n();
 
   const [fullName, setFullName] = useState(profile?.full_name || '');
   const [phone, setPhone] = useState(profile?.phone || '');
@@ -122,15 +124,15 @@ export default function ProfileSettings() {
           <User className="w-6 h-6 text-blue-600" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Profili Im</h1>
-          <p className="text-slate-500 text-sm">Menaxho informacionin personal dhe sigurinë e llogarisë</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('profile.title')}</h1>
+          <p className="text-slate-500 text-sm">{t('profile.subtitle')}</p>
         </div>
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-100 p-5 space-y-4">
         <h2 className="font-semibold text-slate-900 flex items-center gap-2">
           <Camera className="w-4 h-4 text-slate-500" />
-          Fotografia e profilit
+          {t('profile.photo')}
         </h2>
         <div className="flex items-center gap-4">
           <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center text-white text-3xl font-bold overflow-hidden flex-shrink-0">
@@ -149,10 +151,10 @@ export default function ProfileSettings() {
               currentUrl={avatarUrl}
               onUploaded={handleAvatarUploaded}
               onRemoved={avatarUrl ? handleAvatarRemoved : undefined}
-              label="Ngarko fotografi"
+              label={t('profile.upload_photo')}
               preview={false}
             />
-            <p className="text-xs text-slate-400 mt-2">JPG, PNG ose WebP. Maksimum 2 MB.</p>
+            <p className="text-xs text-slate-400 mt-2">{t('profile.photo_help')}</p>
           </div>
         </div>
       </div>
@@ -160,20 +162,20 @@ export default function ProfileSettings() {
       <form onSubmit={handleSaveInfo} className="bg-white rounded-2xl border border-slate-100 p-5 space-y-4">
         <h2 className="font-semibold text-slate-900 flex items-center gap-2">
           <User className="w-4 h-4 text-slate-500" />
-          Informacioni personal
+          {t('profile.personal_info')}
         </h2>
 
         <div>
-          <label className="block text-xs font-medium text-slate-500 mb-1">Email</label>
+          <label className="block text-xs font-medium text-slate-500 mb-1">{t('common.email')}</label>
           <div className="flex items-center gap-2 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-600 text-sm">
             <Mail className="w-4 h-4 text-slate-400" />
             {profile?.email || '—'}
-            <span className="ml-auto text-xs text-slate-400">Nuk mund të ndryshohet</span>
+            <span className="ml-auto text-xs text-slate-400">{t('profile.email_cannot_change')}</span>
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-slate-500 mb-1">Emri i plotë *</label>
+          <label className="block text-xs font-medium text-slate-500 mb-1">{t('profile.full_name')} *</label>
           <input
             type="text"
             value={fullName}
@@ -184,7 +186,7 @@ export default function ProfileSettings() {
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-slate-500 mb-1">Telefoni</label>
+          <label className="block text-xs font-medium text-slate-500 mb-1">{t('common.phone')}</label>
           <div className="flex items-center gap-2">
             <Phone className="w-4 h-4 text-slate-400 absolute ml-3 pointer-events-none" />
             <input
@@ -203,18 +205,18 @@ export default function ProfileSettings() {
           className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium disabled:opacity-50 text-sm"
         >
           {savingInfo ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-          Ruaj ndryshimet
+          {t('profile.save_changes')}
         </button>
       </form>
 
       <form onSubmit={handleChangePassword} className="bg-white rounded-2xl border border-slate-100 p-5 space-y-4">
         <h2 className="font-semibold text-slate-900 flex items-center gap-2">
           <Lock className="w-4 h-4 text-slate-500" />
-          Ndrysho fjalëkalimin
+          {t('profile.change_password')}
         </h2>
 
         <div>
-          <label className="block text-xs font-medium text-slate-500 mb-1">Fjalëkalimi aktual *</label>
+          <label className="block text-xs font-medium text-slate-500 mb-1">{t('profile.current_password')} *</label>
           <input
             type="password"
             value={currentPassword}
@@ -225,7 +227,7 @@ export default function ProfileSettings() {
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-slate-500 mb-1">Fjalëkalimi i ri *</label>
+          <label className="block text-xs font-medium text-slate-500 mb-1">{t('profile.new_password')} *</label>
           <input
             type="password"
             value={newPassword}
@@ -234,11 +236,11 @@ export default function ProfileSettings() {
             className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-sm"
             required
           />
-          <p className="text-xs text-slate-400 mt-1">Të paktën 8 karaktere</p>
+          <p className="text-xs text-slate-400 mt-1">{t('profile.min_chars')}</p>
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-slate-500 mb-1">Konfirmo fjalëkalimin e ri *</label>
+          <label className="block text-xs font-medium text-slate-500 mb-1">{t('profile.confirm_password')} *</label>
           <input
             type="password"
             value={confirmPassword}
@@ -255,7 +257,7 @@ export default function ProfileSettings() {
           className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium disabled:opacity-50 text-sm"
         >
           {savingPassword ? <Loader2 className="w-4 h-4 animate-spin" /> : <Lock className="w-4 h-4" />}
-          Ndrysho fjalëkalimin
+          {t('profile.change_password')}
         </button>
       </form>
     </div>
