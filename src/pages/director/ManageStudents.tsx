@@ -84,6 +84,7 @@ export default function ManageStudents() {
   const [newCredentials, setNewCredentials] = useState<{ email: string; password: string } | null>(null);
   const [copied, setCopied] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<StudentWithClass | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [formData, setFormData] = useState<StudentFormData>({ ...emptyFormData });
   const [formError, setFormError] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -346,6 +347,45 @@ export default function ManageStudents() {
     return matchSearch && matchClass;
   });
 
+  const toggleSelected = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === filtered.length && filtered.length > 0) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(filtered.map((s) => s.id)));
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.size === 0) return;
+    if (!confirm(
+      `Largim nga sistemi i ${selectedIds.size} nxënësve të zgjedhur?\n\n` +
+      `Të dhënat akademike do të ruhen, statusi do të vendoset 'I/E larguar'.`
+    )) return;
+
+    const ids = Array.from(selectedIds);
+    const { error } = await supabase
+      .from('profiles')
+      .update({ deleted_at: new Date().toISOString(), enrollment_status: 'larguar' })
+      .in('id', ids);
+
+    if (error) {
+      toast.error('Gabim: ' + error.message);
+      return;
+    }
+    toast.success(`${ids.length} nxënës u larguan nga sistemi.`);
+    setSelectedIds(new Set());
+    await loadStudents();
+  };
+
   const handleExportCSV = () => {
     if (filtered.length === 0) {
       toast.info('Asnjë nxënës për të eksportuar.');
@@ -424,11 +464,46 @@ export default function ManageStudents() {
         </select>
       </div>
 
+      {selectedIds.size > 0 && (
+        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-3 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <span className="inline-flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded-lg text-sm font-bold">
+              {selectedIds.size}
+            </span>
+            <span className="text-sm font-medium text-slate-700">nxënës të zgjedhur</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setSelectedIds(new Set())}
+              className="px-3 py-1.5 text-sm text-slate-600 hover:text-slate-900"
+            >
+              Hiq zgjedhjen
+            </button>
+            <button
+              onClick={handleBulkDelete}
+              className="inline-flex items-center gap-2 px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-sm font-medium"
+            >
+              <Trash2 className="w-4 h-4" />
+              Largo të zgjedhurit
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-100">
+                <th className="px-4 py-3 w-10">
+                  <input
+                    type="checkbox"
+                    aria-label="Zgjidh të gjithë"
+                    checked={filtered.length > 0 && selectedIds.size === filtered.length}
+                    onChange={toggleSelectAll}
+                    className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
+                  />
+                </th>
                 <th className="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Nxenesi</th>
                 <th className="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Email</th>
                 <th className="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Klasa</th>
@@ -439,13 +514,22 @@ export default function ManageStudents() {
             <tbody className="divide-y divide-slate-50">
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-slate-400">
+                  <td colSpan={6} className="px-6 py-12 text-center text-slate-400">
                     {students.length === 0 ? 'Shtoni nxenesin e pare duke klikuar "Shto Nxenes"' : 'Nuk u gjet asnje rezultat'}
                   </td>
                 </tr>
               ) : (
                 filtered.map((student) => (
-                  <tr key={student.id} className="hover:bg-slate-50 transition-colors">
+                  <tr key={student.id} className={`hover:bg-slate-50 transition-colors ${selectedIds.has(student.id) ? 'bg-blue-50/50' : ''}`}>
+                    <td className="px-4 py-4">
+                      <input
+                        type="checkbox"
+                        aria-label={`Zgjidh ${student.full_name}`}
+                        checked={selectedIds.has(student.id)}
+                        onChange={() => toggleSelected(student.id)}
+                        className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
+                      />
+                    </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-xl flex items-center justify-center text-white text-sm font-bold">
