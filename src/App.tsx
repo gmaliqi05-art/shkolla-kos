@@ -30,6 +30,8 @@ import TwoFactorSettings from './pages/TwoFactorSettings';
 import LegalDocuments from './pages/shared/LegalDocuments';
 import MinistriDashboard from './pages/ministri/MinistriDashboard';
 import DkaDashboard from './pages/dka/DkaDashboard';
+import SchoolsManagement from './pages/shared/SchoolsManagement';
+import LocalitiesManagement from './pages/shared/LocalitiesManagement';
 
 import TeacherDashboard from './pages/teacher/TeacherDashboard';
 import MyClasses from './pages/teacher/MyClasses';
@@ -70,7 +72,7 @@ import {
   Calendar, Clock, Star, MessageSquare, Library, UserCog, Shield,
   Activity, Trash2, Lock, Heart, Sparkles, Briefcase, FileCheck, Building2,
   Trophy, MapPin, NotebookPen, FileText, Stethoscope, FolderOpen, FileSpreadsheet, ShieldCheck, Scale,
-  Crown, Building,
+  Crown, Building, School,
 } from 'lucide-react';
 
 const directorNav: NavItem[] = [
@@ -154,7 +156,9 @@ const parentNav: NavItem[] = [
 
 const dkaNav: NavItem[] = [
   { label: 'Paneli Kryesor', path: '/dka', icon: LayoutDashboard },
-  { label: 'Komunat', path: '/dka/komunat', icon: MapPin },
+  { label: 'Shkollat', path: '/dka/shkollat', icon: School },
+  { label: 'Vendbanimet', path: '/dka/vendbanimet', icon: MapPin },
+  { label: 'Komunat', path: '/dka/komunat', icon: Building },
   { label: 'Mesazhet', path: '/dka/mesazhet', icon: MessageSquare },
   { label: '2FA / Siguria', path: '/dka/2fa', icon: ShieldCheck },
   { label: 'Dokumentet Ligjore', path: '/dka/dokumentet-ligjore', icon: Scale },
@@ -162,6 +166,8 @@ const dkaNav: NavItem[] = [
 
 const ministriNav: NavItem[] = [
   { label: 'Paneli Kryesor', path: '/ministri', icon: Crown },
+  { label: 'Shkollat', path: '/ministri/shkollat', icon: School },
+  { label: 'Vendbanimet', path: '/ministri/vendbanimet', icon: MapPin },
   { label: 'Komunat', path: '/ministri/komunat', icon: Building },
   { label: 'Mesazhet', path: '/ministri/mesazhet', icon: MessageSquare },
   { label: 'Audit Log', path: '/ministri/audit', icon: Activity },
@@ -345,6 +351,8 @@ function AppRoutes() {
         <Route path="/" element={<Navigate to="/dka" replace />} />
         <Route element={<DashboardLayout navItems={dkaNav} role="drejtor_komunal" />}>
           <Route path="/dka" element={<DkaDashboard />} />
+          <Route path="/dka/shkollat" element={<SchoolsManagement />} />
+          <Route path="/dka/vendbanimet" element={<LocalitiesManagement />} />
           <Route path="/dka/mesazhet" element={<MessagesPage />} />
           <Route path="/dka/komunat" element={<Municipalities />} />
           <Route path="/dka/2fa" element={<TwoFactorSettings />} />
@@ -361,6 +369,8 @@ function AppRoutes() {
         <Route path="/" element={<Navigate to="/ministri" replace />} />
         <Route element={<DashboardLayout navItems={ministriNav} role="ministri" />}>
           <Route path="/ministri" element={<MinistriDashboard />} />
+          <Route path="/ministri/shkollat" element={<SchoolsManagement />} />
+          <Route path="/ministri/vendbanimet" element={<LocalitiesManagement />} />
           <Route path="/ministri/komunat" element={<Municipalities />} />
           <Route path="/ministri/mesazhet" element={<MessagesPage />} />
           <Route path="/ministri/audit" element={<AuditLogs />} />
