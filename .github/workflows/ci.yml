@@ -29,6 +29,9 @@ jobs:
       - name: ESLint
         run: npx eslint src --quiet
 
+      - name: Tests
+        run: npm test
+
       - name: Build
         env:
           # CI build pa Supabase credentials — vetëm verifikon compilation
