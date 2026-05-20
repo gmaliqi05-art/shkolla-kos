@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Menu, Bell, LogOut, User, MessageSquare, Megaphone, Clock, X } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
@@ -20,6 +20,17 @@ interface NotifItem {
   time: string;
   isRead: boolean;
 }
+
+const ROLE_TO_URL_PREFIX: Record<UserRole, string> = {
+  drejtor: 'drejtor',
+  mesues: 'mesues',
+  nxenes: 'nxenes',
+  prind: 'prind',
+  pedagog: 'pedagog',
+  drejtor_komunal: 'dka',
+  ministri: 'ministri',
+  inspektor: 'inspektor',
+};
 
 const DEMO_NOTIFS: Record<UserRole, NotifItem[]> = {
   drejtor: [
@@ -273,24 +284,28 @@ export default function Header({ onMenuToggle }: HeaderProps) {
           )}
         </div>
 
-        <div className="flex items-center gap-3 ml-2 pl-4 border-l border-slate-200">
+        <Link
+          to={profile ? `/${ROLE_TO_URL_PREFIX[profile.role] || 'drejtor'}/profili` : '/'}
+          className="flex items-center gap-3 ml-2 pl-4 border-l border-slate-200 hover:bg-slate-50 rounded-xl px-2 py-1 transition-colors group"
+          title="Profili Im"
+        >
           <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-teal-500 rounded-xl flex items-center justify-center text-white text-sm font-bold">
             {profile?.full_name?.charAt(0)?.toUpperCase() || <User className="w-4 h-4" />}
           </div>
           <div className="hidden sm:block">
-            <p className="text-sm font-medium text-slate-900 leading-tight">
+            <p className="text-sm font-medium text-slate-900 leading-tight group-hover:text-blue-700">
               {profile?.full_name}
             </p>
             <p className="text-xs text-slate-500">{profile?.email}</p>
           </div>
-          <button
-            onClick={signOut}
-            className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
-            title="Dilni"
-          >
-            <LogOut className="w-4 h-4" />
-          </button>
-        </div>
+        </Link>
+        <button
+          onClick={signOut}
+          className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+          title="Dilni"
+        >
+          <LogOut className="w-4 h-4" />
+        </button>
       </div>
     </header>
   );
