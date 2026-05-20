@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { I18nProvider } from './lib/i18n/I18nProvider';
@@ -5,69 +6,69 @@ import LoginPage from './pages/LoginPage';
 import DashboardLayout from './components/layout/DashboardLayout';
 import type { NavItem } from './components/layout/Sidebar';
 
-import DirectorDashboard from './pages/director/DirectorDashboard';
-import ManageTeachers from './pages/director/ManageTeachers';
-import ManageClasses from './pages/director/ManageClasses';
-import ManageStudents from './pages/director/ManageStudents';
-import ManageParents from './pages/director/ManageParents';
-import Reports from './pages/director/Reports';
-import Announcements from './pages/director/Announcements';
-import AuditLogs from './pages/director/AuditLogs';
-import DeletionRequests from './pages/director/DeletionRequests';
-import SpecialNeedsManagement from './pages/director/SpecialNeedsManagement';
-import SchoolCouncils from './pages/director/SchoolCouncils';
-import SchoolSettings from './pages/director/SchoolSettings';
-import ReportCards from './pages/director/ReportCards';
-import ReportCardView from './pages/director/ReportCardView';
-import TeacherLicensing from './pages/director/TeacherLicensing';
-import Activities from './pages/director/Activities';
-import NationalTests from './pages/director/NationalTests';
-import Municipalities from './pages/director/Municipalities';
-import SchoolCalendar from './pages/director/SchoolCalendar';
-import AnnualPlan from './pages/director/AnnualPlan';
-import LibraryPage from './pages/director/Library';
-import TwoFactorSettings from './pages/TwoFactorSettings';
-import LegalDocuments from './pages/shared/LegalDocuments';
-import MinistriDashboard from './pages/ministri/MinistriDashboard';
-import StaffAccountsManagement from './pages/ministri/StaffAccountsManagement';
-import DkaDashboard from './pages/dka/DkaDashboard';
-import SchoolsManagement from './pages/shared/SchoolsManagement';
-import LocalitiesManagement from './pages/shared/LocalitiesManagement';
-import InspectionsManagement from './pages/inspektor/InspectionsManagement';
-import InspectionDetail from './pages/inspektor/InspectionDetail';
+const DirectorDashboard = lazy(() => import('./pages/director/DirectorDashboard'));
+const ManageTeachers = lazy(() => import('./pages/director/ManageTeachers'));
+const ManageClasses = lazy(() => import('./pages/director/ManageClasses'));
+const ManageStudents = lazy(() => import('./pages/director/ManageStudents'));
+const ManageParents = lazy(() => import('./pages/director/ManageParents'));
+const Reports = lazy(() => import('./pages/director/Reports'));
+const Announcements = lazy(() => import('./pages/director/Announcements'));
+const AuditLogs = lazy(() => import('./pages/director/AuditLogs'));
+const DeletionRequests = lazy(() => import('./pages/director/DeletionRequests'));
+const SpecialNeedsManagement = lazy(() => import('./pages/director/SpecialNeedsManagement'));
+const SchoolCouncils = lazy(() => import('./pages/director/SchoolCouncils'));
+const SchoolSettings = lazy(() => import('./pages/director/SchoolSettings'));
+const ReportCards = lazy(() => import('./pages/director/ReportCards'));
+const ReportCardView = lazy(() => import('./pages/director/ReportCardView'));
+const TeacherLicensing = lazy(() => import('./pages/director/TeacherLicensing'));
+const Activities = lazy(() => import('./pages/director/Activities'));
+const NationalTests = lazy(() => import('./pages/director/NationalTests'));
+const Municipalities = lazy(() => import('./pages/director/Municipalities'));
+const SchoolCalendar = lazy(() => import('./pages/director/SchoolCalendar'));
+const AnnualPlan = lazy(() => import('./pages/director/AnnualPlan'));
+const LibraryPage = lazy(() => import('./pages/director/Library'));
+const TwoFactorSettings = lazy(() => import('./pages/TwoFactorSettings'));
+const LegalDocuments = lazy(() => import('./pages/shared/LegalDocuments'));
+const MinistriDashboard = lazy(() => import('./pages/ministri/MinistriDashboard'));
+const StaffAccountsManagement = lazy(() => import('./pages/ministri/StaffAccountsManagement'));
+const DkaDashboard = lazy(() => import('./pages/dka/DkaDashboard'));
+const SchoolsManagement = lazy(() => import('./pages/shared/SchoolsManagement'));
+const LocalitiesManagement = lazy(() => import('./pages/shared/LocalitiesManagement'));
+const InspectionsManagement = lazy(() => import('./pages/inspektor/InspectionsManagement'));
+const InspectionDetail = lazy(() => import('./pages/inspektor/InspectionDetail'));
 
-import TeacherDashboard from './pages/teacher/TeacherDashboard';
-import MyClasses from './pages/teacher/MyClasses';
-import GradeEntry from './pages/teacher/GradeEntry';
-import AttendancePage from './pages/teacher/AttendancePage';
-import TeacherSchedule from './pages/teacher/TeacherSchedule';
-import SubjectsPage from './pages/teacher/SubjectsPage';
-import BehaviorPage from './pages/teacher/BehaviorPage';
-import DisciplinePage from './pages/teacher/DisciplinePage';
-import StudentAccommodations from './pages/teacher/StudentAccommodations';
-import MyLicense from './pages/teacher/MyLicense';
-import ParentMeetings from './pages/teacher/ParentMeetings';
-import ClassDiary from './pages/teacher/ClassDiary';
-import HomeworkPage from './pages/teacher/HomeworkPage';
-import DiagnosticAssessments from './pages/teacher/DiagnosticAssessments';
+const TeacherDashboard = lazy(() => import('./pages/teacher/TeacherDashboard'));
+const MyClasses = lazy(() => import('./pages/teacher/MyClasses'));
+const GradeEntry = lazy(() => import('./pages/teacher/GradeEntry'));
+const AttendancePage = lazy(() => import('./pages/teacher/AttendancePage'));
+const TeacherSchedule = lazy(() => import('./pages/teacher/TeacherSchedule'));
+const SubjectsPage = lazy(() => import('./pages/teacher/SubjectsPage'));
+const BehaviorPage = lazy(() => import('./pages/teacher/BehaviorPage'));
+const DisciplinePage = lazy(() => import('./pages/teacher/DisciplinePage'));
+const StudentAccommodations = lazy(() => import('./pages/teacher/StudentAccommodations'));
+const MyLicense = lazy(() => import('./pages/teacher/MyLicense'));
+const ParentMeetings = lazy(() => import('./pages/teacher/ParentMeetings'));
+const ClassDiary = lazy(() => import('./pages/teacher/ClassDiary'));
+const HomeworkPage = lazy(() => import('./pages/teacher/HomeworkPage'));
+const DiagnosticAssessments = lazy(() => import('./pages/teacher/DiagnosticAssessments'));
 
-import StudentDashboard from './pages/student/StudentDashboard';
-import MyGrades from './pages/student/MyGrades';
-import MySchedule from './pages/student/MySchedule';
-import MyAttendance from './pages/student/MyAttendance';
+const StudentDashboard = lazy(() => import('./pages/student/StudentDashboard'));
+const MyGrades = lazy(() => import('./pages/student/MyGrades'));
+const MySchedule = lazy(() => import('./pages/student/MySchedule'));
+const MyAttendance = lazy(() => import('./pages/student/MyAttendance'));
 
-import ParentDashboard from './pages/parent/ParentDashboard';
-import ChildGrades from './pages/parent/ChildGrades';
-import ChildAttendance from './pages/parent/ChildAttendance';
-import PrivacySettings from './pages/parent/PrivacySettings';
-import ChildIEP from './pages/parent/ChildIEP';
+const ParentDashboard = lazy(() => import('./pages/parent/ParentDashboard'));
+const ChildGrades = lazy(() => import('./pages/parent/ChildGrades'));
+const ChildAttendance = lazy(() => import('./pages/parent/ChildAttendance'));
+const PrivacySettings = lazy(() => import('./pages/parent/PrivacySettings'));
+const ChildIEP = lazy(() => import('./pages/parent/ChildIEP'));
 
-import MessagesPage from './pages/shared/MessagesPage';
-import PrivacyPolicy from './pages/shared/PrivacyPolicy';
-import MyCouncils from './pages/shared/MyCouncils';
-import MyTestResults from './pages/shared/MyTestResults';
-import Portfolio from './pages/shared/Portfolio';
-import SelfAssessmentPage from './pages/student/SelfAssessment';
+const MessagesPage = lazy(() => import('./pages/shared/MessagesPage'));
+const PrivacyPolicy = lazy(() => import('./pages/shared/PrivacyPolicy'));
+const MyCouncils = lazy(() => import('./pages/shared/MyCouncils'));
+const MyTestResults = lazy(() => import('./pages/shared/MyTestResults'));
+const Portfolio = lazy(() => import('./pages/shared/Portfolio'));
+const SelfAssessmentPage = lazy(() => import('./pages/student/SelfAssessment'));
 
 import {
   LayoutDashboard, Users, GraduationCap, Layers, BarChart3,
@@ -202,6 +203,14 @@ const pedagogNav: NavItem[] = [
   { label: 'Dokumentet Ligjore', path: '/pedagog/dokumentet-ligjore', icon: Scale },
 ];
 
+function PageLoader() {
+  return (
+    <div className="flex items-center justify-center min-h-64">
+      <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+}
+
 function AppRoutes() {
   const { profile, loading } = useAuth();
 
@@ -218,202 +227,220 @@ function AppRoutes() {
 
   if (!profile) {
     return (
-      <Routes>
-        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="/dokumentet-ligjore" element={<LegalDocuments />} />
-        <Route path="*" element={<LoginPage />} />
-      </Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/dokumentet-ligjore" element={<LegalDocuments />} />
+          <Route path="*" element={<LoginPage />} />
+        </Routes>
+      </Suspense>
     );
   }
 
   if (profile.role === 'drejtor') {
     return (
-      <Routes>
-        <Route path="/" element={<Navigate to="/drejtor" replace />} />
-        <Route element={<DashboardLayout navItems={directorNav} role="drejtor" />}>
-          <Route path="/drejtor" element={<DirectorDashboard />} />
-          <Route path="/drejtor/mesues" element={<ManageTeachers />} />
-          <Route path="/drejtor/licencat" element={<TeacherLicensing />} />
-          <Route path="/drejtor/nxenes" element={<ManageStudents />} />
-          <Route path="/drejtor/prinder" element={<ManageParents />} />
-          <Route path="/drejtor/klasa" element={<ManageClasses />} />
-          <Route path="/drejtor/raporte" element={<Reports />} />
-          <Route path="/drejtor/deftesat" element={<ReportCards />} />
-          <Route path="/drejtor/deftesat/:studentId/:classId/:period/:type" element={<ReportCardView />} />
-          <Route path="/drejtor/cilesime" element={<SchoolSettings />} />
-          <Route path="/drejtor/komunat" element={<Municipalities />} />
-          <Route path="/drejtor/kalendari" element={<SchoolCalendar />} />
-          <Route path="/drejtor/plani-vjetor" element={<AnnualPlan />} />
-          <Route path="/drejtor/biblioteka" element={<LibraryPage />} />
-          <Route path="/drejtor/2fa" element={<TwoFactorSettings />} />
-          <Route path="/drejtor/dokumentet-ligjore" element={<LegalDocuments />} />
-          <Route path="/drejtor/inspektimet" element={<InspectionsManagement />} />
-          <Route path="/drejtor/inspektimet/:id" element={<InspectionDetail />} />
-          <Route path="/drejtor/disiplina" element={<DisciplinePage />} />
-          <Route path="/drejtor/nva" element={<SpecialNeedsManagement />} />
-          <Route path="/drejtor/keshillat" element={<SchoolCouncils />} />
-          <Route path="/drejtor/aktivitete" element={<Activities />} />
-          <Route path="/drejtor/takimet" element={<ParentMeetings />} />
-          <Route path="/drejtor/testet-kombetare" element={<NationalTests />} />
-          <Route path="/drejtor/audit" element={<AuditLogs />} />
-          <Route path="/drejtor/kerkesa-fshirje" element={<DeletionRequests />} />
-          <Route path="/drejtor/njoftime" element={<Announcements />} />
-          <Route path="/drejtor/mesazhet" element={<MessagesPage />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/drejtor" replace />} />
-      </Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<Navigate to="/drejtor" replace />} />
+          <Route element={<DashboardLayout navItems={directorNav} role="drejtor" />}>
+            <Route path="/drejtor" element={<DirectorDashboard />} />
+            <Route path="/drejtor/mesues" element={<ManageTeachers />} />
+            <Route path="/drejtor/licencat" element={<TeacherLicensing />} />
+            <Route path="/drejtor/nxenes" element={<ManageStudents />} />
+            <Route path="/drejtor/prinder" element={<ManageParents />} />
+            <Route path="/drejtor/klasa" element={<ManageClasses />} />
+            <Route path="/drejtor/raporte" element={<Reports />} />
+            <Route path="/drejtor/deftesat" element={<ReportCards />} />
+            <Route path="/drejtor/deftesat/:studentId/:classId/:period/:type" element={<ReportCardView />} />
+            <Route path="/drejtor/cilesime" element={<SchoolSettings />} />
+            <Route path="/drejtor/komunat" element={<Municipalities />} />
+            <Route path="/drejtor/kalendari" element={<SchoolCalendar />} />
+            <Route path="/drejtor/plani-vjetor" element={<AnnualPlan />} />
+            <Route path="/drejtor/biblioteka" element={<LibraryPage />} />
+            <Route path="/drejtor/2fa" element={<TwoFactorSettings />} />
+            <Route path="/drejtor/dokumentet-ligjore" element={<LegalDocuments />} />
+            <Route path="/drejtor/inspektimet" element={<InspectionsManagement />} />
+            <Route path="/drejtor/inspektimet/:id" element={<InspectionDetail />} />
+            <Route path="/drejtor/disiplina" element={<DisciplinePage />} />
+            <Route path="/drejtor/nva" element={<SpecialNeedsManagement />} />
+            <Route path="/drejtor/keshillat" element={<SchoolCouncils />} />
+            <Route path="/drejtor/aktivitete" element={<Activities />} />
+            <Route path="/drejtor/takimet" element={<ParentMeetings />} />
+            <Route path="/drejtor/testet-kombetare" element={<NationalTests />} />
+            <Route path="/drejtor/audit" element={<AuditLogs />} />
+            <Route path="/drejtor/kerkesa-fshirje" element={<DeletionRequests />} />
+            <Route path="/drejtor/njoftime" element={<Announcements />} />
+            <Route path="/drejtor/mesazhet" element={<MessagesPage />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/drejtor" replace />} />
+        </Routes>
+      </Suspense>
     );
   }
 
   if (profile.role === 'mesues') {
     return (
-      <Routes>
-        <Route path="/" element={<Navigate to="/mesues" replace />} />
-        <Route element={<DashboardLayout navItems={teacherNav} role="mesues" />}>
-          <Route path="/mesues" element={<TeacherDashboard />} />
-          <Route path="/mesues/klasa" element={<MyClasses />} />
-          <Route path="/mesues/nota" element={<GradeEntry />} />
-          <Route path="/mesues/sjellja" element={<BehaviorPage />} />
-          <Route path="/mesues/disiplina" element={<DisciplinePage />} />
-          <Route path="/mesues/akomodimet" element={<StudentAccommodations />} />
-          <Route path="/mesues/keshillat" element={<MyCouncils />} />
-          <Route path="/mesues/licenca" element={<MyLicense />} />
-          <Route path="/mesues/aktivitete" element={<Activities />} />
-          <Route path="/mesues/takimet" element={<ParentMeetings />} />
-          <Route path="/mesues/ditari" element={<ClassDiary />} />
-          <Route path="/mesues/detyrat" element={<HomeworkPage />} />
-          <Route path="/mesues/2fa" element={<TwoFactorSettings />} />
-          <Route path="/mesues/dokumentet-ligjore" element={<LegalDocuments />} />
-          <Route path="/mesues/diagnostik" element={<DiagnosticAssessments />} />
-          <Route path="/mesues/portofoli" element={<Portfolio />} />
-          <Route path="/mesues/frekuentimi" element={<AttendancePage />} />
-          <Route path="/mesues/lendet" element={<SubjectsPage />} />
-          <Route path="/mesues/orari" element={<TeacherSchedule />} />
-          <Route path="/mesues/mesazhet" element={<MessagesPage />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/mesues" replace />} />
-      </Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<Navigate to="/mesues" replace />} />
+          <Route element={<DashboardLayout navItems={teacherNav} role="mesues" />}>
+            <Route path="/mesues" element={<TeacherDashboard />} />
+            <Route path="/mesues/klasa" element={<MyClasses />} />
+            <Route path="/mesues/nota" element={<GradeEntry />} />
+            <Route path="/mesues/sjellja" element={<BehaviorPage />} />
+            <Route path="/mesues/disiplina" element={<DisciplinePage />} />
+            <Route path="/mesues/akomodimet" element={<StudentAccommodations />} />
+            <Route path="/mesues/keshillat" element={<MyCouncils />} />
+            <Route path="/mesues/licenca" element={<MyLicense />} />
+            <Route path="/mesues/aktivitete" element={<Activities />} />
+            <Route path="/mesues/takimet" element={<ParentMeetings />} />
+            <Route path="/mesues/ditari" element={<ClassDiary />} />
+            <Route path="/mesues/detyrat" element={<HomeworkPage />} />
+            <Route path="/mesues/2fa" element={<TwoFactorSettings />} />
+            <Route path="/mesues/dokumentet-ligjore" element={<LegalDocuments />} />
+            <Route path="/mesues/diagnostik" element={<DiagnosticAssessments />} />
+            <Route path="/mesues/portofoli" element={<Portfolio />} />
+            <Route path="/mesues/frekuentimi" element={<AttendancePage />} />
+            <Route path="/mesues/lendet" element={<SubjectsPage />} />
+            <Route path="/mesues/orari" element={<TeacherSchedule />} />
+            <Route path="/mesues/mesazhet" element={<MessagesPage />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/mesues" replace />} />
+        </Routes>
+      </Suspense>
     );
   }
 
   if (profile.role === 'nxenes') {
     return (
-      <Routes>
-        <Route path="/" element={<Navigate to="/nxenes" replace />} />
-        <Route element={<DashboardLayout navItems={studentNav} role="nxenes" />}>
-          <Route path="/nxenes" element={<StudentDashboard />} />
-          <Route path="/nxenes/nota" element={<MyGrades />} />
-          <Route path="/nxenes/orari" element={<MySchedule />} />
-          <Route path="/nxenes/frekuentimi" element={<MyAttendance />} />
-          <Route path="/nxenes/mesazhet" element={<MessagesPage />} />
-          <Route path="/nxenes/keshillat" element={<MyCouncils />} />
-          <Route path="/nxenes/testet-kombetare" element={<MyTestResults />} />
-          <Route path="/nxenes/portofoli" element={<Portfolio />} />
-          <Route path="/nxenes/vetevleresimi" element={<SelfAssessmentPage />} />
-          <Route path="/nxenes/dokumentet-ligjore" element={<LegalDocuments />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/nxenes" replace />} />
-      </Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<Navigate to="/nxenes" replace />} />
+          <Route element={<DashboardLayout navItems={studentNav} role="nxenes" />}>
+            <Route path="/nxenes" element={<StudentDashboard />} />
+            <Route path="/nxenes/nota" element={<MyGrades />} />
+            <Route path="/nxenes/orari" element={<MySchedule />} />
+            <Route path="/nxenes/frekuentimi" element={<MyAttendance />} />
+            <Route path="/nxenes/mesazhet" element={<MessagesPage />} />
+            <Route path="/nxenes/keshillat" element={<MyCouncils />} />
+            <Route path="/nxenes/testet-kombetare" element={<MyTestResults />} />
+            <Route path="/nxenes/portofoli" element={<Portfolio />} />
+            <Route path="/nxenes/vetevleresimi" element={<SelfAssessmentPage />} />
+            <Route path="/nxenes/dokumentet-ligjore" element={<LegalDocuments />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/nxenes" replace />} />
+        </Routes>
+      </Suspense>
     );
   }
 
   if (profile.role === 'prind') {
     return (
-      <Routes>
-        <Route path="/" element={<Navigate to="/prind" replace />} />
-        <Route element={<DashboardLayout navItems={parentNav} role="prind" />}>
-          <Route path="/prind" element={<ParentDashboard />} />
-          <Route path="/prind/nota" element={<ChildGrades />} />
-          <Route path="/prind/frekuentimi" element={<ChildAttendance />} />
-          <Route path="/prind/mesazhet" element={<MessagesPage />} />
-          <Route path="/prind/pia" element={<ChildIEP />} />
-          <Route path="/prind/aktivitete" element={<Activities />} />
-          <Route path="/prind/takimet" element={<ParentMeetings />} />
-          <Route path="/prind/keshillat" element={<MyCouncils />} />
-          <Route path="/prind/testet-kombetare" element={<MyTestResults />} />
-          <Route path="/prind/portofoli" element={<Portfolio />} />
-          <Route path="/prind/privatesia" element={<PrivacySettings />} />
-          <Route path="/prind/dokumentet-ligjore" element={<LegalDocuments />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/prind" replace />} />
-      </Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<Navigate to="/prind" replace />} />
+          <Route element={<DashboardLayout navItems={parentNav} role="prind" />}>
+            <Route path="/prind" element={<ParentDashboard />} />
+            <Route path="/prind/nota" element={<ChildGrades />} />
+            <Route path="/prind/frekuentimi" element={<ChildAttendance />} />
+            <Route path="/prind/mesazhet" element={<MessagesPage />} />
+            <Route path="/prind/pia" element={<ChildIEP />} />
+            <Route path="/prind/aktivitete" element={<Activities />} />
+            <Route path="/prind/takimet" element={<ParentMeetings />} />
+            <Route path="/prind/keshillat" element={<MyCouncils />} />
+            <Route path="/prind/testet-kombetare" element={<MyTestResults />} />
+            <Route path="/prind/portofoli" element={<Portfolio />} />
+            <Route path="/prind/privatesia" element={<PrivacySettings />} />
+            <Route path="/prind/dokumentet-ligjore" element={<LegalDocuments />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/prind" replace />} />
+        </Routes>
+      </Suspense>
     );
   }
 
   if (profile.role === 'pedagog') {
     return (
-      <Routes>
-        <Route path="/" element={<Navigate to="/pedagog" replace />} />
-        <Route element={<DashboardLayout navItems={pedagogNav} role="pedagog" />}>
-          <Route path="/pedagog" element={<DirectorDashboard />} />
-          <Route path="/pedagog/nva" element={<SpecialNeedsManagement />} />
-          <Route path="/pedagog/diagnostik" element={<DiagnosticAssessments />} />
-          <Route path="/pedagog/portofoli" element={<Portfolio />} />
-          <Route path="/pedagog/keshillat" element={<MyCouncils />} />
-          <Route path="/pedagog/aktivitete" element={<Activities />} />
-          <Route path="/pedagog/takimet" element={<ParentMeetings />} />
-          <Route path="/pedagog/mesazhet" element={<MessagesPage />} />
-          <Route path="/pedagog/2fa" element={<TwoFactorSettings />} />
-          <Route path="/pedagog/dokumentet-ligjore" element={<LegalDocuments />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/pedagog" replace />} />
-      </Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<Navigate to="/pedagog" replace />} />
+          <Route element={<DashboardLayout navItems={pedagogNav} role="pedagog" />}>
+            <Route path="/pedagog" element={<DirectorDashboard />} />
+            <Route path="/pedagog/nva" element={<SpecialNeedsManagement />} />
+            <Route path="/pedagog/diagnostik" element={<DiagnosticAssessments />} />
+            <Route path="/pedagog/portofoli" element={<Portfolio />} />
+            <Route path="/pedagog/keshillat" element={<MyCouncils />} />
+            <Route path="/pedagog/aktivitete" element={<Activities />} />
+            <Route path="/pedagog/takimet" element={<ParentMeetings />} />
+            <Route path="/pedagog/mesazhet" element={<MessagesPage />} />
+            <Route path="/pedagog/2fa" element={<TwoFactorSettings />} />
+            <Route path="/pedagog/dokumentet-ligjore" element={<LegalDocuments />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/pedagog" replace />} />
+        </Routes>
+      </Suspense>
     );
   }
 
   if (profile.role === 'drejtor_komunal') {
     return (
-      <Routes>
-        <Route path="/" element={<Navigate to="/dka" replace />} />
-        <Route element={<DashboardLayout navItems={dkaNav} role="drejtor_komunal" />}>
-          <Route path="/dka" element={<DkaDashboard />} />
-          <Route path="/dka/shkollat" element={<SchoolsManagement />} />
-          <Route path="/dka/vendbanimet" element={<LocalitiesManagement />} />
-          <Route path="/dka/mesazhet" element={<MessagesPage />} />
-          <Route path="/dka/komunat" element={<Municipalities />} />
-          <Route path="/dka/2fa" element={<TwoFactorSettings />} />
-          <Route path="/dka/dokumentet-ligjore" element={<LegalDocuments />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/dka" replace />} />
-      </Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<Navigate to="/dka" replace />} />
+          <Route element={<DashboardLayout navItems={dkaNav} role="drejtor_komunal" />}>
+            <Route path="/dka" element={<DkaDashboard />} />
+            <Route path="/dka/shkollat" element={<SchoolsManagement />} />
+            <Route path="/dka/vendbanimet" element={<LocalitiesManagement />} />
+            <Route path="/dka/mesazhet" element={<MessagesPage />} />
+            <Route path="/dka/komunat" element={<Municipalities />} />
+            <Route path="/dka/2fa" element={<TwoFactorSettings />} />
+            <Route path="/dka/dokumentet-ligjore" element={<LegalDocuments />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/dka" replace />} />
+        </Routes>
+      </Suspense>
     );
   }
 
   if (profile.role === 'inspektor') {
     return (
-      <Routes>
-        <Route path="/" element={<Navigate to="/inspektor" replace />} />
-        <Route element={<DashboardLayout navItems={inspektorNav} role="inspektor" />}>
-          <Route path="/inspektor" element={<InspectionsManagement />} />
-          <Route path="/inspektor/inspektimet" element={<InspectionsManagement />} />
-          <Route path="/inspektor/inspektimet/:id" element={<InspectionDetail />} />
-          <Route path="/inspektor/shkollat" element={<SchoolsManagement />} />
-          <Route path="/inspektor/mesazhet" element={<MessagesPage />} />
-          <Route path="/inspektor/2fa" element={<TwoFactorSettings />} />
-          <Route path="/inspektor/dokumentet-ligjore" element={<LegalDocuments />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/inspektor" replace />} />
-      </Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<Navigate to="/inspektor" replace />} />
+          <Route element={<DashboardLayout navItems={inspektorNav} role="inspektor" />}>
+            <Route path="/inspektor" element={<InspectionsManagement />} />
+            <Route path="/inspektor/inspektimet" element={<InspectionsManagement />} />
+            <Route path="/inspektor/inspektimet/:id" element={<InspectionDetail />} />
+            <Route path="/inspektor/shkollat" element={<SchoolsManagement />} />
+            <Route path="/inspektor/mesazhet" element={<MessagesPage />} />
+            <Route path="/inspektor/2fa" element={<TwoFactorSettings />} />
+            <Route path="/inspektor/dokumentet-ligjore" element={<LegalDocuments />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/inspektor" replace />} />
+        </Routes>
+      </Suspense>
     );
   }
 
   if (profile.role === 'ministri') {
     return (
-      <Routes>
-        <Route path="/" element={<Navigate to="/ministri" replace />} />
-        <Route element={<DashboardLayout navItems={ministriNav} role="ministri" />}>
-          <Route path="/ministri" element={<MinistriDashboard />} />
-          <Route path="/ministri/stafi" element={<StaffAccountsManagement />} />
-          <Route path="/ministri/shkollat" element={<SchoolsManagement />} />
-          <Route path="/ministri/vendbanimet" element={<LocalitiesManagement />} />
-          <Route path="/ministri/komunat" element={<Municipalities />} />
-          <Route path="/ministri/mesazhet" element={<MessagesPage />} />
-          <Route path="/ministri/audit" element={<AuditLogs />} />
-          <Route path="/ministri/2fa" element={<TwoFactorSettings />} />
-          <Route path="/ministri/dokumentet-ligjore" element={<LegalDocuments />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/ministri" replace />} />
-      </Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<Navigate to="/ministri" replace />} />
+          <Route element={<DashboardLayout navItems={ministriNav} role="ministri" />}>
+            <Route path="/ministri" element={<MinistriDashboard />} />
+            <Route path="/ministri/stafi" element={<StaffAccountsManagement />} />
+            <Route path="/ministri/shkollat" element={<SchoolsManagement />} />
+            <Route path="/ministri/vendbanimet" element={<LocalitiesManagement />} />
+            <Route path="/ministri/komunat" element={<Municipalities />} />
+            <Route path="/ministri/mesazhet" element={<MessagesPage />} />
+            <Route path="/ministri/audit" element={<AuditLogs />} />
+            <Route path="/ministri/2fa" element={<TwoFactorSettings />} />
+            <Route path="/ministri/dokumentet-ligjore" element={<LegalDocuments />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/ministri" replace />} />
+        </Routes>
+      </Suspense>
     );
   }
 
