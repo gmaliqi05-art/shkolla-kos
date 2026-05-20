@@ -1,0 +1,369 @@
+import { useEffect, useState } from 'react';
+import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../contexts/AuthContext';
+import {
+  SCHOOL_TYPE_LABELS,
+  type SchoolInfo,
+  type SchoolType,
+  type Municipality,
+  type Locality,
+} from '../../types/database';
+import { Loader2, Plus, X, School, Edit2, Trash2, MapPin, Phone, Mail, Building } from 'lucide-react';
+
+interface SchoolRow extends SchoolInfo {
+  municipality_name?: string;
+  locality_name?: string;
+}
+
+export default function SchoolsManagement() {
+  const { profile } = useAuth();
+  const isMinister = profile?.role === 'ministri';
+  const isDka = profile?.role === 'drejtor_komunal';
+  const canManage = isMinister || isDka;
+
+  const [schools, setSchools] = useState<SchoolRow[]>([]);
+  const [municipalities, setMunicipalities] = useState<Municipality[]>([]);
+  const [localities, setLocalities] = useState<Locality[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filterMunicipality, setFilterMunicipality] = useState('');
+
+  const [showModal, setShowModal] = useState(false);
+  const [editing, setEditing] = useState<SchoolInfo | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+
+  const [form, setForm] = useState({
+    name: '',
+    full_name: '',
+    address: '',
+    municipality_id: '',
+    locality_id: '',
+    school_type: 'fillore_mesme_ulet' as SchoolType,
+    phone: '',
+    email: '',
+    director_name: '',
+    registration_number: '',
+  });
+
+  useEffect(() => {
+    load();
+  }, [profile?.id]);
+
+  const load = async () => {
+    setLoading(true);
+    const [schoolsRes, munRes, locRes] = await Promise.all([
+      isDka && profile?.managed_municipality_id
+        ? supabase.from('school_info').select('*').eq('municipality_id', profile.managed_municipality_id)
+        : supabase.from('school_info').select('*'),
+      supabase.from('municipalities').select('*').order('name'),
+      supabase.from('localities').select('*').order('name'),
+    ]);
+    const schoolsList: SchoolInfo[] = schoolsRes.data || [];
+    const munList = munRes.data || [];
+    const locList = locRes.data || [];
+
+    const munMap = new Map(munList.map((m) => [m.id, m.name]));
+    const locMap = new Map(locList.map((l) => [l.id, l.name]));
+
+    setSchools(schoolsList.map((s) => ({
+      ...s,
+      municipality_name: s.municipality_id ? munMap.get(s.municipality_id) : undefined,
+      locality_name: s.locality_id ? locMap.get(s.locality_id) : undefined,
+    })));
+    setMunicipalities(munList);
+    setLocalities(locList);
+    setLoading(false);
+  };
+
+  const openNew = () => {
+    setEditing(null);
+    setForm({
+      name: '',
+      full_name: '',
+      address: '',
+      municipality_id: isDka && profile?.managed_municipality_id ? profile.managed_municipality_id : '',
+      locality_id: '',
+      school_type: 'fillore_mesme_ulet',
+      phone: '',
+      email: '',
+      director_name: '',
+      registration_number: '',
+    });
+    setError('');
+    setShowModal(true);
+  };
+
+  const openEdit = (s: SchoolInfo) => {
+    setEditing(s);
+    setForm({
+      name: s.name,
+      full_name: s.full_name,
+      address: s.address,
+      municipality_id: s.municipality_id || '',
+      locality_id: s.locality_id || '',
+      school_type: (s.school_type as SchoolType) || 'fillore_mesme_ulet',
+      phone: s.phone,
+      email: s.email,
+      director_name: s.director_name,
+      registration_number: s.registration_number,
+    });
+    setError('');
+    setShowModal(true);
+  };
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError('');
+    const payload = {
+      name: form.name,
+      full_name: form.full_name,
+      address: form.address,
+      municipality_id: form.municipality_id || null,
+      locality_id: form.locality_id || null,
+      school_type: form.school_type,
+      municipality: form.municipality_id
+        ? (municipalities.find((m) => m.id === form.municipality_id)?.name || '')
+        : '',
+      phone: form.phone,
+      email: form.email,
+      director_name: form.director_name,
+      registration_number: form.registration_number,
+      updated_at: new Date().toISOString(),
+    };
+    const res = editing
+      ? await supabase.from('school_info').update(payload).eq('id', editing.id)
+      : await supabase.from('school_info').insert(payload);
+    if (res.error) {
+      setError(res.error.message);
+    } else {
+      setShowModal(false);
+      load();
+    }
+    setSubmitting(false);
+  };
+
+  const remove = async (s: SchoolInfo) => {
+    if (!confirm(`Fshij shkollën "${s.name}"? Të gjitha të dhënat e lidhura me të do të humbasin.`)) return;
+    const { error } = await supabase.from('school_info').delete().eq('id', s.id);
+    if (error) alert('Gabim: ' + error.message);
+    else load();
+  };
+
+  const filtered = filterMunicipality
+    ? schools.filter((s) => s.municipality_id === filterMunicipality)
+    : schools;
+
+  if (loading) {
+    return <div className="flex items-center justify-center h-64"><Loader2 className="w-8 h-8 text-blue-500 animate-spin" /></div>;
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+            <School className="w-5 h-5 text-blue-600" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">Menaxhimi i Shkollave</h1>
+            <p className="text-slate-500 text-sm">
+              {isMinister ? 'Të gjitha shkollat e Kosovës' : isDka ? 'Shkollat e komunës suaj' : 'Shkollat'}
+            </p>
+          </div>
+        </div>
+        {canManage && (
+          <button onClick={openNew} className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium">
+            <Plus className="w-4 h-4" />
+            Shto Shkollë
+          </button>
+        )}
+      </div>
+
+      {isMinister && (
+        <div className="bg-white rounded-2xl border border-slate-100 p-4">
+          <label className="block text-xs font-medium text-slate-500 mb-1">Filtro sipas komunës</label>
+          <select
+            value={filterMunicipality}
+            onChange={(e) => setFilterMunicipality(e.target.value)}
+            className="px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">Të gjitha komunat</option>
+            {municipalities.map((m) => (
+              <option key={m.id} value={m.id}>{m.name}</option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
+        {filtered.length === 0 ? (
+          <div className="px-6 py-12 text-center text-slate-400 text-sm">
+            {schools.length === 0 ? 'Asnjë shkollë e regjistruar.' : 'Asnjë shkollë me filtrin e zgjedhur.'}
+          </div>
+        ) : (
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50">
+              <tr className="text-left text-xs font-semibold text-slate-500 uppercase">
+                <th className="px-4 py-3">Shkolla</th>
+                <th className="px-4 py-3">Lloji</th>
+                <th className="px-4 py-3">Komuna / Fshati</th>
+                <th className="px-4 py-3">Drejtori</th>
+                <th className="px-4 py-3">Kontakt</th>
+                {canManage && <th className="px-4 py-3"></th>}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {filtered.map((s) => (
+                <tr key={s.id} className="hover:bg-slate-50">
+                  <td className="px-4 py-3">
+                    <p className="font-medium text-slate-900">{s.name}</p>
+                    {s.full_name && <p className="text-xs text-slate-500">{s.full_name}</p>}
+                    {s.registration_number && <p className="text-xs text-slate-400 font-mono">Nr: {s.registration_number}</p>}
+                  </td>
+                  <td className="px-4 py-3 text-slate-700">
+                    {s.school_type ? SCHOOL_TYPE_LABELS[s.school_type] : '—'}
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-start gap-1 text-xs">
+                      <MapPin className="w-3 h-3 text-slate-400 mt-0.5" />
+                      <div>
+                        {s.municipality_name && <p className="text-slate-700 font-medium">{s.municipality_name}</p>}
+                        {s.locality_name && <p className="text-slate-500">{s.locality_name}</p>}
+                        {s.address && <p className="text-slate-400 mt-0.5">{s.address}</p>}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-slate-700">{s.director_name || <span className="text-slate-400 italic">pa caktuar</span>}</td>
+                  <td className="px-4 py-3 text-xs text-slate-600">
+                    {s.phone && <div className="flex items-center gap-1"><Phone className="w-3 h-3" />{s.phone}</div>}
+                    {s.email && <div className="flex items-center gap-1"><Mail className="w-3 h-3" />{s.email}</div>}
+                  </td>
+                  {canManage && (
+                    <td className="px-4 py-3 text-right">
+                      <div className="inline-flex gap-1">
+                        <button onClick={() => openEdit(s)} className="p-1.5 text-slate-400 hover:text-slate-700">
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        {isMinister && (
+                          <button onClick={() => remove(s)} className="p-1.5 text-slate-400 hover:text-rose-600">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      {showModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Building className="w-5 h-5 text-blue-600" />
+                <h2 className="text-lg font-bold text-slate-900">{editing ? 'Edito Shkollën' : 'Krijo Shkollë të Re'}</h2>
+              </div>
+              <button onClick={() => setShowModal(false)}><X className="w-5 h-5 text-slate-400" /></button>
+            </div>
+            {error && <div className="mb-3 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl px-3 py-2">{error}</div>}
+            <form onSubmit={submit} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Emri i shkollës *</label>
+                  <input required type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder='P.sh. "Naim Frashëri"' />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Lloji i shkollës *</label>
+                  <select required value={form.school_type} onChange={(e) => setForm({ ...form, school_type: e.target.value as SchoolType })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                    {(Object.keys(SCHOOL_TYPE_LABELS) as SchoolType[]).map((t) => (
+                      <option key={t} value={t}>{SCHOOL_TYPE_LABELS[t]}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Emri i plotë zyrtar</label>
+                <input type="text" value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Komuna *</label>
+                  <select
+                    required
+                    value={form.municipality_id}
+                    onChange={(e) => setForm({ ...form, municipality_id: e.target.value, locality_id: '' })}
+                    disabled={isDka}
+                    className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-50"
+                  >
+                    <option value="">— Zgjidh —</option>
+                    {municipalities.map((m) => (
+                      <option key={m.id} value={m.id}>{m.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Fshati / Qyteti</label>
+                  <select
+                    value={form.locality_id}
+                    onChange={(e) => setForm({ ...form, locality_id: e.target.value })}
+                    disabled={!form.municipality_id}
+                    className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-50"
+                  >
+                    <option value="">— Zgjidh vendin —</option>
+                    {localities
+                      .filter((l) => l.municipality_id === form.municipality_id)
+                      .map((l) => (
+                        <option key={l.id} value={l.id}>{l.name} ({l.is_city_center ? 'qendër' : l.type})</option>
+                      ))}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Adresa</label>
+                <input type="text" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder="Rruga, numri" />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Drejtori (emri)</label>
+                  <input type="text" value={form.director_name} onChange={(e) => setForm({ ...form, director_name: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Nr. regjistrimit MAShTI</label>
+                  <input type="text" value={form.registration_number} onChange={(e) => setForm({ ...form, registration_number: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Telefon</label>
+                  <input type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                  <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+              </div>
+
+              <div className="flex gap-3 pt-3 border-t border-slate-100">
+                <button type="button" onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium">Anulo</button>
+                <button type="submit" disabled={submitting} className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium disabled:opacity-50 flex items-center justify-center gap-2">
+                  {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
+                  {editing ? 'Ruaj' : 'Krijo'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
