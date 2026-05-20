@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { formatDate } from '../../lib/formatDate';
+import { DashboardSkeleton } from '../../components/Skeleton';
 import { useAuth } from '../../contexts/AuthContext';
 import StatCard from '../../components/StatCard';
 import { GRADE_LABELS } from '../../types/database';
@@ -17,7 +18,6 @@ import {
   UserPlus,
   FolderPlus,
   Megaphone,
-  Loader2,
   AlertTriangle,
   MessageSquare,
   BarChart3,
@@ -231,11 +231,7 @@ export default function DirectorDashboard() {
   const maxGradeCount = Math.max(...gradeDistribution.map(g => g.count), 1);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   return (

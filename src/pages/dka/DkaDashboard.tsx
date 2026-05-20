@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
-import { Loader2, Building, School, Users, GraduationCap, MapPin, BarChart3, ArrowRight, Plus, FileText, ChevronRight, AlertCircle } from 'lucide-react';
+import { Building, School, Users, GraduationCap, MapPin, BarChart3, ArrowRight, Plus, FileText, ChevronRight, AlertCircle } from 'lucide-react';
+import { DashboardSkeleton } from '../../components/Skeleton';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const DEMO_SCHOOLS = [
@@ -116,7 +117,7 @@ export default function DkaDashboard() {
   };
 
   if (loading) {
-    return <div className="flex items-center justify-center h-64"><Loader2 className="w-8 h-8 text-amber-500 animate-spin" /></div>;
+    return <DashboardSkeleton />;
   }
 
   if (!isDemo && !profile?.managed_municipality_id) {
