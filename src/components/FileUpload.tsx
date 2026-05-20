@@ -118,7 +118,7 @@ export default function FileUpload({
       {preview && currentUrl ? (
         <div className="flex items-start gap-3">
           {isImage ? (
-            <img src={currentUrl} alt="Preview" className="w-20 h-20 object-contain rounded-xl border border-slate-200 bg-white" />
+            <img src={currentUrl} alt="Preview" loading="lazy" className="w-20 h-20 object-contain rounded-xl border border-slate-200 bg-white" />
           ) : (
             <div className="w-20 h-20 flex items-center justify-center bg-slate-100 rounded-xl border border-slate-200">
               <FileText className="w-8 h-8 text-slate-400" />

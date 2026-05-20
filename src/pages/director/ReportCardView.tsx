@@ -285,7 +285,7 @@ export default function ReportCardView() {
         <div className="flex items-start justify-between border-b-2 border-slate-900 pb-4 mb-6">
           <div className="flex items-start gap-3">
             {school?.logo_url && (
-              <img src={school.logo_url} alt="Logo" className="w-16 h-16 object-contain" />
+              <img src={school.logo_url} alt="Logo" loading="lazy" className="w-16 h-16 object-contain" />
             )}
             <div>
               <p className="text-xs text-slate-600">REPUBLIKA E KOSOVËS</p>
@@ -439,7 +439,7 @@ export default function ReportCardView() {
               <p className="text-slate-600">{school?.director_name || '________________'}</p>
             </div>
             {school?.stamp_url && (
-              <img src={school.stamp_url} alt="Vula" className="w-20 h-20 mx-auto mt-2 opacity-80" />
+              <img src={school.stamp_url} alt="Vula" loading="lazy" className="w-20 h-20 mx-auto mt-2 opacity-80" />
             )}
           </div>
         </div>

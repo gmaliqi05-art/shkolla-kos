@@ -194,6 +194,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
       <div className="flex items-center gap-3">
         <button
           onClick={onMenuToggle}
+          aria-label="Hap menunë"
           className="lg:hidden p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors"
         >
           <Menu className="w-5 h-5" />
@@ -212,6 +213,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
         <LanguageSwitcher compact />
         <button
           onClick={() => navigate(getMessagePath())}
+          aria-label="Mesazhet"
           className="relative p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors"
           title="Mesazhet"
         >
@@ -221,6 +223,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setShowNotifs(!showNotifs)}
+            aria-label={unreadCount > 0 ? `${unreadCount} njoftime të reja` : 'Njoftimet'}
             className="relative p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors"
           >
             <Bell className="w-5 h-5" />
@@ -304,7 +307,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
         >
           <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-teal-500 rounded-xl flex items-center justify-center text-white text-sm font-bold overflow-hidden">
             {profile?.avatar_url ? (
-              <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+              <img src={profile.avatar_url} alt="Avatar" loading="lazy" className="w-full h-full object-cover" />
             ) : (
               profile?.full_name?.charAt(0)?.toUpperCase() || <User className="w-4 h-4" />
             )}

@@ -137,7 +137,7 @@ export default function ProfileSettings() {
         <div className="flex items-center gap-4">
           <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center text-white text-3xl font-bold overflow-hidden flex-shrink-0">
             {avatarUrl ? (
-              <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+              <img src={avatarUrl} alt="Avatar" loading="lazy" className="w-full h-full object-cover" />
             ) : (
               profile?.full_name?.charAt(0)?.toUpperCase() || <User className="w-10 h-10" />
             )}
