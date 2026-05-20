@@ -3,6 +3,14 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import { Loader2, Building, School, Users, GraduationCap, MapPin } from 'lucide-react';
 
+const DEMO_SCHOOLS = [
+  { id: 'ds1', name: '"Naim Frashëri"', director_name: 'Arben Hoxha', locality_name: 'Prishtinë (qendër)', students_count: 487, teachers_count: 32 },
+  { id: 'ds2', name: '"Faik Konica"', director_name: 'Mirjeta Krasniqi', locality_name: 'Hajvali', students_count: 312, teachers_count: 21 },
+  { id: 'ds3', name: '"Asdreni"', director_name: 'Driton Berisha', locality_name: 'Llukar', students_count: 198, teachers_count: 14 },
+  { id: 'ds4', name: '"Ismail Qemali"', director_name: 'Albulena Gashi', locality_name: 'Çagllavicë', students_count: 254, teachers_count: 18 },
+  { id: 'ds5', name: '"Hasan Prishtina"', director_name: 'Bekim Ramadani', locality_name: 'Bardhosh', studens_count: 167, teachers_count: 12 },
+];
+
 interface DkaStats {
   municipalityName: string;
   totalSchools: number;
@@ -21,7 +29,7 @@ interface SchoolRow {
 }
 
 export default function DkaDashboard() {
-  const { profile } = useAuth();
+  const { profile, isDemo } = useAuth();
   const [stats, setStats] = useState<DkaStats | null>(null);
   const [schools, setSchools] = useState<SchoolRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,6 +39,27 @@ export default function DkaDashboard() {
   }, [profile?.id]);
 
   const load = async () => {
+    if (isDemo) {
+      // Demo data për komunën e Prishtinës
+      setStats({
+        municipalityName: 'Prishtinë',
+        totalSchools: 142,
+        totalStudents: 38271,
+        totalTeachers: 2654,
+        totalDirectors: 142,
+      });
+      setSchools(DEMO_SCHOOLS.map((s) => ({
+        id: s.id,
+        name: s.name,
+        director_name: s.director_name,
+        locality_name: s.locality_name,
+        students_count: s.students_count || 0,
+        teachers_count: s.teachers_count,
+      })));
+      setLoading(false);
+      return;
+    }
+
     if (!profile?.managed_municipality_id) {
       setLoading(false);
       return;
@@ -80,7 +109,7 @@ export default function DkaDashboard() {
     return <div className="flex items-center justify-center h-64"><Loader2 className="w-8 h-8 text-amber-500 animate-spin" /></div>;
   }
 
-  if (!profile?.managed_municipality_id) {
+  if (!isDemo && !profile?.managed_municipality_id) {
     return (
       <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6">
         <p className="text-amber-900 font-medium">Nuk është caktuar komuna.</p>
