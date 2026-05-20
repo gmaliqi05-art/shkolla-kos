@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { formatRelative } from '../../lib/formatDate';
+import { DashboardSkeleton } from '../../components/Skeleton';
 import StatCard from '../../components/StatCard';
 import { getGradeBgColor } from '../../types/database';
 import {
@@ -241,11 +242,7 @@ export default function ParentDashboard() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 text-slate-500 animate-spin" />
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   if (children.length === 0) {
