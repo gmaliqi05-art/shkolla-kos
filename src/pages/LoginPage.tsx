@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import type { UserRole } from '../types/database';
@@ -178,7 +179,10 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-teal-50 flex relative">
-      <div className="absolute top-4 right-4 z-20">
+      <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
+        <Link to="/dokumentet-ligjore" className="text-xs px-3 py-1.5 bg-white/80 hover:bg-white border border-slate-200 rounded-xl text-slate-700">
+          Dokumentet Ligjore
+        </Link>
         <LanguageSwitcher />
       </div>
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
