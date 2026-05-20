@@ -116,21 +116,32 @@ export default function GradeEntry() {
 
       if (csError) throw csError;
 
-      const mapped: TeacherClass[] = classSubjects?.map((cs: any) => ({
-        id: cs.id,
-        class_id: cs.class_id,
-        subject_id: cs.subject_id,
-        name: `${cs.classes.name} - ${cs.subjects.name}`,
-        subject: cs.subjects,
-        classData: cs.classes,
-      })) || [];
+      type ClassRef = { id: string; name: string; grade_level?: number; section?: string | null };
+      type SubjectRef = { id: string; name: string };
+      type CSRow = {
+        id: string; class_id: string; subject_id: string;
+        classes: ClassRef | ClassRef[];
+        subjects: SubjectRef | SubjectRef[];
+      };
+      const mapped: TeacherClass[] = (classSubjects as CSRow[] | null)?.map((cs) => {
+        const cls = Array.isArray(cs.classes) ? cs.classes[0] : cs.classes;
+        const subj = Array.isArray(cs.subjects) ? cs.subjects[0] : cs.subjects;
+        return {
+          id: cs.id,
+          class_id: cs.class_id,
+          subject_id: cs.subject_id,
+          name: `${cls.name} - ${subj.name}`,
+          subject: subj,
+          classData: cls,
+        } as TeacherClass;
+      }) || [];
 
       setClasses(mapped);
       if (mapped.length > 0) {
         setSelectedClassSubject(mapped[0].id);
       }
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gabim');
     } finally {
       setLoading(false);
     }
@@ -172,9 +183,11 @@ export default function GradeEntry() {
       if (enrollRes.error) throw enrollRes.error;
       if (gradesRes.error) throw gradesRes.error;
 
-      const studentData: StudentGradeData[] = enrollRes.data
-        ?.filter((enrollment: any) => enrollment.profiles != null)
-        .map((enrollment: any) => {
+      type EnrollmentRow = { student_id: string; profiles: { id: string; full_name: string } | { id: string; full_name: string }[] | null };
+      const studentData: StudentGradeData[] = (enrollRes.data as EnrollmentRow[] | null)
+        ?.filter((enrollment) => enrollment.profiles != null)
+        .map((enrollment) => {
+        const prof = Array.isArray(enrollment.profiles) ? enrollment.profiles[0] : enrollment.profiles;
         const studentGrades = gradesRes.data?.filter(
           (g: Grade) => g.student_id === enrollment.student_id
         ) || [];
@@ -196,7 +209,7 @@ export default function GradeEntry() {
 
         return {
           student_id: enrollment.student_id,
-          student_name: enrollment.profiles?.full_name || '',
+          student_name: prof?.full_name || '',
           v1: gradeMap[1] || '',
           v2: gradeMap[2] || '',
           v3: gradeMap[3] || '',
@@ -206,8 +219,8 @@ export default function GradeEntry() {
       }) || [];
 
       setStudents(studentData);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gabim');
     } finally {
       setLoading(false);
     }
@@ -370,8 +383,8 @@ export default function GradeEntry() {
 
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gabim');
     } finally {
       setSaving(false);
     }

@@ -23,7 +23,7 @@ function generateSecurePassword() {
   const special = '!@#$';
   const arr = new Uint8Array(10);
   crypto.getRandomValues(arr);
-  let pwd = Array.from(arr).map(n => chars[n % chars.length]).join('');
+  const pwd = Array.from(arr).map(n => chars[n % chars.length]).join('');
   return pwd.slice(0, 7) + special[arr[0] % special.length] + (arr[1] % 9 + 1);
 }
 
@@ -81,13 +81,23 @@ export default function ManageTeachers() {
       .from('class_subjects')
       .select('id, teacher_id, class_id, subject_id, classes(name), subjects(name)');
 
+    type AssignRow = {
+      id: string;
+      teacher_id: string;
+      class_id: string;
+      subject_id: string;
+      classes: { name: string } | { name: string }[] | null;
+      subjects: { name: string } | { name: string }[] | null;
+    };
     const assignmentMap = new Map<string, Assignment[]>();
-    allAssignments?.forEach((a: any) => {
+    (allAssignments as AssignRow[] | null)?.forEach((a) => {
       const list = assignmentMap.get(a.teacher_id) || [];
+      const cls = Array.isArray(a.classes) ? a.classes[0] : a.classes;
+      const subj = Array.isArray(a.subjects) ? a.subjects[0] : a.subjects;
       list.push({
         id: a.id,
-        class_name: a.classes?.name || '',
-        subject_name: a.subjects?.name || '',
+        class_name: cls?.name || '',
+        subject_name: subj?.name || '',
         class_id: a.class_id,
         subject_id: a.subject_id,
       });

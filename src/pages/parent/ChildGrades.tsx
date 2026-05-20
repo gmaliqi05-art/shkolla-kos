@@ -67,13 +67,18 @@ export default function ChildGrades() {
 
       if (psError) throw psError;
 
-      const childrenData = parentStudents?.map((ps: any) => ps.profiles) || [];
+      type ChildProfile = { id: string; full_name: string; email: string };
+      type ParentStudentRow = { student_id: string; profiles: ChildProfile | ChildProfile[] | null };
+      const childrenData = (parentStudents as ParentStudentRow[] | null)?.flatMap((ps) => {
+        if (!ps.profiles) return [];
+        return Array.isArray(ps.profiles) ? ps.profiles : [ps.profiles];
+      }) || [];
       setChildren(childrenData);
       if (childrenData.length > 0) {
         setSelectedChild(childrenData[0].id);
       }
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gabim');
     } finally {
       setLoading(false);
     }
@@ -124,7 +129,8 @@ export default function ChildGrades() {
       if (csRes.error) throw csRes.error;
       if (gradesRes.error) throw gradesRes.error;
 
-      const subjectData: SubjectGrades[] = csRes.data?.map((cs: any) => {
+      type ClassSubjectRow = { subject_id: string; subjects: { name: string } | { name: string }[] };
+      const subjectData: SubjectGrades[] = (csRes.data as ClassSubjectRow[] | null)?.map((cs) => {
         const sGrades = gradesRes.data?.filter((g: Grade) => g.subject_id === cs.subject_id) || [];
 
         const gradeMap: Record<string, number> = {};
@@ -141,9 +147,10 @@ export default function ChildGrades() {
           ? assessments.reduce((sum, v) => sum + v, 0) / assessments.length
           : null;
 
+        const subj = Array.isArray(cs.subjects) ? cs.subjects[0] : cs.subjects;
         return {
           subject_id: cs.subject_id,
-          subject_name: cs.subjects.name,
+          subject_name: subj?.name || '',
           v1: gradeMap.v1 ?? null,
           v2: gradeMap.v2 ?? null,
           v3: gradeMap.v3 ?? null,
@@ -163,8 +170,8 @@ export default function ChildGrades() {
 
       setSubjectGrades(subjectData);
       setOverallAverage(Number(overall.toFixed(2)));
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gabim');
     } finally {
       setLoading(false);
     }

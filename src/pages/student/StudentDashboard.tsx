@@ -106,7 +106,9 @@ export default function StudentDashboard() {
         return;
       }
 
-      setClassName((enrollment as any).classes?.name || '');
+      const en = enrollment as { class_id: string; classes: { name: string } | { name: string }[] | null };
+      const enCls = Array.isArray(en.classes) ? en.classes[0] : en.classes;
+      setClassName(enCls?.name || '');
 
       const [gradesRes, attRes] = await Promise.all([
         supabase.from('grades').select('grade, subject_id, date, assessment_type, teacher_id, created_at, subjects(name)').eq('student_id', profile?.id).order('created_at', { ascending: false }),
@@ -124,9 +126,11 @@ export default function StudentDashboard() {
         monthAgo.setMonth(monthAgo.getMonth() - 1);
         setMonthGrades(grades.filter(g => new Date(g.created_at) >= monthAgo).length);
 
+        type GradeRow = { grade: number; subject_id: string; date: string; assessment_type: string; teacher_id: string; created_at: string; subjects: { name: string } | { name: string }[] | null };
         const subjectMap: Record<string, { total: number; count: number; name: string }> = {};
-        grades.forEach((g: any) => {
-          const sName = g.subjects?.name || '';
+        (grades as GradeRow[]).forEach((g) => {
+          const subj = Array.isArray(g.subjects) ? g.subjects[0] : g.subjects;
+          const sName = subj?.name || '';
           if (!subjectMap[g.subject_id]) subjectMap[g.subject_id] = { total: 0, count: 0, name: sName };
           subjectMap[g.subject_id].total += g.grade;
           subjectMap[g.subject_id].count += 1;
@@ -145,15 +149,16 @@ export default function StudentDashboard() {
 
         const TYPE_LABELS: Record<string, string> = { vlersim: 'Vlersim', perfundimtare_gjysmvjetor: 'Perfundimtare', perfundimtare_vjetor: 'Vjetor' };
 
-        setRecentGrades(grades.slice(0, 5).map((g: any) => {
+        setRecentGrades((grades as GradeRow[]).slice(0, 5).map((g) => {
           const today = new Date().toISOString().split('T')[0];
           const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
           let dateLabel = new Date(g.date).toLocaleDateString('sq-AL');
           if (g.date === today) dateLabel = 'Sot';
           else if (g.date === yesterday) dateLabel = 'Dje';
 
+          const subj = Array.isArray(g.subjects) ? g.subjects[0] : g.subjects;
           return {
-            subject: g.subjects?.name || '',
+            subject: subj?.name || '',
             grade: g.grade,
             type: TYPE_LABELS[g.assessment_type] || g.assessment_type,
             date: dateLabel,
@@ -174,12 +179,21 @@ export default function StudentDashboard() {
           .order('start_time');
 
         if (schedData) {
-          setTodaySchedule(schedData.map((s: any) => ({
-            time: `${s.start_time.substring(0, 5)} - ${s.end_time.substring(0, 5)}`,
-            subject: s.subjects?.name || '',
-            teacher: s.profiles?.full_name || '',
-            room: s.room || '',
-          })));
+          type SchedRow = {
+            start_time: string; end_time: string; room: string | null;
+            subjects: { name: string } | { name: string }[] | null;
+            profiles: { full_name: string } | { full_name: string }[] | null;
+          };
+          setTodaySchedule((schedData as SchedRow[]).map((s) => {
+            const subj = Array.isArray(s.subjects) ? s.subjects[0] : s.subjects;
+            const prof = Array.isArray(s.profiles) ? s.profiles[0] : s.profiles;
+            return {
+              time: `${s.start_time.substring(0, 5)} - ${s.end_time.substring(0, 5)}`,
+              subject: subj?.name || '',
+              teacher: prof?.full_name || '',
+              room: s.room || '',
+            };
+          }));
         }
       }
     } catch (error) {

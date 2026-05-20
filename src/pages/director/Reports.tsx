@@ -107,7 +107,7 @@ export default function Reports() {
     try {
       const [gradesRes, attendanceRes, subjectsRes, classesRes] = await Promise.all([
         supabase.from('grades').select('grade, subject_id, class_id, student_id, teacher_id, date, created_at'),
-        supabase.from('attendance').select('status, student_id, date'),
+        supabase.from('attendance').select('status, student_id, date, recorded_by'),
         supabase.from('subjects').select('id, name'),
         supabase.from('classes').select('id, name, grade_level, section'),
       ]);
@@ -189,7 +189,7 @@ export default function Reports() {
         const cur = teacherGradesMonth[g.teacher_id].lastDate;
         if (!cur || g.date > cur) teacherGradesMonth[g.teacher_id].lastDate = g.date;
       });
-      attendance.filter(a => a.date >= monthAgoStr).forEach((a: any) => {
+      attendance.filter(a => a.date >= monthAgoStr).forEach((a) => {
         if (!a.recorded_by) return;
         teacherAttMonth[a.recorded_by] = (teacherAttMonth[a.recorded_by] || 0) + 1;
       });

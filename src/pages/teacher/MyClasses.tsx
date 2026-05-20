@@ -63,7 +63,12 @@ export default function MyClasses() {
 
       const DAY_NAMES: Record<number, string> = { 1: 'E Hene', 2: 'E Marte', 3: 'E Merkure', 4: 'E Enjte', 5: 'E Premte' };
 
-      const result: ClassData[] = classSubjects.map((cs: any) => {
+      type CSRow = {
+        id: string; class_id: string; subject_id: string;
+        classes: { name: string } | { name: string }[] | null;
+        subjects: { name: string } | { name: string }[] | null;
+      };
+      const result: ClassData[] = (classSubjects as CSRow[]).map((cs) => {
         const csGrades = gradesRes.data?.filter(g => g.class_id === cs.class_id && g.subject_id === cs.subject_id) || [];
         const avgGrade = csGrades.length > 0
           ? Number((csGrades.reduce((s, g) => s + g.grade, 0) / csGrades.length).toFixed(1))
@@ -81,10 +86,12 @@ export default function MyClasses() {
           room = first.room || '';
         }
 
+        const cls = Array.isArray(cs.classes) ? cs.classes[0] : cs.classes;
+        const subj = Array.isArray(cs.subjects) ? cs.subjects[0] : cs.subjects;
         return {
           id: cs.id,
-          className: cs.classes?.name || '',
-          subjectName: cs.subjects?.name || '',
+          className: cls?.name || '',
+          subjectName: subj?.name || '',
           studentCount: enrollMap[cs.class_id] || 0,
           avgGrade,
           scheduleCount: csSchedule.length,

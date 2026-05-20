@@ -113,19 +113,30 @@ export default function MessagesPage() {
 
       if (error) throw error;
 
-      setMessages((data || []).map((m: any) => ({
-        id: m.id,
-        sender_id: m.sender_id,
-        receiver_id: m.receiver_id,
-        subject: m.subject,
-        content: m.content,
-        is_read: m.is_read,
-        created_at: m.created_at,
-        sender_name: m.sender?.full_name || '',
-        sender_role: m.sender?.role || 'nxenes',
-        receiver_name: m.receiver?.full_name || '',
-        receiver_role: m.receiver?.role || 'nxenes',
-      })));
+      type PartyRef = { full_name: string; role: string } | { full_name: string; role: string }[] | null;
+      type MsgRow = {
+        id: string; sender_id: string; receiver_id: string; subject: string;
+        content: string; is_read: boolean; created_at: string;
+        sender: PartyRef; receiver: PartyRef;
+      };
+      const pick = (p: PartyRef) => (Array.isArray(p) ? p[0] : p) || null;
+      setMessages(((data as MsgRow[] | null) || []).map((m) => {
+        const sender = pick(m.sender);
+        const receiver = pick(m.receiver);
+        return {
+          id: m.id,
+          sender_id: m.sender_id,
+          receiver_id: m.receiver_id,
+          subject: m.subject,
+          content: m.content,
+          is_read: m.is_read,
+          created_at: m.created_at,
+          sender_name: sender?.full_name || '',
+          sender_role: sender?.role || 'nxenes',
+          receiver_name: receiver?.full_name || '',
+          receiver_role: receiver?.role || 'nxenes',
+        };
+      }));
     } catch (err) {
       console.error('Error loading messages:', err);
     } finally {
