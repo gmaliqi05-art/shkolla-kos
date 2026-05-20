@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
-import { Loader2, Crown, Building2, Users, GraduationCap, School, BookOpen, Award, MapPin, TrendingUp, ArrowRight, UserCog, ChevronRight, AlertCircle } from 'lucide-react';
+import { Crown, Building2, Users, GraduationCap, School, BookOpen, Award, MapPin, TrendingUp, ArrowRight, UserCog, ChevronRight, AlertCircle } from 'lucide-react';
+import { DashboardSkeleton } from '../../components/Skeleton';
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 interface NationalStats {
@@ -148,7 +149,7 @@ export default function MinistriDashboard() {
   };
 
   if (loading || !stats) {
-    return <div className="flex items-center justify-center h-64"><Loader2 className="w-8 h-8 text-purple-500 animate-spin" /></div>;
+    return <DashboardSkeleton />;
   }
 
   const licensePercentage = stats.totalTeachers > 0 ? Math.round((stats.licensedTeachers / stats.totalTeachers) * 100) : 0;
