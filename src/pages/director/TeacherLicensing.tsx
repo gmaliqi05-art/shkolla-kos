@@ -240,7 +240,7 @@ export default function TeacherLicensing() {
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-slate-900">Licenca e {editing.full_name}</h2>
-              <button onClick={() => setEditing(null)}><X className="w-5 h-5 text-slate-400" /></button>
+              <button onClick={() => setEditing(null)} aria-label="Mbyll"><X className="w-5 h-5 text-slate-400" /></button>
             </div>
             {error && <div className="mb-3 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl px-3 py-2">{error}</div>}
             <form onSubmit={submitEdit} className="space-y-4">
@@ -297,7 +297,7 @@ export default function TeacherLicensing() {
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-slate-900">Trajnimet (ZHPM)</h2>
-              <button onClick={() => setShowZhpm(null)}><X className="w-5 h-5 text-slate-400" /></button>
+              <button onClick={() => setShowZhpm(null)} aria-label="Mbyll"><X className="w-5 h-5 text-slate-400" /></button>
             </div>
             {zhpmList.length === 0 ? (
               <p className="text-sm text-slate-400 text-center py-8">Asnjë trajnim i regjistruar.</p>

@@ -579,7 +579,7 @@ export default function SpecialNeedsManagement() {
           <div className="bg-white rounded-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-slate-900">{editingNeed ? 'Edito NVA' : 'Shto NVA'}</h2>
-              <button onClick={() => setShowNeedModal(false)}><X className="w-5 h-5 text-slate-400" /></button>
+              <button onClick={() => setShowNeedModal(false)} aria-label="Mbyll"><X className="w-5 h-5 text-slate-400" /></button>
             </div>
             {error && <div className="mb-3 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl px-3 py-2">{error}</div>}
             <form onSubmit={submitNeed} className="space-y-3">
@@ -639,7 +639,7 @@ export default function SpecialNeedsManagement() {
           <div className="bg-white rounded-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-slate-900">Plan i Ri Individual (PIA)</h2>
-              <button onClick={() => setShowIepModal(false)}><X className="w-5 h-5 text-slate-400" /></button>
+              <button onClick={() => setShowIepModal(false)} aria-label="Mbyll"><X className="w-5 h-5 text-slate-400" /></button>
             </div>
             {error && <div className="mb-3 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl px-3 py-2">{error}</div>}
             <form onSubmit={submitIep} className="space-y-3">
@@ -692,7 +692,7 @@ export default function SpecialNeedsManagement() {
           <div className="bg-white rounded-2xl max-w-md w-full p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-slate-900">Objektiv i Ri</h2>
-              <button onClick={() => setShowGoalModal(null)}><X className="w-5 h-5 text-slate-400" /></button>
+              <button onClick={() => setShowGoalModal(null)} aria-label="Mbyll"><X className="w-5 h-5 text-slate-400" /></button>
             </div>
             <form onSubmit={submitGoal} className="space-y-3">
               <div>
@@ -739,7 +739,7 @@ export default function SpecialNeedsManagement() {
           <div className="bg-white rounded-2xl max-w-md w-full p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-slate-900">Akomodim i Ri</h2>
-              <button onClick={() => setShowAccModal(null)}><X className="w-5 h-5 text-slate-400" /></button>
+              <button onClick={() => setShowAccModal(null)} aria-label="Mbyll"><X className="w-5 h-5 text-slate-400" /></button>
             </div>
             <form onSubmit={submitAccommodation} className="space-y-3">
               <div>
