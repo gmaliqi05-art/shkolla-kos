@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import type { UserRole } from '../types/database';
-import { GraduationCap, Eye, EyeOff, BookOpen, Users, BarChart3, Shield, Loader2, CircleUser as UserCircle, School, User, UserCheck, ArrowLeft, CheckCircle } from 'lucide-react';
+import { GraduationCap, Eye, EyeOff, BookOpen, Users, BarChart3, Shield, Loader2, CircleUser as UserCircle, School, User, UserCheck, ArrowLeft, CheckCircle, Crown, Building, Heart } from 'lucide-react';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 // Shield is used both in landing image and MFA challenge screen
 
@@ -14,9 +14,12 @@ const ROLES: { value: UserRole; label: string; description: string }[] = [
 ];
 
 const DEMO_USERS: { role: UserRole; name: string; icon: typeof UserCircle; color: string }[] = [
-  { role: 'drejtor', name: 'Drejtor', icon: School, color: 'from-blue-500 to-blue-600' },
-  { role: 'mesues', name: 'Mesues', icon: UserCheck, color: 'from-teal-500 to-teal-600' },
-  { role: 'nxenes', name: 'Nxenes', icon: User, color: 'from-cyan-500 to-cyan-600' },
+  { role: 'ministri', name: 'Ministër (MAShTI)', icon: Crown, color: 'from-purple-500 to-purple-600' },
+  { role: 'drejtor_komunal', name: 'Drejtor Komunal (DKA)', icon: Building, color: 'from-amber-500 to-amber-600' },
+  { role: 'drejtor', name: 'Drejtor i Shkollës', icon: School, color: 'from-blue-500 to-blue-600' },
+  { role: 'pedagog', name: 'Pedagog/Psikolog', icon: Heart, color: 'from-pink-500 to-pink-600' },
+  { role: 'mesues', name: 'Mësues', icon: UserCheck, color: 'from-teal-500 to-teal-600' },
+  { role: 'nxenes', name: 'Nxënës', icon: User, color: 'from-cyan-500 to-cyan-600' },
   { role: 'prind', name: 'Prind', icon: Users, color: 'from-slate-600 to-slate-700' },
 ];
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../contexts/AuthContext';
 import { Loader2, Crown, Building2, Users, GraduationCap, School, BookOpen, Award, MapPin } from 'lucide-react';
 
 interface NationalStats {
@@ -25,6 +26,7 @@ interface MunicipalitySummary {
 }
 
 export default function MinistriDashboard() {
+  const { isDemo } = useAuth();
   const [stats, setStats] = useState<NationalStats | null>(null);
   const [municipalities, setMunicipalities] = useState<MunicipalitySummary[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,6 +36,34 @@ export default function MinistriDashboard() {
   }, []);
 
   const load = async () => {
+    if (isDemo) {
+      // Demo data — kombëtare
+      setStats({
+        totalMunicipalities: 38,
+        totalSchools: 1247,
+        totalStudents: 287563,
+        totalTeachers: 19842,
+        totalParents: 248917,
+        totalDirectors: 1247,
+        totalDKAs: 38,
+        licensedTeachers: 16234,
+        totalGrades: 4582940,
+        totalAttendance: 12847693,
+      });
+      setMunicipalities([
+        { id: 'd1', name: 'Prishtinë', region: 'Qendër', schools_count: 142, students_count: 38271, teachers_count: 2654 },
+        { id: 'd2', name: 'Prizren', region: 'Jug', schools_count: 98, students_count: 27843, teachers_count: 1892 },
+        { id: 'd3', name: 'Pejë', region: 'Perëndim', schools_count: 76, students_count: 18420, teachers_count: 1342 },
+        { id: 'd4', name: 'Mitrovicë', region: 'Veri', schools_count: 64, students_count: 15276, teachers_count: 1108 },
+        { id: 'd5', name: 'Gjakovë', region: 'Perëndim', schools_count: 58, students_count: 13892, teachers_count: 987 },
+        { id: 'd6', name: 'Ferizaj', region: 'Lindje', schools_count: 71, students_count: 16438, teachers_count: 1184 },
+        { id: 'd7', name: 'Gjilan', region: 'Lindje', schools_count: 54, students_count: 12476, teachers_count: 902 },
+        { id: 'd8', name: 'Podujevë', region: 'Qendër', schools_count: 48, students_count: 11254, teachers_count: 821 },
+      ]);
+      setLoading(false);
+      return;
+    }
+
     const [muns, schools, students, teachers, parents, directors, dkas, licensed, grades, attendance] = await Promise.all([
       supabase.from('municipalities').select('id, name, region'),
       supabase.from('school_info').select('id, municipality_id'),
