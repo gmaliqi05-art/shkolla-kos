@@ -224,7 +224,7 @@ export default function DiagnosticAssessments() {
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-slate-900">Vlerësimi për {editing.student.full_name}</h2>
-              <button onClick={() => setEditing(null)}><X className="w-5 h-5 text-slate-400" /></button>
+              <button onClick={() => setEditing(null)} aria-label="Mbyll"><X className="w-5 h-5 text-slate-400" /></button>
             </div>
             {error && <div className="mb-3 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl px-3 py-2">{error}</div>}
             <form onSubmit={submit} className="space-y-3">
