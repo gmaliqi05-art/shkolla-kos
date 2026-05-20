@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
+import { formatDate } from '../../lib/formatDate';
 import { useAuth } from '../../contexts/AuthContext';
 import StatCard from '../../components/StatCard';
 import { GRADE_LABELS } from '../../types/database';
@@ -395,7 +396,7 @@ export default function DirectorDashboard() {
                         {TARGET_LABELS[ann.target_role] || ann.target_role}
                       </span>
                       <span className="text-xs text-slate-400">
-                        {new Date(ann.created_at).toLocaleDateString('sq-AL')}
+                        {formatDate(ann.created_at)}
                       </span>
                     </div>
                   </div>

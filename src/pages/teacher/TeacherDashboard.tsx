@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
+import { formatRelative, formatDayMonth } from '../../lib/formatDate';
 import StatCard from '../../components/StatCard';
 import { getGradeBgColor } from '../../types/database';
 import {
@@ -194,12 +195,7 @@ export default function TeacherDashboard() {
         };
 
         const recentGradesList: RecentGrade[] = recentFive.map(g => {
-          const today = new Date().toISOString().split('T')[0];
-          const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-          let dateLabel = new Date(g.date).toLocaleDateString('sq-AL');
-          if (g.date === today) dateLabel = 'Sot';
-          else if (g.date === yesterday) dateLabel = 'Dje';
-
+          const dateLabel = formatRelative(g.date);
           return {
             studentName: profileMap[g.student_id] || '',
             className: classNameMap[g.class_id]?.replace('Klasa ', '') || '',
@@ -296,7 +292,7 @@ export default function TeacherDashboard() {
               <h3 className="font-semibold text-slate-900">Orari i Sotem</h3>
             </div>
             <span className="text-xs text-slate-400">
-              {new Date().toLocaleDateString('sq-AL', { weekday: 'long', day: 'numeric', month: 'long' })}
+              {formatDayMonth(new Date())}
             </span>
           </div>
           {todaySchedule.length > 0 ? (

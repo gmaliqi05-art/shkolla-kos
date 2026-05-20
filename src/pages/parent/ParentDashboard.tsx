@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
+import { formatRelative } from '../../lib/formatDate';
 import StatCard from '../../components/StatCard';
 import { getGradeBgColor } from '../../types/database';
 import {
@@ -197,13 +198,8 @@ export default function ParentDashboard() {
         setSubjectAverages(sAvgs);
         setSubjectCount(sAvgs.length);
 
-        const today = new Date().toISOString().split('T')[0];
-        const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-
         setRecentGrades((grades as GradeRow[]).slice(0, 5).map((g) => {
-          let dateLabel = new Date(g.date).toLocaleDateString('sq-AL');
-          if (g.date === today) dateLabel = 'Sot';
-          else if (g.date === yesterday) dateLabel = 'Dje';
+          const dateLabel = formatRelative(g.date);
           const subj = Array.isArray(g.subjects) ? g.subjects[0] : g.subjects;
           return {
             subject: subj?.name || '',

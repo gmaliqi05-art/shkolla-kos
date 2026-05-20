@@ -285,7 +285,7 @@ export default function ChildIEP() {
 
                 {iep.parent_consent && iep.parent_consent_at && (
                   <p className="text-xs text-slate-500 mt-3">
-                    Pëlqimi dhënë më: {new Date(iep.parent_consent_at).toLocaleDateString('sq')}
+                    Pëlqimi dhënë më: {new Date(iep.parent_consent_at).toLocaleDateString('sq-AL')}
                   </p>
                 )}
               </div>

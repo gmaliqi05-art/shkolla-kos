@@ -445,7 +445,7 @@ export default function ReportCardView() {
         </div>
 
         <div className="mt-8 text-xs text-slate-500 text-center">
-          Lëshuar më: {new Date().toLocaleDateString('sq')} · Vendi: {school?.municipality || '_____'}
+          Lëshuar më: {new Date().toLocaleDateString('sq-AL')} · Vendi: {school?.municipality || '_____'}
         </div>
       </div>
     </div>

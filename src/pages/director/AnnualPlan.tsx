@@ -391,7 +391,7 @@ export default function AnnualPlan() {
               {selectedPlan.approved_at && (
                 <p className="text-xs text-emerald-700 mt-1 flex items-center gap-1">
                   <CheckCircle className="w-3 h-3" />
-                  Miratuar më {new Date(selectedPlan.approved_at).toLocaleDateString('sq')}
+                  Miratuar më {new Date(selectedPlan.approved_at).toLocaleDateString('sq-AL')}
                 </p>
               )}
             </div>

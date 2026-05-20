@@ -150,7 +150,7 @@ export default function DeletionRequests() {
                         {DELETION_REQUEST_STATUS_LABELS[r.status]}
                       </span>
                       <p className="text-sm text-slate-500">
-                        Paraqitur më {new Date(r.created_at).toLocaleDateString('sq')}
+                        Paraqitur më {new Date(r.created_at).toLocaleDateString('sq-AL')}
                       </p>
                     </div>
                     <p className="font-medium text-slate-900 mt-2">
