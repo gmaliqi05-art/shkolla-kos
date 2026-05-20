@@ -8,7 +8,7 @@ import {
   type Municipality,
   type Locality,
 } from '../../types/database';
-import { Loader2, Plus, X, School, Edit2, Trash2, MapPin, Phone, Mail, Building } from 'lucide-react';
+import { Loader2, Plus, X, School, Edit2, Trash2, MapPin, Phone, Mail, Building, Copy, Check as CheckIcon, UserCheck } from 'lucide-react';
 
 interface SchoolRow extends SchoolInfo {
   municipality_name?: string;
@@ -44,6 +44,16 @@ export default function SchoolsManagement() {
     director_name: '',
     registration_number: '',
   });
+
+  // Director account creation form (when creating school)
+  const [createDirectorAccount, setCreateDirectorAccount] = useState(false);
+  const [directorForm, setDirectorForm] = useState({
+    full_name: '',
+    email: '',
+    phone: '',
+  });
+  const [newCredentials, setNewCredentials] = useState<{ email: string; password: string } | null>(null);
+  const [credentialsCopied, setCredentialsCopied] = useState(false);
 
   useEffect(() => {
     load();
@@ -89,8 +99,26 @@ export default function SchoolsManagement() {
       director_name: '',
       registration_number: '',
     });
+    setCreateDirectorAccount(false);
+    setDirectorForm({ full_name: '', email: '', phone: '' });
     setError('');
     setShowModal(true);
+  };
+
+  const generateSecurePassword = () => {
+    const chars = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const special = '!@#$';
+    const arr = new Uint8Array(10);
+    crypto.getRandomValues(arr);
+    const pwd = Array.from(arr).map((n) => chars[n % chars.length]).join('');
+    return pwd.slice(0, 7) + special[arr[0] % special.length] + (arr[1] % 9 + 1);
+  };
+
+  const copyCredentials = async () => {
+    if (!newCredentials) return;
+    await navigator.clipboard.writeText(`Email: ${newCredentials.email}\nFjalëkalimi: ${newCredentials.password}`);
+    setCredentialsCopied(true);
+    setTimeout(() => setCredentialsCopied(false), 2000);
   };
 
   const openEdit = (s: SchoolInfo) => {
@@ -133,13 +161,56 @@ export default function SchoolsManagement() {
     };
     const res = editing
       ? await supabase.from('school_info').update(payload).eq('id', editing.id)
-      : await supabase.from('school_info').insert(payload);
+      : await supabase.from('school_info').insert(payload).select().single();
+
     if (res.error) {
       setError(res.error.message);
-    } else {
-      setShowModal(false);
-      load();
+      setSubmitting(false);
+      return;
     }
+
+    const createdSchoolId = !editing && res.data ? (res.data as { id: string }).id : null;
+
+    // If creating new school AND user wants to create director account
+    if (!editing && createDirectorAccount && createdSchoolId && directorForm.email && directorForm.full_name) {
+      const tempPassword = generateSecurePassword();
+      const { data: authData, error: signUpError } = await supabase.auth.signUp({
+        email: directorForm.email,
+        password: tempPassword,
+      });
+
+      if (signUpError) {
+        setError(`Shkolla u krijua por gabim te llogaria e drejtorit: ${signUpError.message}`);
+        setSubmitting(false);
+        return;
+      }
+
+      if (authData.user) {
+        const { error: profileError } = await supabase.from('profiles').insert({
+          id: authData.user.id,
+          email: directorForm.email,
+          full_name: directorForm.full_name,
+          phone: directorForm.phone,
+          role: 'drejtor',
+          school_id: createdSchoolId,
+          must_change_password: true,
+        });
+        if (profileError) {
+          setError(`Shkolla u krijua por gabim te profili i drejtorit: ${profileError.message}`);
+          setSubmitting(false);
+          return;
+        }
+        // Update school with director name
+        await supabase.from('school_info').update({ director_name: directorForm.full_name }).eq('id', createdSchoolId);
+        setNewCredentials({ email: directorForm.email, password: tempPassword });
+        load();
+        setSubmitting(false);
+        return;
+      }
+    }
+
+    setShowModal(false);
+    load();
     setSubmitting(false);
   };
 
@@ -260,6 +331,49 @@ export default function SchoolsManagement() {
         )}
       </div>
 
+      {newCredentials && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <UserCheck className="w-6 h-6 text-emerald-600" />
+              <h2 className="text-lg font-bold text-slate-900">Llogaria e Drejtorit u Krijua!</h2>
+            </div>
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4">
+              <p className="text-sm text-amber-900 font-medium mb-1">Ruajeni këto kredenciale tani!</p>
+              <p className="text-xs text-amber-700">
+                Kjo është hera e vetme që mund të shihet fjalëkalimi. Ndajeni me drejtorin në mënyrë të sigurt
+                (email i sigurt ose person-më-person).
+              </p>
+            </div>
+            <div className="space-y-3">
+              <div>
+                <p className="text-xs font-medium text-slate-500 mb-1">Email</p>
+                <p className="text-sm font-mono bg-slate-50 px-3 py-2 rounded-lg border border-slate-200">{newCredentials.email}</p>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-slate-500 mb-1">Fjalëkalimi i përkohshëm</p>
+                <p className="text-sm font-mono bg-slate-50 px-3 py-2 rounded-lg border border-slate-200 tracking-widest">{newCredentials.password}</p>
+              </div>
+            </div>
+            <button
+              onClick={copyCredentials}
+              className={`mt-4 w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                credentialsCopied ? 'bg-emerald-600 text-white' : 'bg-slate-900 text-white hover:bg-slate-800'
+              }`}
+            >
+              {credentialsCopied ? <CheckIcon className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+              {credentialsCopied ? 'U kopjua!' : 'Kopjo Kredencialet'}
+            </button>
+            <button
+              onClick={() => { setNewCredentials(null); setShowModal(false); }}
+              className="mt-2 w-full py-2.5 text-sm text-slate-600 hover:text-slate-900"
+            >
+              Mbyll
+            </button>
+          </div>
+        </div>
+      )}
+
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
@@ -352,6 +466,62 @@ export default function SchoolsManagement() {
                   <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
               </div>
+
+              {!editing && (
+                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                  <label className="inline-flex items-center gap-2 cursor-pointer mb-3">
+                    <input
+                      type="checkbox"
+                      checked={createDirectorAccount}
+                      onChange={(e) => setCreateDirectorAccount(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm font-medium text-emerald-900">
+                      Krijo gjithashtu llogarinë e drejtorit të shkollës
+                    </span>
+                  </label>
+                  {createDirectorAccount && (
+                    <div className="space-y-3 mt-3 pt-3 border-t border-emerald-200">
+                      <p className="text-xs text-emerald-700">
+                        Drejtori do të marrë një email me kredencialet. Do t'i duhet të ndryshojë fjalëkalimin në hyrjen e parë.
+                      </p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-sm font-medium text-slate-700 mb-1">Emri i drejtorit *</label>
+                          <input
+                            required={createDirectorAccount}
+                            type="text"
+                            value={directorForm.full_name}
+                            onChange={(e) => setDirectorForm({ ...directorForm, full_name: e.target.value })}
+                            placeholder="Emër Mbiemër"
+                            className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-slate-700 mb-1">Email i drejtorit *</label>
+                          <input
+                            required={createDirectorAccount}
+                            type="email"
+                            value={directorForm.email}
+                            onChange={(e) => setDirectorForm({ ...directorForm, email: e.target.value })}
+                            placeholder="drejtor@shkolla.ks"
+                            className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">Telefon i drejtorit</label>
+                        <input
+                          type="tel"
+                          value={directorForm.phone}
+                          onChange={(e) => setDirectorForm({ ...directorForm, phone: e.target.value })}
+                          className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
               <div className="flex gap-3 pt-3 border-t border-slate-100">
                 <button type="button" onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium">Anulo</button>
