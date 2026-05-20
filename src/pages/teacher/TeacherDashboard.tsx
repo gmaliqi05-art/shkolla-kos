@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { formatRelative, formatDayMonth } from '../../lib/formatDate';
+import { DashboardSkeleton } from '../../components/Skeleton';
 import StatCard from '../../components/StatCard';
 import { getGradeBgColor } from '../../types/database';
 import {
@@ -13,7 +14,6 @@ import {
   Clock,
   Calendar,
   ChevronRight,
-  Loader2,
   AlertCircle,
   CalendarDays,
   AlertTriangle,
@@ -262,11 +262,7 @@ export default function TeacherDashboard() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 text-teal-500 animate-spin" />
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   return (
