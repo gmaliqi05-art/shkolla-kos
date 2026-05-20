@@ -29,6 +29,7 @@ import LibraryPage from './pages/director/Library';
 import TwoFactorSettings from './pages/TwoFactorSettings';
 import LegalDocuments from './pages/shared/LegalDocuments';
 import MinistriDashboard from './pages/ministri/MinistriDashboard';
+import StaffAccountsManagement from './pages/ministri/StaffAccountsManagement';
 import DkaDashboard from './pages/dka/DkaDashboard';
 import SchoolsManagement from './pages/shared/SchoolsManagement';
 import LocalitiesManagement from './pages/shared/LocalitiesManagement';
@@ -169,6 +170,7 @@ const dkaNav: NavItem[] = [
 
 const ministriNav: NavItem[] = [
   { label: 'Paneli Kryesor', path: '/ministri', icon: Crown },
+  { label: 'Stafi Administrativ', path: '/ministri/stafi', icon: UserCog },
   { label: 'Shkollat', path: '/ministri/shkollat', icon: School },
   { label: 'Vendbanimet', path: '/ministri/vendbanimet', icon: MapPin },
   { label: 'Komunat', path: '/ministri/komunat', icon: Building },
@@ -401,6 +403,7 @@ function AppRoutes() {
         <Route path="/" element={<Navigate to="/ministri" replace />} />
         <Route element={<DashboardLayout navItems={ministriNav} role="ministri" />}>
           <Route path="/ministri" element={<MinistriDashboard />} />
+          <Route path="/ministri/stafi" element={<StaffAccountsManagement />} />
           <Route path="/ministri/shkollat" element={<SchoolsManagement />} />
           <Route path="/ministri/vendbanimet" element={<LocalitiesManagement />} />
           <Route path="/ministri/komunat" element={<Municipalities />} />
