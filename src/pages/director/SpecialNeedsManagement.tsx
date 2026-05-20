@@ -384,8 +384,19 @@ export default function SpecialNeedsManagement() {
           </div>
           <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
             {needs.length === 0 ? (
-              <div className="px-6 py-12 text-center text-slate-400 text-sm">
-                Asnjë nxënës me NVA i regjistruar.
+              <div className="px-6 py-12 text-center">
+                <Heart className="w-12 h-12 text-slate-200 mx-auto mb-3" />
+                <p className="text-slate-700 font-medium mb-1">Asnjë nxënës me NVA i regjistruar</p>
+                <p className="text-slate-400 text-sm mb-4">
+                  Regjistro një nxënës me Nevoja të Veçanta Arsimore për të krijuar profilin përkatës.
+                </p>
+                <button
+                  onClick={openNewNeed}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-xl text-sm font-medium"
+                >
+                  <Plus className="w-4 h-4" />
+                  Regjistro NVA
+                </button>
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -440,8 +451,17 @@ export default function SpecialNeedsManagement() {
           </div>
           <div className="space-y-3">
             {ieps.length === 0 ? (
-              <div className="bg-white rounded-2xl border border-slate-100 px-6 py-12 text-center text-slate-400 text-sm">
-                Asnjë Plan Individual i Arsimimit.
+              <div className="bg-white rounded-2xl border border-slate-100 px-6 py-12 text-center">
+                <Target className="w-12 h-12 text-slate-200 mx-auto mb-3" />
+                <p className="text-slate-700 font-medium mb-1">Asnjë Plan Individual i Arsimimit (PIA)</p>
+                <p className="text-slate-400 text-sm mb-4">Krijo një PIA për nxënësit me nevoja të veçanta arsimore.</p>
+                <button
+                  onClick={openNewIep}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-xl text-sm font-medium"
+                >
+                  <Plus className="w-4 h-4" />
+                  Krijo PIA
+                </button>
               </div>
             ) : (
               ieps.map((iep) => (

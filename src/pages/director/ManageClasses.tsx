@@ -187,6 +187,35 @@ export default function ManageClasses() {
       </div>
 
       <div className="space-y-6">
+        {filtered.length === 0 && (
+          <div className="bg-white rounded-2xl border border-slate-100 px-6 py-12 text-center">
+            <BookOpen className="w-12 h-12 text-slate-200 mx-auto mb-3" />
+            <p className="text-slate-700 font-medium mb-1">
+              {classes.length === 0 ? 'Asnjë klasë e regjistruar' : 'Asnjë klasë me kërkimin tuaj'}
+            </p>
+            <p className="text-slate-400 text-sm mb-4">
+              {classes.length === 0
+                ? 'Krijo klasën e parë për të organizuar nxënësit.'
+                : 'Provoni një kërkim tjetër.'}
+            </p>
+            {classes.length === 0 ? (
+              <button
+                onClick={() => setShowAddModal(true)}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-sm font-medium"
+              >
+                <Plus className="w-4 h-4" />
+                Krijo Klasë
+              </button>
+            ) : (
+              <button
+                onClick={() => setSearch('')}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-medium"
+              >
+                Pastro kërkimin
+              </button>
+            )}
+          </div>
+        )}
         {Object.entries(grouped)
           .sort(([a], [b]) => Number(a) - Number(b))
           .map(([grade, classList]) => (

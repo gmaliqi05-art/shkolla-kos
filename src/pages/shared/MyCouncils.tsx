@@ -122,8 +122,10 @@ export default function MyCouncils() {
       </div>
 
       {entries.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-slate-100 px-6 py-12 text-center text-slate-400 text-sm">
-          Nuk jeni anëtar i asnjë këshilli aktiv.
+        <div className="bg-white rounded-2xl border border-slate-100 px-6 py-12 text-center">
+          <Briefcase className="w-12 h-12 text-slate-200 mx-auto mb-3" />
+          <p className="text-slate-700 font-medium mb-1">Nuk jeni anëtar i ndonjë këshilli aktiv</p>
+          <p className="text-slate-400 text-sm">Drejtori i shkollës ju shton si anëtar në këshillin përkatës.</p>
         </div>
       ) : (
         <div className="space-y-4">

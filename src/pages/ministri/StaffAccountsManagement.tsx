@@ -224,8 +224,32 @@ export default function StaffAccountsManagement() {
 
       <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
         {filtered.length === 0 ? (
-          <div className="px-6 py-12 text-center text-slate-400 text-sm">
-            {staff.length === 0 ? 'Asnjë llogari e regjistruar.' : 'Asnjë rezultat me filtrat e zgjedhur.'}
+          <div className="px-6 py-12 text-center">
+            <UserCheck className="w-12 h-12 text-slate-200 mx-auto mb-3" />
+            <p className="text-slate-700 font-medium mb-1">
+              {staff.length === 0 ? 'Asnjë llogari e regjistruar' : 'Asnjë rezultat me filtrat e zgjedhur'}
+            </p>
+            <p className="text-slate-400 text-sm mb-4">
+              {staff.length === 0
+                ? 'Krijo llogarinë e parë administrative (DKA, Inspektor, Ministër).'
+                : 'Provoni të hiqni filtrat ose ndryshoni kërkimin.'}
+            </p>
+            {staff.length === 0 ? (
+              <button
+                onClick={openNew}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-sm font-medium"
+              >
+                <Plus className="w-4 h-4" />
+                Krijo Llogari
+              </button>
+            ) : (
+              <button
+                onClick={() => { setSearch(''); setFilterRole(''); }}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-medium"
+              >
+                Pastro filtrat
+              </button>
+            )}
           </div>
         ) : (
           <div className="overflow-x-auto">
