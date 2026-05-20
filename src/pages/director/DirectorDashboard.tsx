@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { formatDate } from '../../lib/formatDate';
 import { DashboardSkeleton } from '../../components/Skeleton';
-import { useI18n } from '../../lib/i18n/I18nProvider';
 import { useAuth } from '../../contexts/AuthContext';
 import StatCard from '../../components/StatCard';
 import { GRADE_LABELS } from '../../types/database';
@@ -66,7 +65,6 @@ interface AlertItem {
 
 export default function DirectorDashboard() {
   const { isDemo } = useAuth();
-  const { t } = useI18n();
   const [stats, setStats] = useState<DashboardStats>({ totalStudents: 0, totalTeachers: 0, totalClasses: 0, totalSubjects: 0 });
   const [gradeDistribution, setGradeDistribution] = useState<GradeDistItem[]>([]);
   const [attendanceData, setAttendanceData] = useState<AttendanceDayData[]>([]);
@@ -104,9 +102,9 @@ export default function DirectorDashboard() {
         { id: '2', title: 'Ndryshim ne orarin e mesimit', target_role: 'te_gjithe', is_important: false, created_at: new Date(Date.now() - 86400000).toISOString() },
       ]);
       setAlerts([
-        { type: 'warning', message: '1 mësues nuk ka regjistruar asnjë notë këtë muaj.', action: 'Shiko Mësuesit', actionPath: '/drejtor/mesues' },
-        { type: 'warning', message: '4 nxënës kanë mesatare nën 2.5 — rrezik akademik.', action: 'Shiko Nxënësit', actionPath: '/drejtor/nxenes' },
-        { type: 'info', message: '3 mungesa frekuentimi pa arsyetim në javën e kaluar.', action: 'Shiko Raportet', actionPath: '/drejtor/raporte' },
+        { type: 'warning', message: '1 mësues nuk ka regjistruar asnjë notë këtë muaj.', action: 'Shiko Raportet', actionPath: '/drejtor/raporte' },
+        { type: 'warning', message: '4 nxënës kanë mesatare nën 2.5 — rrezik akademik.', action: 'Shiko Nxënësit', actionPath: '/drejtor/raporte' },
+        { type: 'info', message: '3 mungesa frekuentimi pa arsyetim në javën e kaluar.', action: 'Shiko Frekuentimin', actionPath: '/drejtor/raporte' },
       ]);
       setLoading(false);
       return;
@@ -253,10 +251,10 @@ export default function DirectorDashboard() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard label={t('stat.students_total')} value={stats.totalStudents} icon={Users} color="blue" to="/drejtor/nxenes" />
-        <StatCard label={t('stat.teachers')} value={stats.totalTeachers} icon={GraduationCap} color="teal" to="/drejtor/mesues" />
-        <StatCard label={t('stat.classes')} value={stats.totalClasses} icon={Layers} color="amber" to="/drejtor/klasa" />
-        <StatCard label={t('stat.subjects')} value={stats.totalSubjects} icon={BookOpen} color="cyan" />
+        <StatCard label="Nxenes Gjithsej" value={stats.totalStudents} icon={Users} color="blue" />
+        <StatCard label="Mesues" value={stats.totalTeachers} icon={GraduationCap} color="teal" />
+        <StatCard label="Klasa" value={stats.totalClasses} icon={Layers} color="amber" />
+        <StatCard label="Lende" value={stats.totalSubjects} icon={BookOpen} color="cyan" />
       </div>
 
       {alerts.length > 0 && (

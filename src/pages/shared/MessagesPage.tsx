@@ -76,30 +76,6 @@ export default function MessagesPage() {
     loadMessages();
   }, [profile, tab]);
 
-  // Real-time subscription: rifresko listën kur ka mesazhe të reja për këtë user
-  useEffect(() => {
-    if (!profile || isDemo) return;
-    const channel = supabase
-      .channel(`messages-${profile.id}`)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'messages',
-          filter: tab === 'sent' ? `sender_id=eq.${profile.id}` : `receiver_id=eq.${profile.id}`,
-        },
-        () => {
-          loadMessages();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [profile, isDemo, tab]);
-
   useEffect(() => {
     if (showCompose) loadContacts();
   }, [showCompose]);

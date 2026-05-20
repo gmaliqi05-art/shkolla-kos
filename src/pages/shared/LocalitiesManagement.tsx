@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../components/ToastProvider';
-import { useI18n } from '../../lib/i18n/I18nProvider';
 import {
   LOCALITY_TYPE_LABELS,
   type LocalityType,
@@ -19,7 +18,6 @@ interface LocalityRow extends Locality {
 export default function LocalitiesManagement() {
   const { profile } = useAuth();
   const toast = useToast();
-  const { t } = useI18n();
   const canManage = profile?.role === 'drejtor' || profile?.role === 'drejtor_komunal' || profile?.role === 'ministri';
 
   const [localities, setLocalities] = useState<LocalityRow[]>([]);
@@ -151,13 +149,13 @@ export default function LocalitiesManagement() {
           </div>
           <div>
             <h1 className="text-2xl font-bold text-slate-900">Qytetet, Fshatrat dhe Lagjet</h1>
-            <p className="text-slate-500 text-sm">{localities.length} {t('locality.count_in_municipalities')}</p>
+            <p className="text-slate-500 text-sm">{localities.length} vendbanime në 38 komuna</p>
           </div>
         </div>
         {canManage && (
           <button onClick={openNew} className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-medium">
             <Plus className="w-4 h-4" />
-            {t('locality.add')}
+            Shto Vendbanim
           </button>
         )}
       </div>
@@ -198,7 +196,7 @@ export default function LocalitiesManagement() {
               onClick={() => { setSearch(''); setFilterMunicipality(''); }}
               className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-medium"
             >
-              {t('btn.clear_filters')}
+              Pastro filtrat
             </button>
           ) : canManage && (
             <button
@@ -206,7 +204,7 @@ export default function LocalitiesManagement() {
               className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-medium"
             >
               <Plus className="w-4 h-4" />
-              {t('locality.add')}
+              Shto Vendbanim
             </button>
           )}
         </div>
@@ -255,7 +253,7 @@ export default function LocalitiesManagement() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-slate-900">{editing ? t('locality.edit') : t('locality.new')}</h2>
+              <h2 className="text-lg font-bold text-slate-900">{editing ? 'Edito Vendbanimin' : 'Vendbanim i Ri'}</h2>
               <button onClick={() => setShowModal(false)}><X className="w-5 h-5 text-slate-400" /></button>
             </div>
             {error && <div className="mb-3 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl px-3 py-2">{error}</div>}
@@ -297,7 +295,7 @@ export default function LocalitiesManagement() {
                 </label>
               </div>
               <div className="flex gap-3 pt-3">
-                <button type="button" onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium">{t('btn.cancel')}</button>
+                <button type="button" onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium">Anulo</button>
                 <button type="submit" disabled={submitting} className="flex-1 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-medium disabled:opacity-50 flex items-center justify-center gap-2">
                   {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
                   Ruaj
