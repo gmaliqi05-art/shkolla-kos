@@ -204,18 +204,20 @@ export default function Header({ onMenuToggle }: HeaderProps) {
           </button>
 
           {showNotifs && (
-            <div className="absolute right-0 top-12 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-50">
-              <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
-                <h3 className="font-semibold text-slate-900">Njoftimet</h3>
+            <>
+              <div className="fixed inset-0 bg-black/10 sm:hidden z-40" onClick={() => setShowNotifs(false)} />
+              <div className="fixed sm:absolute left-2 right-2 top-16 sm:left-auto sm:right-0 sm:top-12 sm:w-96 max-w-[calc(100vw-1rem)] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-50">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
+                <h3 className="text-sm font-semibold text-slate-900">Njoftimet</h3>
                 <button onClick={() => setShowNotifs(false)} className="text-slate-400 hover:text-slate-600">
                   <X className="w-4 h-4" />
                 </button>
               </div>
-              <div className="max-h-80 overflow-y-auto">
+              <div className="max-h-[60vh] sm:max-h-80 overflow-y-auto">
                 {notifs.length === 0 ? (
-                  <div className="px-5 py-8 text-center">
+                  <div className="px-4 py-8 text-center">
                     <Bell className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                    <p className="text-sm text-slate-400">Nuk ka njoftime</p>
+                    <p className="text-xs text-slate-400">Nuk ka njoftime</p>
                   </div>
                 ) : (
                   notifs.map((n) => (
@@ -225,26 +227,26 @@ export default function Header({ onMenuToggle }: HeaderProps) {
                         setShowNotifs(false);
                         if (n.type === 'message') navigate(getMessagePath());
                       }}
-                      className={`w-full text-left px-5 py-3 flex items-start gap-3 hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-b-0 ${
+                      className={`w-full text-left px-4 py-2.5 flex items-start gap-2 hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-b-0 ${
                         !n.isRead ? 'bg-blue-50/50' : ''
                       }`}
                     >
-                      <div className={`p-2 rounded-lg flex-shrink-0 mt-0.5 ${
+                      <div className={`p-1.5 rounded-lg flex-shrink-0 mt-0.5 ${
                         n.type === 'message' ? 'bg-teal-50 text-teal-500' : 'bg-amber-50 text-amber-500'
                       }`}>
-                        {n.type === 'message' ? <MessageSquare className="w-3.5 h-3.5" /> : <Megaphone className="w-3.5 h-3.5" />}
+                        {n.type === 'message' ? <MessageSquare className="w-3 h-3" /> : <Megaphone className="w-3 h-3" />}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
-                          <p className={`text-sm truncate ${!n.isRead ? 'font-semibold text-slate-900' : 'font-medium text-slate-700'}`}>
+                          <p className={`text-xs truncate ${!n.isRead ? 'font-semibold text-slate-900' : 'font-medium text-slate-700'}`}>
                             {n.title}
                           </p>
-                          {!n.isRead && <span className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0" />}
+                          {!n.isRead && <span className="w-1.5 h-1.5 bg-blue-500 rounded-full flex-shrink-0" />}
                         </div>
-                        <p className="text-xs text-slate-500 truncate mt-0.5">{n.preview}</p>
+                        <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">{n.preview}</p>
                         <div className="flex items-center gap-2 mt-1">
-                          <span className="text-[10px] text-slate-400">{n.from}</span>
-                          <span className="text-[10px] text-slate-300 flex items-center gap-0.5">
+                          <span className="text-[10px] text-slate-400 truncate">{n.from}</span>
+                          <span className="text-[10px] text-slate-300 flex items-center gap-0.5 shrink-0">
                             <Clock className="w-2.5 h-2.5" />
                             {n.time}
                           </span>
@@ -254,15 +256,16 @@ export default function Header({ onMenuToggle }: HeaderProps) {
                   ))
                 )}
               </div>
-              <div className="px-5 py-3 border-t border-slate-100">
+              <div className="px-4 py-2.5 border-t border-slate-100">
                 <button
                   onClick={() => { setShowNotifs(false); navigate(getMessagePath()); }}
-                  className="w-full text-center text-sm text-slate-600 hover:text-slate-900 font-medium transition-colors"
+                  className="w-full text-center text-xs text-slate-600 hover:text-slate-900 font-medium transition-colors"
                 >
                   Shiko te gjitha mesazhet
                 </button>
               </div>
-            </div>
+              </div>
+            </>
           )}
         </div>
 

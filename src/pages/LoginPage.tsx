@@ -14,11 +14,11 @@ const ROLES: { value: UserRole; label: string; description: string }[] = [
 ];
 
 const DEMO_USERS: { role: UserRole; name: string; icon: typeof UserCircle; color: string }[] = [
-  { role: 'ministri', name: 'Ministër (MAShTI)', icon: Crown, color: 'from-purple-500 to-purple-600' },
-  { role: 'drejtor_komunal', name: 'Drejtor Komunal (DKA)', icon: Building, color: 'from-amber-500 to-amber-600' },
-  { role: 'inspektor', name: 'Inspektor Arsimit', icon: ClipboardCheck, color: 'from-orange-500 to-orange-600' },
-  { role: 'drejtor', name: 'Drejtor i Shkollës', icon: School, color: 'from-blue-500 to-blue-600' },
-  { role: 'pedagog', name: 'Pedagog/Psikolog', icon: Heart, color: 'from-pink-500 to-pink-600' },
+  { role: 'ministri', name: 'Ministër', icon: Crown, color: 'from-purple-500 to-purple-600' },
+  { role: 'drejtor_komunal', name: 'Drejtor Komunal', icon: Building, color: 'from-amber-500 to-amber-600' },
+  { role: 'inspektor', name: 'Inspektor', icon: ClipboardCheck, color: 'from-orange-500 to-orange-600' },
+  { role: 'drejtor', name: 'Drejtor Shkolle', icon: School, color: 'from-blue-500 to-blue-600' },
+  { role: 'pedagog', name: 'Pedagog', icon: Heart, color: 'from-pink-500 to-pink-600' },
   { role: 'mesues', name: 'Mësues', icon: UserCheck, color: 'from-teal-500 to-teal-600' },
   { role: 'nxenes', name: 'Nxënës', icon: User, color: 'from-cyan-500 to-cyan-600' },
   { role: 'prind', name: 'Prind', icon: Users, color: 'from-slate-600 to-slate-700' },
@@ -183,10 +183,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-teal-50 flex relative">
-      <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
-        <Link to="/dokumentet-ligjore" className="text-xs px-3 py-1.5 bg-white/80 hover:bg-white border border-slate-200 rounded-xl text-slate-700">
-          Dokumentet Ligjore
-        </Link>
+      <div className="absolute top-4 right-4 z-20">
         <LanguageSwitcher />
       </div>
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
@@ -438,16 +435,16 @@ export default function LoginPage() {
               <p className="text-center text-sm text-slate-500 mb-4">
                 Ose hyni me nje llogari demo
               </p>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
                 {DEMO_USERS.map((demo) => (
                   <button
                     key={demo.role}
                     type="button"
                     onClick={() => demoSignIn(demo.role)}
-                    className={`flex items-center gap-2 px-3 py-2.5 rounded-xl bg-gradient-to-r ${demo.color} text-white text-sm font-medium hover:opacity-90 transition-all shadow-md`}
+                    className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-gradient-to-r ${demo.color} text-white text-xs font-medium hover:opacity-90 transition-colors`}
                   >
-                    <demo.icon className="w-4 h-4" />
-                    {demo.name}
+                    <demo.icon className="w-3 h-3 shrink-0" />
+                    <span className="truncate">{demo.name}</span>
                   </button>
                 ))}
               </div>
@@ -456,9 +453,14 @@ export default function LoginPage() {
             )}
           </div>
 
-          <p className="text-center text-slate-400 text-xs mt-6">
-            Shkolla - Sistemi i Menaxhimit te Shkolles &copy; 2025
-          </p>
+          <div className="mt-6 text-center space-y-2">
+            <Link to="/dokumentet-ligjore" className="text-xs text-slate-500 hover:text-slate-700 underline">
+              Dokumentet Ligjore
+            </Link>
+            <p className="text-slate-400 text-xs">
+              Shkolla - Sistemi i Menaxhimit te Shkolles &copy; 2025
+            </p>
+          </div>
         </div>
       </div>
     </div>
