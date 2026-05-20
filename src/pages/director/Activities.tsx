@@ -46,6 +46,7 @@ export default function Activities() {
   const [showAddParticipant, setShowAddParticipant] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const canManage = profile?.role === 'drejtor' || profile?.role === 'mesues' || profile?.role === 'pedagog';
 
   const [form, setForm] = useState({
     name: '',
@@ -193,7 +194,7 @@ export default function Activities() {
             <p className="text-slate-500 text-sm">Klube, sport, olimpiada — sipas KKK</p>
           </div>
         </div>
-        {profile?.role !== 'nxenes' && profile?.role !== 'prind' && (
+        {canManage && (
           <button onClick={openNew} className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-medium">
             <Plus className="w-4 h-4" />
             Shto Aktivitet
@@ -233,9 +234,11 @@ export default function Activities() {
                     </div>
                   </div>
                   <div className="flex gap-1">
-                    <button onClick={() => openEdit(a)} className="p-1.5 text-slate-400 hover:text-slate-700 rounded">
-                      <Edit2 className="w-4 h-4" />
-                    </button>
+                    {canManage && (
+                      <button onClick={() => openEdit(a)} className="p-1.5 text-slate-400 hover:text-slate-700 rounded">
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+                    )}
                     <button onClick={() => setExpanded(isOpen ? null : a.id)} className="p-1.5 text-slate-400 hover:text-slate-700 rounded">
                       {isOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
                     </button>
@@ -248,13 +251,15 @@ export default function Activities() {
                         <Users className="w-4 h-4" />
                         Pjesëmarrësit ({ps.length})
                       </h4>
-                      <button
-                        onClick={() => { setShowAddParticipant(a.id); setParticipantForm({ student_id: '', notes: '' }); }}
-                        className="text-xs text-amber-700 hover:text-amber-900 font-medium inline-flex items-center gap-1"
-                      >
-                        <UserPlus className="w-3 h-3" />
-                        Shto nxënës
-                      </button>
+                      {canManage && (
+                        <button
+                          onClick={() => { setShowAddParticipant(a.id); setParticipantForm({ student_id: '', notes: '' }); }}
+                          className="text-xs text-amber-700 hover:text-amber-900 font-medium inline-flex items-center gap-1"
+                        >
+                          <UserPlus className="w-3 h-3" />
+                          Shto nxënës
+                        </button>
+                      )}
                     </div>
                     {ps.length === 0 ? (
                       <p className="text-xs text-slate-400 italic">Asnjë pjesëmarrës.</p>
@@ -273,9 +278,11 @@ export default function Activities() {
                                 Pa pëlqim prindi
                               </span>
                             )}
-                            <button onClick={() => removeParticipant(p.id)} className="ml-auto text-xs text-rose-600 hover:text-rose-800">
-                              <UserX className="w-4 h-4" />
-                            </button>
+                            {canManage && (
+                              <button onClick={() => removeParticipant(p.id)} className="ml-auto text-xs text-rose-600 hover:text-rose-800">
+                                <UserX className="w-4 h-4" />
+                              </button>
+                            )}
                           </li>
                         ))}
                       </ul>
