@@ -168,6 +168,51 @@ export const translations = {
   'nav.municipalities': { sq: 'Komunat', sr: 'Opštine', tr: 'Belediyeler', bs: 'Opštine' },
   'nav.staff': { sq: 'Stafi Administrativ', sr: 'Administrativno osoblje', tr: 'İdari Personel', bs: 'Administrativno osoblje' },
   'nav.inspections': { sq: 'Inspektimet', sr: 'Inspekcije', tr: 'Denetimler', bs: 'Inspekcije' },
+
+  // === DASHBOARD STATS ===
+  'stat.students': { sq: 'Nxënës', sr: 'Učenici', tr: 'Öğrenciler', bs: 'Učenici' },
+  'stat.students_total': { sq: 'Nxënës Gjithsej', sr: 'Ukupno učenika', tr: 'Toplam Öğrenci', bs: 'Ukupno učenika' },
+  'stat.teachers': { sq: 'Mësues', sr: 'Nastavnici', tr: 'Öğretmenler', bs: 'Nastavnici' },
+  'stat.classes': { sq: 'Klasa', sr: 'Razredi', tr: 'Sınıflar', bs: 'Razredi' },
+  'stat.subjects': { sq: 'Lëndë', sr: 'Predmeti', tr: 'Dersler', bs: 'Predmeti' },
+  'stat.average': { sq: 'Mesatare', sr: 'Prosek', tr: 'Ortalama', bs: 'Prosjek' },
+  'stat.attendance': { sq: 'Frekuentimi', sr: 'Pohađanje', tr: 'Devam', bs: 'Pohađanje' },
+  'stat.absences': { sq: 'Mungesa', sr: 'Odsustva', tr: 'Devamsızlık', bs: 'Odsustva' },
+  'stat.month_grades': { sq: 'Nota këtë muaj', sr: 'Ocene ovog meseca', tr: 'Bu ay notlar', bs: 'Ocjene ovog mjeseca' },
+  'stat.municipalities': { sq: 'Komuna', sr: 'Opštine', tr: 'Belediyeler', bs: 'Opštine' },
+  'stat.schools': { sq: 'Shkolla', sr: 'Škole', tr: 'Okullar', bs: 'Škole' },
+  'stat.directors': { sq: 'Drejtorë shkollash', sr: 'Direktori škola', tr: 'Okul Müdürleri', bs: 'Direktori škola' },
+  'stat.dka_directors': { sq: 'Drejtorë DKA', sr: 'DKA direktori', tr: 'DKA Müdürleri', bs: 'DKA direktori' },
+  'stat.parents': { sq: 'Prindër', sr: 'Roditelji', tr: 'Veliler', bs: 'Roditelji' },
+  'stat.licensed': { sq: 'Të licencuar', sr: 'Licencirani', tr: 'Lisanslı', bs: 'Licencirani' },
+
+  // === DASHBOARD SECTIONS ===
+  'dash.welcome_back': { sq: 'Mirë se erdhët përsëri', sr: 'Dobrodošli nazad', tr: 'Tekrar hoş geldiniz', bs: 'Dobrodošli nazad' },
+  'dash.quick_actions': { sq: 'Veprime të Shpejta', sr: 'Brze akcije', tr: 'Hızlı İşlemler', bs: 'Brze akcije' },
+  'dash.recent_grades': { sq: 'Notat e Fundit', sr: 'Nedavne ocene', tr: 'Son Notlar', bs: 'Nedavne ocjene' },
+  'dash.today_schedule': { sq: 'Orari i Sotëm', sr: 'Današnji raspored', tr: 'Bugünkü Program', bs: 'Današnji raspored' },
+  'dash.announcements': { sq: 'Njoftimet', sr: 'Obaveštenja', tr: 'Duyurular', bs: 'Obavještenja' },
+  'dash.my_classes': { sq: 'Klasat e Mia', sr: 'Moji razredi', tr: 'Sınıflarım', bs: 'Moji razredi' },
+  'dash.alerts': { sq: 'Vërejtje', sr: 'Upozorenja', tr: 'Uyarılar', bs: 'Upozorenja' },
+  'dash.see_all': { sq: 'Shiko të gjitha', sr: 'Vidi sve', tr: 'Tümünü gör', bs: 'Vidi sve' },
+  'dash.no_data': { sq: 'Nuk ka të dhëna', sr: 'Nema podataka', tr: 'Veri yok', bs: 'Nema podataka' },
+  'dash.incomplete_data': { sq: 'Të dhëna të paplota', sr: 'Nepotpuni podaci', tr: 'Eksik veri', bs: 'Nepotpuni podaci' },
+
+  // === PROFILE ===
+  'profile.title': { sq: 'Profili Im', sr: 'Moj profil', tr: 'Profilim', bs: 'Moj profil' },
+  'profile.subtitle': { sq: 'Menaxho informacionin personal dhe sigurinë e llogarisë', sr: 'Upravljaj ličnim podacima i bezbednošću', tr: 'Kişisel bilgileri ve hesap güvenliğini yönet', bs: 'Upravljaj ličnim podacima i sigurnošću' },
+  'profile.photo': { sq: 'Fotografia e profilit', sr: 'Fotografija profila', tr: 'Profil fotoğrafı', bs: 'Fotografija profila' },
+  'profile.photo_help': { sq: 'JPG, PNG ose WebP. Maksimum 2 MB.', sr: 'JPG, PNG ili WebP. Maksimum 2 MB.', tr: 'JPG, PNG veya WebP. Maksimum 2 MB.', bs: 'JPG, PNG ili WebP. Maksimum 2 MB.' },
+  'profile.upload_photo': { sq: 'Ngarko fotografi', sr: 'Otpremi sliku', tr: 'Fotoğraf yükle', bs: 'Otpremi sliku' },
+  'profile.personal_info': { sq: 'Informacioni personal', sr: 'Lični podaci', tr: 'Kişisel bilgiler', bs: 'Lični podaci' },
+  'profile.full_name': { sq: 'Emri i plotë', sr: 'Puno ime', tr: 'Tam adı', bs: 'Puno ime' },
+  'profile.email_cannot_change': { sq: 'Nuk mund të ndryshohet', sr: 'Ne može se promeniti', tr: 'Değiştirilemez', bs: 'Ne može se promijeniti' },
+  'profile.save_changes': { sq: 'Ruaj ndryshimet', sr: 'Sačuvaj promene', tr: 'Değişiklikleri kaydet', bs: 'Sačuvaj promjene' },
+  'profile.change_password': { sq: 'Ndrysho fjalëkalimin', sr: 'Promeni lozinku', tr: 'Şifreyi değiştir', bs: 'Promijeni lozinku' },
+  'profile.current_password': { sq: 'Fjalëkalimi aktual', sr: 'Trenutna lozinka', tr: 'Mevcut şifre', bs: 'Trenutna lozinka' },
+  'profile.new_password': { sq: 'Fjalëkalimi i ri', sr: 'Nova lozinka', tr: 'Yeni şifre', bs: 'Nova lozinka' },
+  'profile.confirm_password': { sq: 'Konfirmo fjalëkalimin e ri', sr: 'Potvrdi novu lozinku', tr: 'Yeni şifreyi onayla', bs: 'Potvrdi novu lozinku' },
+  'profile.min_chars': { sq: 'Të paktën 8 karaktere', sr: 'Najmanje 8 znakova', tr: 'En az 8 karakter', bs: 'Najmanje 8 znakova' },
 } as const;
 
 export type TranslationKey = keyof typeof translations;
