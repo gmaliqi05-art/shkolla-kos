@@ -49,8 +49,8 @@ export default function ParentDashboard() {
   const [subjectAverages, setSubjectAverages] = useState<SubjectAvg[]>([]);
   const [loadError, setLoadError] = useState<string | null>(null);
 
-  useEffect(() => { loadChildren(); }, [profile]);
-  useEffect(() => { if (selectedChildId) loadChildData(selectedChildId); }, [selectedChildId]);
+  useEffect(() => { loadChildren(); }, [profile, isDemo]);
+  useEffect(() => { if (selectedChildId) loadChildData(selectedChildId); }, [selectedChildId, isDemo]);
 
   const loadChildren = async () => {
     if (!profile) return;
