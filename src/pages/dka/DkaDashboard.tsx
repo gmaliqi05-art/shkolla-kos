@@ -187,7 +187,8 @@ export default function DkaDashboard() {
         {schools.length === 0 ? (
           <div className="px-6 py-12 text-center text-slate-400 text-sm">Asnjë shkollë e regjistruar në këtë komunë.</div>
         ) : (
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
             <thead className="bg-slate-50">
               <tr className="text-left text-xs font-semibold text-slate-500 uppercase">
                 <th className="px-4 py-2">Shkolla</th>
@@ -224,6 +225,7 @@ export default function DkaDashboard() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </div>

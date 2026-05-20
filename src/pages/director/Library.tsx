@@ -292,6 +292,7 @@ export default function LibraryPage() {
                 {books.length === 0 ? 'Asnjë libër në katalog. Shto librin e parë.' : 'Asnjë libër me filtrat e zgjedhur.'}
               </div>
             ) : (
+              <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="bg-slate-50 border-b border-slate-100 text-left text-xs font-semibold text-slate-500 uppercase">
@@ -339,6 +340,7 @@ export default function LibraryPage() {
                   ))}
                 </tbody>
               </table>
+              </div>
             )}
           </div>
         </>
@@ -361,6 +363,7 @@ export default function LibraryPage() {
             {filteredLoans.length === 0 ? (
               <div className="px-6 py-12 text-center text-slate-400 text-sm">Asnjë huazim.</div>
             ) : (
+              <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="bg-slate-50 border-b border-slate-100 text-left text-xs font-semibold text-slate-500 uppercase">
@@ -403,6 +406,7 @@ export default function LibraryPage() {
                   })}
                 </tbody>
               </table>
+              </div>
             )}
           </div>
         </>

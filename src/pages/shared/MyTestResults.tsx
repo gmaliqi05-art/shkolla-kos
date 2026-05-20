@@ -208,6 +208,7 @@ export default function MyTestResults() {
                 <h3 className="font-semibold text-slate-900 mt-1">{test.name}</h3>
                 <p className="text-xs text-slate-500 mt-0.5">{test.test_date}</p>
               </div>
+              <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="bg-slate-50 text-left text-xs font-semibold text-slate-500 uppercase">
@@ -241,6 +242,7 @@ export default function MyTestResults() {
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
           ))}
         </div>

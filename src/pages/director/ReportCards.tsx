@@ -173,6 +173,7 @@ export default function ReportCards() {
             Asnjë nxënës i regjistruar në këtë klasë.
           </div>
         ) : (
+          <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-100 text-left text-xs font-semibold text-slate-500 uppercase">
@@ -213,6 +214,7 @@ export default function ReportCards() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </div>

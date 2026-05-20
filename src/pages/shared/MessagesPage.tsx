@@ -233,6 +233,7 @@ export default function MessagesPage() {
   };
 
   const handleDelete = async (msgId: string) => {
+    if (!confirm('Fshij këtë mesazh? Ky veprim nuk mund të kthehet.')) return;
     if (isDemo) {
       const idx = DEMO_MESSAGES.findIndex(m => m.id === msgId);
       if (idx !== -1) DEMO_MESSAGES.splice(idx, 1);

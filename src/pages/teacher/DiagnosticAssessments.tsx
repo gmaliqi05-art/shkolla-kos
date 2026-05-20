@@ -181,6 +181,7 @@ export default function DiagnosticAssessments() {
         {students.length === 0 ? (
           <div className="px-6 py-12 text-center text-slate-400 text-sm">Asnjë nxënës në këtë klasë.</div>
         ) : (
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-100 text-left text-xs font-semibold text-slate-500 uppercase">
@@ -214,6 +215,7 @@ export default function DiagnosticAssessments() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
 
