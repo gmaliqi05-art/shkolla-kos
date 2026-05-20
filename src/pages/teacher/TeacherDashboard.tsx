@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { formatRelative, formatDayMonth } from '../../lib/formatDate';
@@ -56,7 +56,6 @@ interface AtRiskStudent {
 
 export default function TeacherDashboard() {
   const { profile, isDemo } = useAuth();
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [totalClasses, setTotalClasses] = useState(0);
   const [totalStudents, setTotalStudents] = useState(0);
@@ -344,14 +343,14 @@ export default function TeacherDashboard() {
                     <p className="text-sm font-medium text-slate-900">{cls.className}</p>
                     <p className="text-xs text-slate-500">{cls.subjectName} - {cls.studentCount} nxenes</p>
                   </div>
-                  <button
-                    onClick={() => navigate('/mesues/orari')}
-                    title="Shiko orarin e kesaj klase"
-                    className="opacity-0 group-hover:opacity-100 flex items-center gap-1 px-2.5 py-1 rounded-lg bg-teal-50 text-teal-700 text-xs font-medium hover:bg-teal-100 transition-all"
+                  <Link
+                    to="/mesues/klasa"
+                    title="Detajet e klasës"
+                    className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-teal-50 text-teal-700 text-xs font-medium hover:bg-teal-100 transition-all"
                   >
                     <CalendarDays className="w-3.5 h-3.5" />
-                    Orari
-                  </button>
+                    Detajet
+                  </Link>
                   <div className="text-right">
                     <p className={`text-lg font-bold ${
                       cls.avgGrade >= 4 ? 'text-emerald-600' :
