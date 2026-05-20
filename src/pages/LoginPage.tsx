@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 import type { UserRole } from '../types/database';
 import { GraduationCap, Eye, EyeOff, BookOpen, Users, BarChart3, Shield, Loader2, CircleUser as UserCircle, School, User, UserCheck, ArrowLeft, CheckCircle } from 'lucide-react';
 import LanguageSwitcher from '../components/LanguageSwitcher';
+// Shield is used both in landing image and MFA challenge screen
 
 const ROLES: { value: UserRole; label: string; description: string }[] = [
   { value: 'mesues', label: 'Mesues', description: 'Menaxhoni klasat' },
@@ -32,6 +33,56 @@ export default function LoginPage() {
   const [resetEmail, setResetEmail] = useState('');
   const [resetSent, setResetSent] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
+
+  // MFA challenge state
+  const [mfaFactorId, setMfaFactorId] = useState('');
+  const [mfaChallengeId, setMfaChallengeId] = useState('');
+  const [mfaCode, setMfaCode] = useState('');
+  const [mfaLoading, setMfaLoading] = useState(false);
+
+  const checkMfaRequired = async () => {
+    const { data } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+    if (data && data.currentLevel === 'aal1' && data.nextLevel === 'aal2') {
+      const { data: factors } = await supabase.auth.mfa.listFactors();
+      const verified = factors?.totp.find((f) => f.status === 'verified');
+      if (verified) {
+        const { data: ch, error } = await supabase.auth.mfa.challenge({ factorId: verified.id });
+        if (!error && ch) {
+          setMfaFactorId(verified.id);
+          setMfaChallengeId(ch.id);
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
+  const handleMfaSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (mfaCode.length !== 6) return;
+    setMfaLoading(true);
+    setError('');
+    const { error: err } = await supabase.auth.mfa.verify({
+      factorId: mfaFactorId,
+      challengeId: mfaChallengeId,
+      code: mfaCode,
+    });
+    if (err) {
+      setError('Kodi është i pasaktë. Provo përsëri.');
+    } else {
+      setMfaFactorId('');
+      setMfaChallengeId('');
+      setMfaCode('');
+    }
+    setMfaLoading(false);
+  };
+
+  const handleMfaCancel = async () => {
+    await supabase.auth.signOut();
+    setMfaFactorId('');
+    setMfaChallengeId('');
+    setMfaCode('');
+  };
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,10 +114,67 @@ export default function LoginPage() {
       if (result.error) setError(result.error);
     } else {
       const result = await signIn(email, password);
-      if (result.error) setError(result.error);
+      if (result.error) {
+        setError(result.error);
+      } else {
+        const needsMfa = await checkMfaRequired();
+        if (needsMfa) {
+          setLoading(false);
+          return;
+        }
+      }
     }
     setLoading(false);
   };
+
+  if (mfaChallengeId) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-teal-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-xl border border-slate-100 max-w-md w-full p-8">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center">
+              <Shield className="w-6 h-6 text-blue-600" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-slate-900">Verifikimi i Sigurisë</h1>
+              <p className="text-sm text-slate-500">Vendos kodin nga aplikacioni i autentifikuesit</p>
+            </div>
+          </div>
+          {error && <div className="mb-4 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl px-4 py-3">{error}</div>}
+          <form onSubmit={handleMfaSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Kodi 6-shifror</label>
+              <input
+                type="text"
+                inputMode="numeric"
+                maxLength={6}
+                value={mfaCode}
+                onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, ''))}
+                placeholder="123456"
+                autoFocus
+                className="w-full text-center text-3xl font-mono tracking-widest px-3 py-3 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={mfaLoading || mfaCode.length !== 6}
+              className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium disabled:opacity-50 flex items-center justify-center gap-2"
+            >
+              {mfaLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+              Verifiko
+            </button>
+            <button
+              type="button"
+              onClick={handleMfaCancel}
+              className="w-full px-4 py-2 text-sm text-slate-600 hover:text-slate-900"
+            >
+              Anulo dhe dil
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-teal-50 flex relative">
