@@ -218,7 +218,7 @@ export default function TwoFactorSettings() {
                   <p className="text-xs text-slate-500">
                     {f.factor_type.toUpperCase()} ·
                     Statusi: <span className={f.status === 'verified' ? 'text-emerald-600' : 'text-amber-600'}>{f.status}</span> ·
-                    Krijuar: {new Date(f.created_at).toLocaleDateString('sq')}
+                    Krijuar: {new Date(f.created_at).toLocaleDateString('sq-AL')}
                   </p>
                 </div>
                 <button

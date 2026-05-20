@@ -249,9 +249,9 @@ export default function PrivacySettings() {
                   {consent && (
                     <p className="text-xs text-slate-400 mt-1">
                       {isGranted
-                        ? `Dhënë më ${new Date(consent.granted_at).toLocaleDateString('sq')}`
+                        ? `Dhënë më ${new Date(consent.granted_at).toLocaleDateString('sq-AL')}`
                         : consent.revoked_at
-                          ? `Tërhequr më ${new Date(consent.revoked_at).toLocaleDateString('sq')}`
+                          ? `Tërhequr më ${new Date(consent.revoked_at).toLocaleDateString('sq-AL')}`
                           : 'I refuzuar'}
                     </p>
                   )}
@@ -323,7 +323,7 @@ export default function PrivacySettings() {
                     </span>
                     <div className="flex-1">
                       <p className="text-slate-700">{r.reason}</p>
-                      <p className="text-xs text-slate-400">{new Date(r.created_at).toLocaleDateString('sq')}</p>
+                      <p className="text-xs text-slate-400">{new Date(r.created_at).toLocaleDateString('sq-AL')}</p>
                       {r.review_notes && <p className="text-xs text-slate-500 italic mt-0.5">Përgjigja: {r.review_notes}</p>}
                     </div>
                   </div>

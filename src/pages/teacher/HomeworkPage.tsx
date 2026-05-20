@@ -246,7 +246,7 @@ export default function HomeworkPage() {
                             {s.submitted_at && (
                               <span className="text-xs text-slate-500 ml-auto flex items-center gap-1">
                                 <Clock className="w-3 h-3" />
-                                {new Date(s.submitted_at).toLocaleDateString('sq')}
+                                {new Date(s.submitted_at).toLocaleDateString('sq-AL')}
                               </span>
                             )}
                           </li>

@@ -297,7 +297,7 @@ export default function Portfolio() {
                 </a>
               )}
               <p className="text-xs text-slate-400 mt-2">
-                Shtuar më: {new Date(it.added_at).toLocaleDateString('sq')}
+                Shtuar më: {new Date(it.added_at).toLocaleDateString('sq-AL')}
               </p>
             </div>
           ))

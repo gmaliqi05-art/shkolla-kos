@@ -173,7 +173,7 @@ export default function SchoolCalendar() {
             <div key={month} className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
               <div className="px-5 py-3 border-b border-slate-100 bg-slate-50">
                 <h3 className="font-semibold text-slate-900">
-                  {new Date(month + '-01').toLocaleDateString('sq', { year: 'numeric', month: 'long' })}
+                  {new Date(month + '-01').toLocaleDateString('sq-AL', { year: 'numeric', month: 'long' })}
                 </h3>
               </div>
               <div className="divide-y divide-slate-100">

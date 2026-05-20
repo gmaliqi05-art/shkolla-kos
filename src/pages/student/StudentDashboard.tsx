@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
+import { formatRelative, formatDayMonth } from '../../lib/formatDate';
 import StatCard from '../../components/StatCard';
 import { getGradeBgColor } from '../../types/database';
 import {
@@ -157,12 +158,7 @@ export default function StudentDashboard() {
         const TYPE_LABELS: Record<string, string> = { vlersim: 'Vlersim', perfundimtare_gjysmvjetor: 'Perfundimtare', perfundimtare_vjetor: 'Vjetor' };
 
         setRecentGrades((grades as GradeRow[]).slice(0, 5).map((g) => {
-          const today = new Date().toISOString().split('T')[0];
-          const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-          let dateLabel = new Date(g.date).toLocaleDateString('sq-AL');
-          if (g.date === today) dateLabel = 'Sot';
-          else if (g.date === yesterday) dateLabel = 'Dje';
-
+          const dateLabel = formatRelative(g.date);
           const subj = Array.isArray(g.subjects) ? g.subjects[0] : g.subjects;
           return {
             subject: subj?.name || '',
@@ -249,7 +245,7 @@ export default function StudentDashboard() {
               <h3 className="font-semibold text-slate-900">Orari i Sotem</h3>
             </div>
             <span className="text-xs text-slate-400">
-              {new Date().toLocaleDateString('sq-AL', { weekday: 'long', day: 'numeric', month: 'long' })}
+              {formatDayMonth(new Date())}
             </span>
           </div>
           {todaySchedule.length > 0 ? (
