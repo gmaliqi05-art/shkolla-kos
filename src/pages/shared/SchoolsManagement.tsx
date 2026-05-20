@@ -271,6 +271,7 @@ export default function SchoolsManagement() {
             {schools.length === 0 ? 'Asnjë shkollë e regjistruar.' : 'Asnjë shkollë me filtrin e zgjedhur.'}
           </div>
         ) : (
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-slate-50">
               <tr className="text-left text-xs font-semibold text-slate-500 uppercase">
@@ -326,6 +327,7 @@ export default function SchoolsManagement() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
 

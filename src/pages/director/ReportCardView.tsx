@@ -343,6 +343,7 @@ export default function ReportCardView() {
           <h3 className="text-sm font-bold text-slate-900 uppercase mb-2">
             {isDescriptive ? 'Vlerësimi përshkrues' : 'Notat'}
           </h3>
+          <div className="overflow-x-auto">
           <table className="w-full border-collapse text-sm">
             <thead>
               <tr className="bg-slate-100 border border-slate-300">
@@ -389,6 +390,7 @@ export default function ReportCardView() {
               )}
             </tbody>
           </table>
+          </div>
         </div>
 
         {/* Behavior */}
@@ -404,6 +406,7 @@ export default function ReportCardView() {
         {/* Attendance */}
         <div className="mb-6">
           <h3 className="text-sm font-bold text-slate-900 uppercase mb-2">Frekuentimi</h3>
+          <div className="overflow-x-auto">
           <table className="w-full border-collapse text-sm">
             <thead>
               <tr className="bg-slate-100">
@@ -418,6 +421,7 @@ export default function ReportCardView() {
               <tr><td className="border border-slate-300 px-3 py-1.5">Vonesa</td><td className="border border-slate-300 px-3 py-1.5 text-center">{attendance.vonese}</td></tr>
             </tbody>
           </table>
+          </div>
         </div>
 
         {/* Signature */}

@@ -201,6 +201,7 @@ export default function ClassDiary() {
             Asnjë orë e regjistruar për këtë datë. Klik "Shto Orë" për të filluar.
           </div>
         ) : (
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-100 text-left text-xs font-semibold text-slate-500 uppercase">
@@ -227,6 +228,7 @@ export default function ClassDiary() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
 

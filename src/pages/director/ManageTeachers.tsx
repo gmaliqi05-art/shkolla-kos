@@ -192,6 +192,7 @@ export default function ManageTeachers() {
   };
 
   const handleRemoveAssignment = async (assignmentId: string) => {
+    if (!confirm('Hiq caktimin e mësuesit nga kjo klasë/lëndë?')) return;
     await supabase.from('class_subjects').delete().eq('id', assignmentId);
     loadTeachers();
   };

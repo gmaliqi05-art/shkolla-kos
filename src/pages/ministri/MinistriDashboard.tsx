@@ -264,6 +264,7 @@ export default function MinistriDashboard() {
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
+        <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-slate-50">
             <tr className="text-left text-xs font-semibold text-slate-500 uppercase">
@@ -294,6 +295,7 @@ export default function MinistriDashboard() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );
