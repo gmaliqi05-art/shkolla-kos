@@ -12,6 +12,7 @@ import {
   type OverallRating,
   type Inspection,
 } from '../../types/database';
+import { Link } from 'react-router-dom';
 import { Loader2, ClipboardCheck, Plus, X, Edit2, CheckCircle } from 'lucide-react';
 
 interface SchoolOption { id: string; name: string; municipality?: string }
@@ -236,6 +237,12 @@ export default function InspectionsManagement() {
                   )}
                 </div>
                 <div className="flex flex-col gap-1">
+                  <Link
+                    to={isDirector ? `/drejtor/inspektimet/${i.id}` : `/inspektor/inspektimet/${i.id}`}
+                    className="px-2.5 py-1 text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 rounded text-center"
+                  >
+                    Hap detajet
+                  </Link>
                   {isInspector && (
                     <button onClick={() => openEdit(i)} className="p-1.5 text-slate-400 hover:text-slate-700 rounded">
                       <Edit2 className="w-4 h-4" />

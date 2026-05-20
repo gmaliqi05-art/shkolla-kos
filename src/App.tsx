@@ -33,6 +33,7 @@ import DkaDashboard from './pages/dka/DkaDashboard';
 import SchoolsManagement from './pages/shared/SchoolsManagement';
 import LocalitiesManagement from './pages/shared/LocalitiesManagement';
 import InspectionsManagement from './pages/inspektor/InspectionsManagement';
+import InspectionDetail from './pages/inspektor/InspectionDetail';
 
 import TeacherDashboard from './pages/teacher/TeacherDashboard';
 import MyClasses from './pages/teacher/MyClasses';
@@ -245,6 +246,7 @@ function AppRoutes() {
           <Route path="/drejtor/2fa" element={<TwoFactorSettings />} />
           <Route path="/drejtor/dokumentet-ligjore" element={<LegalDocuments />} />
           <Route path="/drejtor/inspektimet" element={<InspectionsManagement />} />
+          <Route path="/drejtor/inspektimet/:id" element={<InspectionDetail />} />
           <Route path="/drejtor/disiplina" element={<DisciplinePage />} />
           <Route path="/drejtor/nva" element={<SpecialNeedsManagement />} />
           <Route path="/drejtor/keshillat" element={<SchoolCouncils />} />
@@ -382,6 +384,7 @@ function AppRoutes() {
         <Route element={<DashboardLayout navItems={inspektorNav} role="inspektor" />}>
           <Route path="/inspektor" element={<InspectionsManagement />} />
           <Route path="/inspektor/inspektimet" element={<InspectionsManagement />} />
+          <Route path="/inspektor/inspektimet/:id" element={<InspectionDetail />} />
           <Route path="/inspektor/shkollat" element={<SchoolsManagement />} />
           <Route path="/inspektor/mesazhet" element={<MessagesPage />} />
           <Route path="/inspektor/2fa" element={<TwoFactorSettings />} />
