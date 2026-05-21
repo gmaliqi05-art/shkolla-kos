@@ -190,6 +190,7 @@ export default function AttendancePage() {
       const attendanceRecords = students.map(student => ({
         student_id: student.id,
         class_id: currentClassSubject.class_id,
+        subject_id: currentClassSubject.subject_id,
         date,
         status: student.status,
         recorded_by: profile?.id,
@@ -198,7 +199,7 @@ export default function AttendancePage() {
       const { error } = await supabase
         .from('attendance')
         .upsert(attendanceRecords, {
-          onConflict: 'student_id,class_id,date',
+          onConflict: 'student_id,class_id,subject_id,date',
         });
 
       if (error) throw error;
