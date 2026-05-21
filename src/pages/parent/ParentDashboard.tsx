@@ -11,6 +11,8 @@ import {
   AlertCircle, Check, X, Clock, Megaphone, Loader2, Users, ChevronDown,
   MessageSquare, GraduationCap, Heart, Trophy,
 } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
+import type { TranslationKey } from '../../lib/i18n/translations';
 
 type AttStatus = 'prezent' | 'mungon' | 'vonese' | 'arsyeshme';
 
@@ -32,8 +34,11 @@ const TYPE_LABELS: Record<string, string> = {
   perfundimtare_vjetor: 'Vjetor',
 };
 
+const WEEK_DAY_KEYS: TranslationKey[] = ['day_short.mon', 'day_short.tue', 'day_short.wed', 'day_short.thu', 'day_short.fri'];
+
 export default function ParentDashboard() {
   const { profile, isDemo } = useAuth();
+  const { t } = useI18n();
   const [loading, setLoading] = useState(true);
   const [dataLoading, setDataLoading] = useState(false);
   const [children, setChildren] = useState<{ id: string; name: string }[]>([]);
@@ -106,9 +111,9 @@ export default function ParentDashboard() {
         { subject: 'Histori', grade: 4, type: 'Vlersim', date: '1 jave me pare' },
       ]);
       setWeekAttendance([
-        { day: 'Hen', status: 'prezent' }, { day: 'Mar', status: 'prezent' },
-        { day: 'Mer', status: 'prezent' }, { day: 'Enj', status: 'vonese' },
-        { day: 'Pre', status: 'prezent' },
+        { day: t('day_short.mon'), status: 'prezent' }, { day: t('day_short.tue'), status: 'prezent' },
+        { day: t('day_short.wed'), status: 'prezent' }, { day: t('day_short.thu'), status: 'vonese' },
+        { day: t('day_short.fri'), status: 'prezent' },
       ]);
       setAnnouncements([
         { title: 'Mbledhje me prinderit', content: 'Diten e enjte ne oren 17:00', important: true },
@@ -164,7 +169,7 @@ export default function ParentDashboard() {
       const firstError = [gradesRes, attRes, annRes].find(r => r.error)?.error;
       if (firstError) {
         console.error('ParentDashboard load error:', firstError);
-        setLoadError('Disa të dhëna nuk u ngarkuan. ' + firstError.message);
+        setLoadError(t('student.data_load_error') + ' ' + firstError.message);
       }
 
       const grades = gradesRes.data || [];
@@ -217,14 +222,13 @@ export default function ParentDashboard() {
       const startOfWeek = new Date(now);
       startOfWeek.setDate(now.getDate() + mondayOffset);
 
-      const weekDayLabels = ['Hen', 'Mar', 'Mer', 'Enj', 'Pre'];
       const weekDays: WeekDay[] = [];
       for (let i = 0; i < 5; i++) {
         const d = new Date(startOfWeek);
         d.setDate(startOfWeek.getDate() + i);
         const dateStr = d.toISOString().split('T')[0];
         const rec = attRecords.find(r => r.date === dateStr);
-        weekDays.push({ day: weekDayLabels[i], status: (rec?.status as AttStatus) || 'prezent' });
+        weekDays.push({ day: t(WEEK_DAY_KEYS[i]), status: (rec?.status as AttStatus) || 'prezent' });
       }
       setWeekAttendance(weekDays);
 
@@ -249,13 +253,13 @@ export default function ParentDashboard() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Paneli Kryesor</h1>
-          <p className="text-slate-500 mt-1">Ndiqni ecurine e femijes tuaj</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('nav.dashboard')}</h1>
+          <p className="text-slate-500 mt-1">{t('parent.follow_child')}</p>
         </div>
         <div className="text-center py-12 bg-white rounded-2xl border border-slate-100">
           <Users className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-slate-900 mb-2">Nuk ka femije te lidhur</h3>
-          <p className="text-slate-500 text-sm">Kontaktoni drejtorine per te lidhur llogarine me femijen tuaj.</p>
+          <h3 className="text-lg font-semibold text-slate-900 mb-2">{t('parent.no_children')}</h3>
+          <p className="text-slate-500 text-sm">{t('parent.no_children_help')}</p>
         </div>
       </div>
     );
@@ -267,15 +271,15 @@ export default function ParentDashboard() {
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
-            <p className="text-sm font-semibold text-amber-900">Të dhëna të paplota</p>
+            <p className="text-sm font-semibold text-amber-900">{t('dash.incomplete_data')}</p>
             <p className="text-xs text-amber-700 mt-0.5">{loadError}</p>
           </div>
         </div>
       )}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Paneli Kryesor</h1>
-          <p className="text-slate-500 mt-1">Ndiqni ecurine e femijes tuaj</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('nav.dashboard')}</h1>
+          <p className="text-slate-500 mt-1">{t('parent.follow_child')}</p>
         </div>
         {children.length > 1 && (
           <div className="relative">
@@ -304,20 +308,20 @@ export default function ParentDashboard() {
               </div>
               <div className="flex-1">
                 <h2 className="text-xl font-bold">{childName}</h2>
-                <p className="text-slate-300">{className || 'Pa klase'} - Viti Akademik 2025-2026</p>
+                <p className="text-slate-300">{className || t('student.no_class')} - {t('parent.academic_year_label')} 2025-2026</p>
               </div>
               <div className="text-center">
                 <p className="text-3xl font-bold">{overallAvg}</p>
-                <p className="text-xs text-slate-300">Mesatarja</p>
+                <p className="text-xs text-slate-300">{t('stat.average')}</p>
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatCard label="Mesatarja" value={overallAvg} icon={Award} color="slate" />
-            <StatCard label="Nota kete muaj" value={monthGrades} icon={TrendingUp} color="blue" />
-            <StatCard label="Mungesa" value={absences} icon={Calendar} color="rose" />
-            <StatCard label="Lende" value={subjectCount} icon={BookOpen} color="teal" />
+            <StatCard label={t('stat.average')} value={overallAvg} icon={Award} color="slate" />
+            <StatCard label={t('stat.month_grades')} value={monthGrades} icon={TrendingUp} color="blue" />
+            <StatCard label={t('stat.absences')} value={absences} icon={Calendar} color="rose" />
+            <StatCard label={t('stat.subjects')} value={subjectCount} icon={BookOpen} color="teal" />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -325,10 +329,10 @@ export default function ParentDashboard() {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <Star className="w-5 h-5 text-amber-500" />
-                  <h3 className="font-semibold text-slate-900">Notat e Fundit</h3>
+                  <h3 className="font-semibold text-slate-900">{t('dash.recent_grades')}</h3>
                 </div>
                 <Link to="/prind/nota" className="text-sm text-slate-600 hover:text-slate-800 font-medium flex items-center gap-1">
-                  Te gjitha <ChevronRight className="w-4 h-4" />
+                  {t('admin.all')} <ChevronRight className="w-4 h-4" />
                 </Link>
               </div>
               {recentGrades.length > 0 ? (
@@ -349,7 +353,7 @@ export default function ParentDashboard() {
               ) : (
                 <div className="text-center py-8">
                   <AlertCircle className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-                  <p className="text-sm text-slate-400">Nuk ka nota ende</p>
+                  <p className="text-sm text-slate-400">{t('student.no_grades_yet')}</p>
                 </div>
               )}
             </div>
@@ -359,10 +363,10 @@ export default function ParentDashboard() {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <Calendar className="w-5 h-5 text-blue-500" />
-                    <h3 className="font-semibold text-slate-900">Frekuentimi i Javes</h3>
+                    <h3 className="font-semibold text-slate-900">{t('parent.week_attendance')}</h3>
                   </div>
                   <Link to="/prind/frekuentimi" className="text-sm text-slate-600 hover:text-slate-800 font-medium flex items-center gap-1">
-                    Detaje <ChevronRight className="w-4 h-4" />
+                    {t('parent.details_short')} <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>
                 <div className="flex items-center gap-2">
@@ -381,7 +385,7 @@ export default function ParentDashboard() {
               <div className="bg-white rounded-2xl border border-slate-100 p-6">
                 <div className="flex items-center gap-2 mb-4">
                   <Megaphone className="w-5 h-5 text-amber-500" />
-                  <h3 className="font-semibold text-slate-900">Njoftime</h3>
+                  <h3 className="font-semibold text-slate-900">{t('dash.announcements')}</h3>
                 </div>
                 {announcements.length > 0 ? (
                   <div className="space-y-3">
@@ -393,7 +397,7 @@ export default function ParentDashboard() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-slate-400 text-center py-4">Nuk ka njoftime</p>
+                  <p className="text-sm text-slate-400 text-center py-4">{t('parent.no_announcements')}</p>
                 )}
               </div>
             </div>
@@ -404,10 +408,10 @@ export default function ParentDashboard() {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <BookOpen className="w-5 h-5 text-teal-500" />
-                  <h3 className="font-semibold text-slate-900">Mesatarja sipas Lendes</h3>
+                  <h3 className="font-semibold text-slate-900">{t('student.avg_by_subject')}</h3>
                 </div>
                 <div className="text-sm text-slate-500">
-                  Mesatarja: <span className="font-bold text-slate-900">{overallAvg}</span>
+                  {t('parent.avg_short')} <span className="font-bold text-slate-900">{overallAvg}</span>
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -423,7 +427,7 @@ export default function ParentDashboard() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-slate-900 truncate">{subject.name}</p>
-                      <p className="text-xs text-slate-400">{subject.count} nota</p>
+                      <p className="text-xs text-slate-400">{subject.count} {t('student.grades_count')}</p>
                     </div>
                     <div className="w-16 bg-slate-100 rounded-full h-1.5 overflow-hidden">
                       <div
@@ -445,16 +449,16 @@ export default function ParentDashboard() {
           <div className="bg-white rounded-2xl border border-slate-100 p-6">
             <div className="flex items-center gap-2 mb-4">
               <GraduationCap className="w-5 h-5 text-slate-600" />
-              <h3 className="font-semibold text-slate-900">Veprime të Shpejta</h3>
+              <h3 className="font-semibold text-slate-900">{t('dash.quick_actions')}</h3>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {[
-                { to: '/prind/nota', icon: <Award className="w-4 h-4" />, label: 'Notat e Fëmijës', desc: 'Shiko notat sipas lëndës', color: 'bg-blue-50 text-blue-600' },
-                { to: '/prind/frekuentimi', icon: <Calendar className="w-4 h-4" />, label: 'Frekuentimi', desc: 'Mungesa dhe prezenca', color: 'bg-emerald-50 text-emerald-600' },
-                { to: '/prind/mesazhet', icon: <MessageSquare className="w-4 h-4" />, label: 'Kontakto Mësuesin', desc: 'Dërgo mesazh direkt', color: 'bg-teal-50 text-teal-600' },
-                { to: '/prind/pia', icon: <Heart className="w-4 h-4" />, label: 'PIA i Fëmijës', desc: 'Plani Individual i Arsimimit', color: 'bg-pink-50 text-pink-600' },
-                { to: '/prind/takimet', icon: <Users className="w-4 h-4" />, label: 'Takimet me Mësues', desc: 'Takime të planifikuara', color: 'bg-indigo-50 text-indigo-600' },
-                { to: '/prind/aktivitete', icon: <Trophy className="w-4 h-4" />, label: 'Aktivitetet', desc: 'Aktivitete jashtëshkollore', color: 'bg-amber-50 text-amber-600' },
+                { to: '/prind/nota', icon: <Award className="w-4 h-4" />, label: t('parent.qa_grades'), desc: t('parent.qa_grades_desc'), color: 'bg-blue-50 text-blue-600' },
+                { to: '/prind/frekuentimi', icon: <Calendar className="w-4 h-4" />, label: t('parent.qa_attendance'), desc: t('parent.qa_attendance_desc'), color: 'bg-emerald-50 text-emerald-600' },
+                { to: '/prind/mesazhet', icon: <MessageSquare className="w-4 h-4" />, label: t('parent.qa_message_teacher'), desc: t('parent.qa_message_teacher_desc'), color: 'bg-teal-50 text-teal-600' },
+                { to: '/prind/pia', icon: <Heart className="w-4 h-4" />, label: t('parent.qa_iep'), desc: t('parent.qa_iep_desc'), color: 'bg-pink-50 text-pink-600' },
+                { to: '/prind/takimet', icon: <Users className="w-4 h-4" />, label: t('parent.qa_meetings'), desc: t('parent.qa_meetings_desc'), color: 'bg-indigo-50 text-indigo-600' },
+                { to: '/prind/aktivitete', icon: <Trophy className="w-4 h-4" />, label: t('nav.activities'), desc: t('parent.qa_activities_desc'), color: 'bg-amber-50 text-amber-600' },
               ].map(item => (
                 <Link key={item.label} to={item.to} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group border border-slate-50 hover:border-slate-200">
                   <div className={`w-9 h-9 ${item.color} rounded-xl flex items-center justify-center`}>

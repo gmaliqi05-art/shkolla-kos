@@ -492,6 +492,50 @@ export const translations = {
   'inspector.status_in_progress': { sq: 'Në vazhdim', sr: 'U toku', tr: 'Devam ediyor', bs: 'U toku', en: 'In progress' },
   'inspector.status_completed': { sq: 'E përfunduar', sr: 'Završena', tr: 'Tamamlandı', bs: 'Završena', en: 'Completed' },
   'inspector.status_cancelled': { sq: 'Anuluar', sr: 'Otkazana', tr: 'İptal edildi', bs: 'Otkazana', en: 'Cancelled' },
+
+  // === DKA DASHBOARD ===
+  'dka.title': { sq: 'Drejtoria Komunale e Arsimit', sr: 'Opštinska direkcija za obrazovanje', tr: 'Belediye Eğitim Müdürlüğü', bs: 'Općinska direkcija za obrazovanje', en: 'Municipal Education Department' },
+  'dka.municipality_label': { sq: 'Komuna', sr: 'Opština', tr: 'Belediye', bs: 'Općina', en: 'Municipality' },
+  'dka.add_school': { sq: 'Shto shkollë', sr: 'Dodaj školu', tr: 'Okul ekle', bs: 'Dodaj školu', en: 'Add school' },
+  'dka.no_municipality_set': { sq: 'Nuk është caktuar komuna.', sr: 'Opština nije postavljena.', tr: 'Belediye atanmadı.', bs: 'Općina nije postavljena.', en: 'No municipality assigned.' },
+  'dka.no_municipality_help': { sq: 'Ministri (MAShTI) duhet të caktojë komunën që menaxhoni.', sr: 'Ministar (MOND) treba da odredi opštinu kojom upravljate.', tr: 'Bakanlık (MAShTI) yönettiğiniz belediyeyi belirlemelidir.', bs: 'Ministar (MOND) treba da odredi općinu kojom upravljate.', en: 'The Ministry (MoE) must assign the municipality you manage.' },
+  'dka.fallback_municipality': { sq: 'Komuna', sr: 'Opština', tr: 'Belediye', bs: 'Općina', en: 'Municipality' },
+  'dka.students_per_school': { sq: 'Numri i nxënësve për shkollë', sr: 'Broj učenika po školi', tr: 'Okul başına öğrenci sayısı', bs: 'Broj učenika po školi', en: 'Number of students per school' },
+  'dka.municipality_schools': { sq: 'Shkollat e komunës', sr: 'Škole opštine', tr: 'Belediye okulları', bs: 'Škole općine', en: 'Municipality schools' },
+  'dka.no_schools': { sq: 'Asnjë shkollë e regjistruar në këtë komunë.', sr: 'Nijedna škola nije registrovana u ovoj opštini.', tr: 'Bu belediyede kayıtlı okul yok.', bs: 'Nijedna škola nije registrovana u ovoj općini.', en: 'No schools registered in this municipality.' },
+  'dka.tbl_school': { sq: 'Shkolla', sr: 'Škola', tr: 'Okul', bs: 'Škola', en: 'School' },
+  'dka.tbl_locality': { sq: 'Fshati / Qyteti', sr: 'Selo / Grad', tr: 'Köy / Şehir', bs: 'Selo / Grad', en: 'Village / City' },
+  'dka.tbl_director': { sq: 'Drejtori', sr: 'Direktor', tr: 'Müdür', bs: 'Direktor', en: 'Principal' },
+  'dka.tbl_students': { sq: 'Nxënës', sr: 'Učenici', tr: 'Öğrenciler', bs: 'Učenici', en: 'Students' },
+  'dka.tbl_teachers': { sq: 'Mësues', sr: 'Nastavnici', tr: 'Öğretmenler', bs: 'Nastavnici', en: 'Teachers' },
+
+  // === PARENT DASHBOARD ===
+  'parent.follow_child': { sq: 'Ndiqni ecurinë e fëmijës tuaj', sr: 'Pratite napredak vašeg deteta', tr: 'Çocuğunuzun ilerlemesini takip edin', bs: 'Pratite napredak vašeg djeteta', en: 'Follow your child\'s progress' },
+  'parent.no_children': { sq: 'Nuk ka fëmijë të lidhur', sr: 'Nema povezane dece', tr: 'Bağlı çocuk yok', bs: 'Nema povezane djece', en: 'No children linked' },
+  'parent.no_children_help': { sq: 'Kontaktoni drejtorinë për të lidhur llogarinë me fëmijën tuaj.', sr: 'Kontaktirajte direkciju da povežete nalog sa vašim detetom.', tr: 'Hesabınızı çocuğunuzla bağlamak için müdürlüğe başvurun.', bs: 'Kontaktirajte direkciju da povežete nalog sa vašim djetetom.', en: 'Contact the school office to link your account with your child.' },
+  'parent.academic_year_label': { sq: 'Viti Akademik', sr: 'Akademska godina', tr: 'Akademik Yıl', bs: 'Akademska godina', en: 'Academic Year' },
+  'parent.week_attendance': { sq: 'Frekuentimi i Javës', sr: 'Pohađanje u nedelji', tr: 'Haftanın Devamı', bs: 'Pohađanje u sedmici', en: 'This Week\'s Attendance' },
+  'parent.details_short': { sq: 'Detaje', sr: 'Detalji', tr: 'Detaylar', bs: 'Detalji', en: 'Details' },
+  'parent.no_announcements': { sq: 'Nuk ka njoftime', sr: 'Nema obaveštenja', tr: 'Duyuru yok', bs: 'Nema obavještenja', en: 'No announcements' },
+  'parent.avg_short': { sq: 'Mesatarja:', sr: 'Prosek:', tr: 'Ortalama:', bs: 'Prosjek:', en: 'Average:' },
+  'parent.qa_grades': { sq: 'Notat e Fëmijës', sr: 'Ocene deteta', tr: 'Çocuğun Notları', bs: 'Ocjene djeteta', en: 'Child\'s Grades' },
+  'parent.qa_grades_desc': { sq: 'Shiko notat sipas lëndës', sr: 'Vidi ocene po predmetu', tr: 'Derse göre notları gör', bs: 'Vidi ocjene po predmetu', en: 'View grades by subject' },
+  'parent.qa_attendance': { sq: 'Frekuentimi', sr: 'Pohađanje', tr: 'Devam', bs: 'Pohađanje', en: 'Attendance' },
+  'parent.qa_attendance_desc': { sq: 'Mungesa dhe prezenca', sr: 'Izostanci i prisustva', tr: 'Devamsızlık ve katılım', bs: 'Izostanci i prisustva', en: 'Absences and presence' },
+  'parent.qa_message_teacher': { sq: 'Kontakto Mësuesin', sr: 'Kontaktiraj nastavnika', tr: 'Öğretmenle İletişim', bs: 'Kontaktiraj nastavnika', en: 'Contact Teacher' },
+  'parent.qa_message_teacher_desc': { sq: 'Dërgo mesazh direkt', sr: 'Pošalji poruku direktno', tr: 'Doğrudan mesaj gönder', bs: 'Pošalji poruku direktno', en: 'Send a direct message' },
+  'parent.qa_iep': { sq: 'PIA i Fëmijës', sr: 'IOP deteta', tr: 'Çocuğun BEP', bs: 'IOP djeteta', en: 'Child\'s IEP' },
+  'parent.qa_iep_desc': { sq: 'Plani Individual i Arsimimit', sr: 'Individualni obrazovni plan', tr: 'Bireysel Eğitim Planı', bs: 'Individualni obrazovni plan', en: 'Individual Education Plan' },
+  'parent.qa_meetings': { sq: 'Takimet me Mësues', sr: 'Sastanci sa nastavnicima', tr: 'Öğretmenlerle Toplantılar', bs: 'Sastanci sa nastavnicima', en: 'Teacher Meetings' },
+  'parent.qa_meetings_desc': { sq: 'Takime të planifikuara', sr: 'Zakazani sastanci', tr: 'Planlanmış toplantılar', bs: 'Zakazani sastanci', en: 'Scheduled meetings' },
+  'parent.qa_activities_desc': { sq: 'Aktivitete jashtëshkollore', sr: 'Vannastavne aktivnosti', tr: 'Okul dışı etkinlikler', bs: 'Vannastavne aktivnosti', en: 'Extracurricular activities' },
+
+  // === WEEK DAYS (short) ===
+  'day_short.mon': { sq: 'Hën', sr: 'Pon', tr: 'Pzt', bs: 'Pon', en: 'Mon' },
+  'day_short.tue': { sq: 'Mar', sr: 'Uto', tr: 'Sal', bs: 'Uto', en: 'Tue' },
+  'day_short.wed': { sq: 'Mër', sr: 'Sre', tr: 'Çar', bs: 'Sri', en: 'Wed' },
+  'day_short.thu': { sq: 'Enj', sr: 'Čet', tr: 'Per', bs: 'Čet', en: 'Thu' },
+  'day_short.fri': { sq: 'Pre', sr: 'Pet', tr: 'Cum', bs: 'Pet', en: 'Fri' },
 } as const;
 
 export type TranslationKey = keyof typeof translations;
