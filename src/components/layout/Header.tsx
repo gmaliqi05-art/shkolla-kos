@@ -30,6 +30,7 @@ const ROLE_TO_URL_PREFIX: Record<UserRole, string> = {
   drejtor_komunal: 'dka',
   ministri: 'ministri',
   inspektor: 'inspektor',
+  super_admin: 'admin',
 };
 
 const DEMO_NOTIFS: Record<UserRole, NotifItem[]> = {
@@ -61,6 +62,9 @@ const DEMO_NOTIFS: Record<UserRole, NotifItem[]> = {
   ],
   inspektor: [
     { id: 'n1', type: 'message', title: 'Inspektim i ri', preview: 'Inspektimi i shkolles "Naim Frasheri" eshte planifikuar', from: 'Sistemi', time: '5 ore', isRead: false },
+  ],
+  super_admin: [
+    { id: 'n1', type: 'announcement', title: 'Sistemi në gjendje normale', preview: 'Të gjitha shërbimet janë aktive. Backup automatik i kryer.', from: 'Sistemi', time: '1 ore', isRead: false },
   ],
 };
 
@@ -185,6 +189,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
       drejtor_komunal: '/dka/mesazhet',
       ministri: '/ministri/mesazhet',
       inspektor: '/inspektor/mesazhet',
+      super_admin: '/admin/logs',
     };
     return basePaths[profile.role];
   };

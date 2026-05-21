@@ -1,4 +1,4 @@
-export type UserRole = 'drejtor' | 'mesues' | 'nxenes' | 'prind' | 'pedagog' | 'drejtor_komunal' | 'ministri' | 'inspektor';
+export type UserRole = 'drejtor' | 'mesues' | 'nxenes' | 'prind' | 'pedagog' | 'drejtor_komunal' | 'ministri' | 'inspektor' | 'super_admin';
 
 export type Gender = 'M' | 'F' | 'tjeter';
 
@@ -740,6 +740,7 @@ export const ROLE_LABELS: Record<UserRole, string> = {
   drejtor_komunal: 'Drejtor/e Komunal/e i/e Arsimit',
   ministri: 'Ministër/e i/e Arsimit (MAShTI)',
   inspektor: 'Inspektor/e i/e Arsimit',
+  super_admin: 'Administrator Sistemi',
 };
 
 // === Paketa 23: Inspektimi Shkollor (Ligji 06/L-046) ===

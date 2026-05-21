@@ -146,6 +146,7 @@ export const translations = {
   'sidebar.role.drejtor_komunal': { sq: 'Paneli i DKA-së', sr: 'Panel DKA', tr: 'DKA Paneli', bs: 'Panel DKA' },
   'sidebar.role.ministri': { sq: 'Paneli i MAShTI-së', sr: 'Panel MOND-a', tr: 'MAShTI Paneli', bs: 'Panel MOND-a' },
   'sidebar.role.inspektor': { sq: 'Paneli i Inspektorit', sr: 'Panel inspektora', tr: 'Müfettiş Paneli', bs: 'Panel inspektora' },
+  'sidebar.role.super_admin': { sq: 'Administrim Sistemi', sr: 'Administracija sistema', tr: 'Sistem Yönetimi', bs: 'Administracija sistema' },
   'sidebar.academic_year': { sq: 'Viti Akademik', sr: 'Akademska godina', tr: 'Akademik Yıl', bs: 'Akademska godina' },
 
   // === NAV (extended) ===

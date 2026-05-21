@@ -28,6 +28,7 @@ const ROLE_COLORS: Record<UserRole, { bg: string; accent: string; text: string }
   drejtor_komunal: { bg: 'from-amber-900 to-amber-800', accent: 'bg-amber-700', text: 'text-amber-200' },
   ministri: { bg: 'from-purple-900 to-purple-800', accent: 'bg-purple-700', text: 'text-purple-200' },
   inspektor: { bg: 'from-orange-900 to-orange-800', accent: 'bg-orange-700', text: 'text-orange-200' },
+  super_admin: { bg: 'from-slate-900 to-zinc-800', accent: 'bg-zinc-700', text: 'text-zinc-300' },
 };
 
 const ROLE_LABEL_KEYS: Record<UserRole, TranslationKey> = {
@@ -39,6 +40,7 @@ const ROLE_LABEL_KEYS: Record<UserRole, TranslationKey> = {
   drejtor_komunal: 'sidebar.role.drejtor_komunal',
   ministri: 'sidebar.role.ministri',
   inspektor: 'sidebar.role.inspektor',
+  super_admin: 'sidebar.role.super_admin',
 };
 
 export default function Sidebar({ items, role, isOpen, onClose }: SidebarProps) {
