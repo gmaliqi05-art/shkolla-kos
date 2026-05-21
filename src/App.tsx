@@ -12,6 +12,7 @@ const ManageTeachers = lazy(() => import('./pages/director/ManageTeachers'));
 const ManageClasses = lazy(() => import('./pages/director/ManageClasses'));
 const ManageStudents = lazy(() => import('./pages/director/ManageStudents'));
 const ManageParents = lazy(() => import('./pages/director/ManageParents'));
+const ManagePedagogues = lazy(() => import('./pages/director/ManagePedagogues'));
 const Reports = lazy(() => import('./pages/director/Reports'));
 const Announcements = lazy(() => import('./pages/director/Announcements'));
 const AuditLogs = lazy(() => import('./pages/director/AuditLogs'));
@@ -84,6 +85,7 @@ import {
 const directorNav: NavItem[] = [
   { label: 'Paneli Kryesor', labelKey: 'nav.dashboard', path: '/drejtor', icon: LayoutDashboard },
   { label: 'Mesuesit', labelKey: 'nav.teachers', path: '/drejtor/mesues', icon: GraduationCap },
+  { label: 'Pedagogët', path: '/drejtor/pedagoget', icon: Heart },
   { label: 'Licencat', labelKey: 'nav.licenses', path: '/drejtor/licencat', icon: Award },
   { label: 'Nxenesit', labelKey: 'nav.students', path: '/drejtor/nxenes', icon: Users },
   { label: 'Prinderit', labelKey: 'nav.parents', path: '/drejtor/prinder', icon: UserCog },
@@ -250,6 +252,7 @@ function AppRoutes() {
             <Route path="/drejtor/licencat" element={<TeacherLicensing />} />
             <Route path="/drejtor/nxenes" element={<ManageStudents />} />
             <Route path="/drejtor/prinder" element={<ManageParents />} />
+            <Route path="/drejtor/pedagoget" element={<ManagePedagogues />} />
             <Route path="/drejtor/klasa" element={<ManageClasses />} />
             <Route path="/drejtor/raporte" element={<Reports />} />
             <Route path="/drejtor/deftesat" element={<ReportCards />} />
