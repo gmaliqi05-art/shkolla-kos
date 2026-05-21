@@ -5,6 +5,7 @@ import { I18nProvider } from './lib/i18n/I18nProvider';
 import { ToastProvider } from './components/ToastProvider';
 import LoginPage from './pages/LoginPage';
 import DashboardLayout from './components/layout/DashboardLayout';
+import ErrorBoundary from './components/ErrorBoundary';
 import type { NavItem } from './components/layout/Sidebar';
 
 const DirectorDashboard = lazy(() => import('./pages/director/DirectorDashboard'));
@@ -501,15 +502,17 @@ function AppRoutes() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <I18nProvider>
-        <ToastProvider>
-          <AuthProvider>
-            <AppRoutes />
-          </AuthProvider>
-        </ToastProvider>
-      </I18nProvider>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <I18nProvider>
+          <ToastProvider>
+            <AuthProvider>
+              <AppRoutes />
+            </AuthProvider>
+          </ToastProvider>
+        </I18nProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 

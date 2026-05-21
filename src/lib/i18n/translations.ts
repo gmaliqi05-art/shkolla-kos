@@ -580,6 +580,15 @@ export const translations = {
   'director.qa_reports': { sq: 'Raportet', sr: 'Izveštaji', tr: 'Raporlar', bs: 'Izvještaji', en: 'Reports' },
   'director.qa_messages': { sq: 'Mesazhet', sr: 'Poruke', tr: 'Mesajlar', bs: 'Poruke', en: 'Messages' },
   'target.everyone': { sq: 'Të gjithë', sr: 'Svi', tr: 'Herkes', bs: 'Svi', en: 'Everyone' },
+
+  // === MANAGE PAGES (CRUD chrome) ===
+  'manage.teachers_count': { sq: 'mësues gjithsej', sr: 'nastavnika ukupno', tr: 'öğretmen toplam', bs: 'nastavnika ukupno', en: 'teachers total' },
+  'manage.students_count': { sq: 'nxënës gjithsej', sr: 'učenika ukupno', tr: 'öğrenci toplam', bs: 'učenika ukupno', en: 'students total' },
+  'reports.subtitle': { sq: 'Statistika dhe analiza — Sistemi i vlerësimit 1–5', sr: 'Statistike i analize — Sistem ocenjivanja 1–5', tr: 'İstatistikler ve analiz — 1–5 değerlendirme sistemi', bs: 'Statistike i analize — Sistem ocjenjivanja 1–5', en: 'Statistics and analytics — 1–5 grading system' },
+  'teacher.my_classes_subtitle': { sq: 'Menaxhoni klasat dhe lëndët tuaja', sr: 'Upravljajte vašim razredima i predmetima', tr: 'Sınıflarınızı ve derslerinizi yönetin', bs: 'Upravljajte vašim razredima i predmetima', en: 'Manage your classes and subjects' },
+  'teacher.not_assigned_short': { sq: 'Nuk jeni caktuar në asnjë klasë', sr: 'Niste raspoređeni ni u jedan razred', tr: 'Hiçbir sınıfa atanmadınız', bs: 'Niste raspoređeni ni u jedan razred', en: 'You are not assigned to any class' },
+  'teacher.not_assigned_help': { sq: 'Drejtori duhet t\'ju caktojë në klasa dhe lëndë.', sr: 'Direktor treba da vas rasporedi u razrede i predmete.', tr: 'Müdür sizi sınıflara ve derslere atamalı.', bs: 'Direktor treba da vas rasporedi u razrede i predmete.', en: 'The principal must assign you to classes and subjects.' },
+  'announcements.actions_col': { sq: 'Veprime', sr: 'Akcije', tr: 'İşlemler', bs: 'Akcije', en: 'Actions' },
 } as const;
 
 export type TranslationKey = keyof typeof translations;
