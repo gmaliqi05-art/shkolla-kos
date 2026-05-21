@@ -87,7 +87,7 @@ export default function MinistriDashboard() {
     const firstError = [muns, schools, students, teachers, parents, directors, dkas, licensed, grades, attendance].find(r => r.error)?.error;
     if (firstError) {
       console.error('MinistriDashboard load error:', firstError);
-      setLoadError('Disa statistika nuk u ngarkuan. ' + firstError.message);
+      setLoadError(t('ministri.data_load_error') + ' ' + firstError.message);
     }
 
     const munList = muns.data || [];
@@ -162,7 +162,7 @@ export default function MinistriDashboard() {
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
-            <p className="text-sm font-semibold text-amber-900">Të dhëna të paplota</p>
+            <p className="text-sm font-semibold text-amber-900">{t('dash.incomplete_data')}</p>
             <p className="text-xs text-amber-700 mt-0.5">{loadError}</p>
           </div>
         </div>
@@ -172,8 +172,8 @@ export default function MinistriDashboard() {
           <div className="flex items-center gap-3">
             <Crown className="w-8 h-8" />
             <div>
-              <h1 className="text-2xl font-bold">Paneli i Ministrit të Arsimit</h1>
-              <p className="text-purple-100 text-sm">MAShTI — Statistika kombëtare të arsimit parauniversitar</p>
+              <h1 className="text-2xl font-bold">{t('ministri.title')}</h1>
+              <p className="text-purple-100 text-sm">{t('ministri.subtitle')}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -182,14 +182,14 @@ export default function MinistriDashboard() {
               className="inline-flex items-center gap-1.5 px-3 py-2 bg-white/15 hover:bg-white/25 rounded-lg text-sm font-medium"
             >
               <UserCog className="w-4 h-4" />
-              Stafi
+              {t('ministri.staff')}
             </Link>
             <Link
               to="/ministri/komunat"
               className="inline-flex items-center gap-1.5 px-3 py-2 bg-white/15 hover:bg-white/25 rounded-lg text-sm font-medium"
             >
               <Building2 className="w-4 h-4" />
-              Komunat
+              {t('ministri.municipalities_btn')}
             </Link>
           </div>
         </div>
@@ -204,15 +204,15 @@ export default function MinistriDashboard() {
         <StatCard icon={Users} label={t('stat.parents')} value={stats.totalParents} color="slate" />
         <StatCard icon={Crown} label={t('stat.dka_directors')} value={stats.totalDKAs} color="amber" />
         <StatCard icon={Crown} label={t('stat.directors')} value={stats.totalDirectors} color="indigo" />
-        <StatCard icon={BookOpen} label="Nota të regjistruara" value={stats.totalGrades.toLocaleString()} color="rose" />
-        <StatCard icon={MapPin} label="Regjistrime frekuentimi" value={stats.totalAttendance.toLocaleString()} color="violet" />
+        <StatCard icon={BookOpen} label={t('ministri.grades_recorded')} value={stats.totalGrades.toLocaleString()} color="rose" />
+        <StatCard icon={MapPin} label={t('ministri.attendance_records')} value={stats.totalAttendance.toLocaleString()} color="violet" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-2xl border border-slate-100 p-5">
           <div className="flex items-center gap-2 mb-4">
             <TrendingUp className="w-5 h-5 text-purple-600" />
-            <h2 className="font-semibold text-slate-900">Nxënësit sipas komunave (Top 8)</h2>
+            <h2 className="font-semibold text-slate-900">{t('ministri.students_by_mun')}</h2>
           </div>
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={municipalities.slice(0, 8)}>
@@ -220,7 +220,7 @@ export default function MinistriDashboard() {
               <XAxis dataKey="name" tick={{ fontSize: 11 }} angle={-20} textAnchor="end" height={50} />
               <YAxis tick={{ fontSize: 11 }} />
               <Tooltip />
-              <Bar dataKey="students_count" fill="#8b5cf6" radius={[8, 8, 0, 0]} name="Nxënës" />
+              <Bar dataKey="students_count" fill="#8b5cf6" radius={[8, 8, 0, 0]} name={t('stat.students')} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -228,7 +228,7 @@ export default function MinistriDashboard() {
         <div className="bg-white rounded-2xl border border-slate-100 p-5">
           <div className="flex items-center gap-2 mb-4">
             <School className="w-5 h-5 text-blue-600" />
-            <h2 className="font-semibold text-slate-900">Shkollat sipas rajonit</h2>
+            <h2 className="font-semibold text-slate-900">{t('ministri.schools_by_region')}</h2>
           </div>
           <ResponsiveContainer width="100%" height={280}>
             <PieChart>
@@ -257,7 +257,7 @@ export default function MinistriDashboard() {
       <div className="bg-white rounded-2xl border border-slate-100 p-5">
         <div className="flex items-center gap-2 mb-4">
           <Award className="w-5 h-5 text-emerald-600" />
-          <h2 className="font-semibold text-slate-900">Mësues vs Nxënës (Top 8)</h2>
+          <h2 className="font-semibold text-slate-900">{t('ministri.teachers_vs_students')}</h2>
         </div>
         <ResponsiveContainer width="100%" height={280}>
           <BarChart data={municipalities.slice(0, 8)}>
@@ -266,8 +266,8 @@ export default function MinistriDashboard() {
             <YAxis tick={{ fontSize: 11 }} />
             <Tooltip />
             <Legend />
-            <Bar dataKey="teachers_count" fill="#10b981" name="Mësues" radius={[6, 6, 0, 0]} />
-            <Bar dataKey="schools_count" fill="#3b82f6" name="Shkolla" radius={[6, 6, 0, 0]} />
+            <Bar dataKey="teachers_count" fill="#10b981" name={t('stat.teachers')} radius={[6, 6, 0, 0]} />
+            <Bar dataKey="schools_count" fill="#3b82f6" name={t('stat.schools')} radius={[6, 6, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -276,10 +276,10 @@ export default function MinistriDashboard() {
         <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Building2 className="w-5 h-5 text-purple-600" />
-            <h2 className="font-semibold text-slate-900">Komunat sipas aktivitetit</h2>
+            <h2 className="font-semibold text-slate-900">{t('ministri.mun_by_activity')}</h2>
           </div>
           <Link to="/ministri/komunat" className="inline-flex items-center gap-1 text-sm text-purple-700 hover:text-purple-900 font-medium">
-            Shiko të gjitha
+            {t('btn.view_all')}
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -287,11 +287,11 @@ export default function MinistriDashboard() {
         <table className="w-full text-sm">
           <thead className="bg-slate-50">
             <tr className="text-left text-xs font-semibold text-slate-500 uppercase">
-              <th className="px-4 py-2">Komuna</th>
-              <th className="px-4 py-2">Rajoni</th>
-              <th className="px-4 py-2 text-center">Shkolla</th>
-              <th className="px-4 py-2 text-center">Nxënës</th>
-              <th className="px-4 py-2 text-center">Mësues</th>
+              <th className="px-4 py-2">{t('ministri.tbl_municipality')}</th>
+              <th className="px-4 py-2">{t('ministri.tbl_region')}</th>
+              <th className="px-4 py-2 text-center">{t('stat.schools')}</th>
+              <th className="px-4 py-2 text-center">{t('stat.students')}</th>
+              <th className="px-4 py-2 text-center">{t('stat.teachers')}</th>
               <th className="px-4 py-2 w-8"></th>
             </tr>
           </thead>

@@ -104,9 +104,9 @@ export default function DirectorDashboard() {
         { id: '2', title: 'Ndryshim ne orarin e mesimit', target_role: 'te_gjithe', is_important: false, created_at: new Date(Date.now() - 86400000).toISOString() },
       ]);
       setAlerts([
-        { type: 'warning', message: '1 mësues nuk ka regjistruar asnjë notë këtë muaj.', action: 'Shiko Mësuesit', actionPath: '/drejtor/mesues' },
-        { type: 'warning', message: '4 nxënës kanë mesatare nën 2.5 — rrezik akademik.', action: 'Shiko Nxënësit', actionPath: '/drejtor/nxenes' },
-        { type: 'info', message: '3 mungesa frekuentimi pa arsyetim në javën e kaluar.', action: 'Shiko Raportet', actionPath: '/drejtor/raporte' },
+        { type: 'warning', message: t('director.alert_no_grades_teacher'), action: t('director.alert_show_teachers'), actionPath: '/drejtor/mesues' },
+        { type: 'warning', message: t('director.alert_at_risk'), action: t('director.alert_show_students'), actionPath: '/drejtor/nxenes' },
+        { type: 'info', message: t('director.alert_absences'), action: t('director.alert_show_reports'), actionPath: '/drejtor/raporte' },
       ]);
       setLoading(false);
       return;
@@ -123,7 +123,7 @@ export default function DirectorDashboard() {
       const firstError = [studentsRes, teachersRes, classesRes, subjectsRes].find(r => r.error)?.error;
       if (firstError) {
         console.error('DirectorDashboard load error:', firstError);
-        setLoadError('Disa statistika nuk u ngarkuan. ' + firstError.message);
+        setLoadError(t('ministri.data_load_error') + ' ' + firstError.message);
       }
 
       setStats({
@@ -146,7 +146,7 @@ export default function DirectorDashboard() {
       const dayOfWeek = today.getDay();
       const monday = new Date(today);
       monday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
-      const weekDays = ['Hen', 'Mar', 'Mer', 'Enj', 'Pre'];
+      const weekDays = [t('day_short.mon'), t('day_short.tue'), t('day_short.wed'), t('day_short.thu'), t('day_short.fri')];
       const attWeek: AttendanceDayData[] = [];
 
       const { data: attData } = await supabase
@@ -227,7 +227,10 @@ export default function DirectorDashboard() {
   };
 
   const TARGET_LABELS: Record<string, string> = {
-    te_gjithe: 'Te Gjithe', mesues: 'Mesuesit', nxenes: 'Nxenesit', prind: 'Prinderit',
+    te_gjithe: t('target.everyone'),
+    mesues: t('nav.teachers'),
+    nxenes: t('nav.students'),
+    prind: t('nav.parents'),
   };
 
   const maxGradeCount = Math.max(...gradeDistribution.map(g => g.count), 1);
@@ -242,14 +245,14 @@ export default function DirectorDashboard() {
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
-            <p className="text-sm font-semibold text-amber-900">Të dhëna të paplota</p>
+            <p className="text-sm font-semibold text-amber-900">{t('dash.incomplete_data')}</p>
             <p className="text-xs text-amber-700 mt-0.5">{loadError}</p>
           </div>
         </div>
       )}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Paneli Kryesor</h1>
-        <p className="text-slate-500 mt-1">Pasqyra e pergjithshme e shkolles - Republika e Kosoves</p>
+        <h1 className="text-2xl font-bold text-slate-900">{t('nav.dashboard')}</h1>
+        <p className="text-slate-500 mt-1">{t('director.subtitle')}</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -279,15 +282,15 @@ export default function DirectorDashboard() {
       )}
 
       <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-6 text-white">
-        <h3 className="text-lg font-semibold mb-4">Veprime te Shpejta</h3>
+        <h3 className="text-lg font-semibold mb-4">{t('director.quick_actions')}</h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {[
-            { to: '/drejtor/mesues', icon: <UserPlus className="w-6 h-6" />, label: 'Mësuesit' },
-            { to: '/drejtor/nxenes', icon: <Users className="w-6 h-6" />, label: 'Nxënësit' },
-            { to: '/drejtor/klasa', icon: <FolderPlus className="w-6 h-6" />, label: 'Klasat' },
-            { to: '/drejtor/njoftime', icon: <Megaphone className="w-6 h-6" />, label: 'Njoftimet' },
-            { to: '/drejtor/raporte', icon: <BarChart3 className="w-6 h-6" />, label: 'Raportet' },
-            { to: '/drejtor/mesazhet', icon: <MessageSquare className="w-6 h-6" />, label: 'Mesazhet' },
+            { to: '/drejtor/mesues', icon: <UserPlus className="w-6 h-6" />, label: t('director.qa_teachers') },
+            { to: '/drejtor/nxenes', icon: <Users className="w-6 h-6" />, label: t('director.qa_students') },
+            { to: '/drejtor/klasa', icon: <FolderPlus className="w-6 h-6" />, label: t('director.qa_classes') },
+            { to: '/drejtor/njoftime', icon: <Megaphone className="w-6 h-6" />, label: t('director.qa_announcements') },
+            { to: '/drejtor/raporte', icon: <BarChart3 className="w-6 h-6" />, label: t('director.qa_reports') },
+            { to: '/drejtor/mesazhet', icon: <MessageSquare className="w-6 h-6" />, label: t('director.qa_messages') },
           ].map(item => (
             <Link key={item.to} to={item.to} className="flex flex-col items-center gap-2 p-4 bg-white/10 hover:bg-white/20 rounded-xl transition-colors backdrop-blur">
               <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">{item.icon}</div>
@@ -301,8 +304,8 @@ export default function DirectorDashboard() {
         <div className="bg-white rounded-2xl border border-slate-100 p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="font-semibold text-slate-900">Shperndarja e Notave</h3>
-              <p className="text-sm text-slate-500 mt-0.5">Semestri aktual (Shkalla 1-5)</p>
+              <h3 className="font-semibold text-slate-900">{t('director.grade_distribution')}</h3>
+              <p className="text-sm text-slate-500 mt-0.5">{t('director.grade_distribution_sub')}</p>
             </div>
             <TrendingUp className="w-5 h-5 text-slate-400" />
           </div>
@@ -327,7 +330,7 @@ export default function DirectorDashboard() {
             </div>
           ) : (
             <div className="text-center py-8 text-slate-400 text-sm">
-              Nuk ka nota te regjistruara ende
+              {t('director.no_grades_yet')}
             </div>
           )}
         </div>
@@ -335,8 +338,8 @@ export default function DirectorDashboard() {
         <div className="bg-white rounded-2xl border border-slate-100 p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="font-semibold text-slate-900">Frekuentimi Javor</h3>
-              <p className="text-sm text-slate-500 mt-0.5">Perqindja e prezences</p>
+              <h3 className="font-semibold text-slate-900">{t('director.weekly_attendance')}</h3>
+              <p className="text-sm text-slate-500 mt-0.5">{t('director.weekly_attendance_sub')}</p>
             </div>
             <Calendar className="w-5 h-5 text-slate-400" />
           </div>
@@ -356,17 +359,17 @@ export default function DirectorDashboard() {
               <div className="flex items-center justify-center gap-6 mt-4">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-emerald-400 rounded" />
-                  <span className="text-xs text-slate-500">Prezent</span>
+                  <span className="text-xs text-slate-500">{t('director.legend_present')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-rose-100 rounded" />
-                  <span className="text-xs text-slate-500">Mungese</span>
+                  <span className="text-xs text-slate-500">{t('director.legend_absent')}</span>
                 </div>
               </div>
             </>
           ) : (
             <div className="text-center py-8 text-slate-400 text-sm">
-              Nuk ka te dhena te frekuentimit per kete jave
+              {t('director.no_attendance_week')}
             </div>
           )}
         </div>
@@ -375,9 +378,9 @@ export default function DirectorDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-100 p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-slate-900">Njoftimet e Fundit</h3>
+            <h3 className="font-semibold text-slate-900">{t('director.recent_announcements')}</h3>
             <Link to="/drejtor/njoftime" className="text-sm text-blue-600 hover:text-blue-800 font-medium">
-              Te gjitha
+              {t('admin.all')}
             </Link>
           </div>
           {recentAnnouncements.length > 0 ? (
@@ -402,13 +405,13 @@ export default function DirectorDashboard() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 text-slate-400 text-sm">Nuk ka njoftime</div>
+            <div className="text-center py-8 text-slate-400 text-sm">{t('director.no_announcements')}</div>
           )}
         </div>
 
         <div className="bg-white rounded-2xl border border-slate-100 p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-slate-900">Klasat me te Mira</h3>
+            <h3 className="font-semibold text-slate-900">{t('director.top_classes')}</h3>
             <Award className="w-5 h-5 text-amber-500" />
           </div>
           {topClasses.length > 0 ? (
@@ -425,7 +428,7 @@ export default function DirectorDashboard() {
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-medium text-slate-900">{cls.name}</p>
-                    <p className="text-xs text-slate-400">{cls.students} nxenes</p>
+                    <p className="text-xs text-slate-400">{cls.students} {t('teacher.students_count')}</p>
                   </div>
                   <div className="text-right">
                     <p className={`text-lg font-bold ${
@@ -433,13 +436,13 @@ export default function DirectorDashboard() {
                       cls.avg >= 3.5 ? 'text-blue-600' :
                       'text-cyan-600'
                     }`}>{cls.avg}</p>
-                    <p className="text-xs text-slate-400">mesatare</p>
+                    <p className="text-xs text-slate-400">{t('teacher.avg_short')}</p>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 text-slate-400 text-sm">Nuk ka te dhena</div>
+            <div className="text-center py-8 text-slate-400 text-sm">{t('director.no_data')}</div>
           )}
         </div>
       </div>
