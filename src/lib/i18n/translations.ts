@@ -340,6 +340,21 @@ export const translations = {
   'login.send_link': { sq: 'Dërgo linkun', sr: 'Pošalji link', tr: 'Bağlantıyı gönder', bs: 'Pošalji link', en: 'Send link' },
   'login.legal_documents': { sq: 'Dokumentet Ligjore', sr: 'Pravni dokumenti', tr: 'Yasal Belgeler', bs: 'Pravni dokumenti', en: 'Legal Documents' },
   'login.footer': { sq: 'Shkolla - Sistemi i Menaxhimit të Shkollës', sr: 'Škola - Sistem za upravljanje školom', tr: 'Okul - Okul Yönetim Sistemi', bs: 'Škola - Sistem za upravljanje školom', en: 'School - School Management System' },
+
+  // === TIME (relative) ===
+  'time.now': { sq: 'Tani', sr: 'Sada', tr: 'Şimdi', bs: 'Sada', en: 'Now' },
+  'time.hours_short': { sq: 'orë', sr: 'sati', tr: 'saat', bs: 'sati', en: 'h' },
+  'time.days_short': { sq: 'ditë', sr: 'dana', tr: 'gün', bs: 'dana', en: 'd' },
+  'time.minutes_short': { sq: 'min', sr: 'min', tr: 'dk', bs: 'min', en: 'min' },
+
+  // === HEADER (extended) ===
+  'header.welcome_user': { sq: 'Mirë se vini', sr: 'Dobrodošli', tr: 'Hoş geldiniz', bs: 'Dobrodošli', en: 'Welcome' },
+  'header.user_fallback': { sq: 'Përdorues', sr: 'Korisnik', tr: 'Kullanıcı', bs: 'Korisnik', en: 'User' },
+  'header.unread_aria': { sq: 'njoftime të reja', sr: 'novih obaveštenja', tr: 'yeni bildirim', bs: 'novih obavještenja', en: 'new notifications' },
+  'header.notifications_title': { sq: 'Njoftimet', sr: 'Obaveštenja', tr: 'Bildirimler', bs: 'Obavještenja', en: 'Notifications' },
+  'header.profile_tooltip': { sq: 'Profili Im', sr: 'Moj profil', tr: 'Profilim', bs: 'Moj profil', en: 'My Profile' },
+  'header.school_source': { sq: 'Shkolla', sr: 'Škola', tr: 'Okul', bs: 'Škola', en: 'School' },
+  'header.system_source': { sq: 'Sistemi', sr: 'Sistem', tr: 'Sistem', bs: 'Sistem', en: 'System' },
 } as const;
 
 export type TranslationKey = keyof typeof translations;
