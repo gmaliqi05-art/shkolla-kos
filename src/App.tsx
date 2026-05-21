@@ -38,6 +38,7 @@ const SchoolsManagement = lazy(() => import('./pages/shared/SchoolsManagement'))
 const LocalitiesManagement = lazy(() => import('./pages/shared/LocalitiesManagement'));
 const InspectionsManagement = lazy(() => import('./pages/inspektor/InspectionsManagement'));
 const InspectionDetail = lazy(() => import('./pages/inspektor/InspectionDetail'));
+const InspectorDashboard = lazy(() => import('./pages/inspektor/InspectorDashboard'));
 
 const TeacherDashboard = lazy(() => import('./pages/teacher/TeacherDashboard'));
 const MyClasses = lazy(() => import('./pages/teacher/MyClasses'));
@@ -419,7 +420,7 @@ function AppRoutes() {
         <Routes>
           <Route path="/" element={<Navigate to="/inspektor" replace />} />
           <Route element={<DashboardLayout navItems={inspektorNav} role="inspektor" />}>
-            <Route path="/inspektor" element={<InspectionsManagement />} />
+            <Route path="/inspektor" element={<InspectorDashboard />} />
             <Route path="/inspektor/inspektimet" element={<InspectionsManagement />} />
             <Route path="/inspektor/inspektimet/:id" element={<InspectionDetail />} />
             <Route path="/inspektor/shkollat" element={<SchoolsManagement />} />
