@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import type { Announcement } from '../../types/database';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 import {
   Plus,
   Megaphone,
@@ -17,6 +18,7 @@ import {
 
 export default function Announcements() {
   const { profile, isDemo } = useAuth();
+  const { t } = useI18n();
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -140,10 +142,10 @@ export default function Announcements() {
   };
 
   const TARGET_LABELS: Record<string, string> = {
-    te_gjithe: 'Te Gjithe',
-    mesues: 'Mesuesit',
-    nxenes: 'Nxenesit',
-    prind: 'Prinderit',
+    te_gjithe: t('target.everyone'),
+    mesues: t('nav.teachers'),
+    nxenes: t('nav.students'),
+    prind: t('nav.parents'),
   };
 
   const formatTime = (dateStr: string) => {
@@ -220,10 +222,10 @@ export default function Announcements() {
                     onChange={(e) => setTargetRole(e.target.value)}
                     className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm"
                   >
-                    <option value="te_gjithe">Te Gjithe</option>
-                    <option value="mesues">Mesuesit</option>
-                    <option value="nxenes">Nxenesit</option>
-                    <option value="prind">Prinderit</option>
+                    <option value="te_gjithe">{t('target.everyone')}</option>
+                    <option value="mesues">{t('nav.teachers')}</option>
+                    <option value="nxenes">{t('nav.students')}</option>
+                    <option value="prind">{t('nav.parents')}</option>
                   </select>
                 </div>
                 <div className="flex items-end">

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 import {
   TrendingUp,
   BarChart3,
@@ -79,6 +80,7 @@ type ActiveTab = 'overview' | 'teachers' | 'atrisk' | 'attendance';
 
 export default function Reports() {
   const { isDemo } = useAuth();
+  const { t } = useI18n();
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<ActiveTab>('overview');
   const [stats, setStats] = useState<Stats>(DEMO_STATS);
@@ -345,8 +347,8 @@ export default function Reports() {
     <div className="space-y-6">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Raportet</h1>
-          <p className="text-slate-500 mt-1">Statistika dhe analiza — Sistemi i vlerësimit 1–5</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('nav.reports')}</h1>
+          <p className="text-slate-500 mt-1">{t('reports.subtitle')}</p>
         </div>
         <div className="flex items-center gap-2">
           <button

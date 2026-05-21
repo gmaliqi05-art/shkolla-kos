@@ -5,6 +5,7 @@ import type { Profile, Gender, EnrollmentStatus } from '../../types/database';
 import { GENDER_LABELS, ENROLLMENT_STATUS_LABELS } from '../../types/database';
 import { Search, Mail, Plus, CreditCard as Edit2, Trash2, X, UserPlus, MoreVertical, Phone, Loader2, BookOpen, Copy, Check as CheckIcon, FileDown } from 'lucide-react';
 import { useToast } from '../../components/ToastProvider';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 import { exportToCSV, csvDateStamp } from '../../lib/csvExport';
 
 function generateSecurePassword() {
@@ -73,6 +74,7 @@ interface StudentWithClass extends Profile {
 export default function ManageStudents() {
   const { profile: currentProfile } = useAuth();
   const toast = useToast();
+  const { t } = useI18n();
   const [students, setStudents] = useState<StudentWithClass[]>([]);
   const [classes, setClasses] = useState<ClassOption[]>([]);
   const [search, setSearch] = useState('');
@@ -422,8 +424,8 @@ export default function ManageStudents() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Nxenesit</h1>
-          <p className="text-slate-500 mt-1">{students.length} nxenes gjithsej</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('nav.students')}</h1>
+          <p className="text-slate-500 mt-1">{students.length} {t('manage.students_count')}</p>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -515,7 +517,7 @@ export default function ManageStudents() {
                 <th className="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Email</th>
                 <th className="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Klasa</th>
                 <th className="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Telefon</th>
-                <th className="text-right px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Veprime</th>
+                <th className="text-right px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('common.actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">

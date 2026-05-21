@@ -5,6 +5,7 @@ import type { Profile } from '../../types/database';
 import { Search, Phone, BookOpen, MoreVertical, Plus, CreditCard as Edit2, Trash2, X, UserPlus, Loader2, Link2, Copy, Check as CheckIcon, FileDown } from 'lucide-react';
 import { useToast } from '../../components/ToastProvider';
 import { exportToCSV, csvDateStamp } from '../../lib/csvExport';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface TeacherFormData {
   full_name: string;
@@ -32,6 +33,7 @@ function generateSecurePassword() {
 export default function ManageTeachers() {
   const { profile } = useAuth();
   const toast = useToast();
+  const { t } = useI18n();
   const [teachers, setTeachers] = useState<TeacherWithAssignments[]>([]);
   const [classes, setClasses] = useState<ClassOption[]>([]);
   const [subjects, setSubjects] = useState<SubjectOption[]>([]);
@@ -291,8 +293,8 @@ export default function ManageTeachers() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Mesuesit</h1>
-          <p className="text-slate-500 mt-1">{teachers.length} mesues gjithsej</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('nav.teachers')}</h1>
+          <p className="text-slate-500 mt-1">{teachers.length} {t('manage.teachers_count')}</p>
         </div>
         <div className="flex items-center gap-2">
           <button

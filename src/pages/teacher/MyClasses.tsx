@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { BookOpen, Users, TrendingUp, Clock, Loader2, AlertCircle, ClipboardCheck, NotebookPen, Calendar, Star } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface ClassData {
   id: string;
@@ -18,6 +19,7 @@ interface ClassData {
 
 export default function MyClasses() {
   const { profile, isDemo } = useAuth();
+  const { t } = useI18n();
   const [loading, setLoading] = useState(true);
   const [classes, setClasses] = useState<ClassData[]>([]);
 
@@ -121,13 +123,13 @@ export default function MyClasses() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Klasat e Mia</h1>
-          <p className="text-slate-500 mt-1">Menaxhoni klasat dhe lendet tuaja</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('nav.my_classes')}</h1>
+          <p className="text-slate-500 mt-1">{t('teacher.my_classes_subtitle')}</p>
         </div>
         <div className="text-center py-12 bg-white rounded-2xl border border-slate-100">
           <AlertCircle className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-slate-900 mb-2">Nuk jeni caktuar ne asnje klase</h3>
-          <p className="text-slate-500 text-sm">Drejtori duhet t'ju caktoje ne klasa dhe lende.</p>
+          <h3 className="text-lg font-semibold text-slate-900 mb-2">{t('teacher.not_assigned_short')}</h3>
+          <p className="text-slate-500 text-sm">{t('teacher.not_assigned_help')}</p>
         </div>
       </div>
     );
@@ -136,7 +138,7 @@ export default function MyClasses() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Klasat e Mia</h1>
+        <h1 className="text-2xl font-bold text-slate-900">{t('nav.my_classes')}</h1>
         <p className="text-slate-500 mt-1">Menaxhoni klasat dhe lendet tuaja</p>
       </div>
 
