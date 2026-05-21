@@ -152,16 +152,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signUp = async (email: string, password: string, fullName: string, role: UserRole) => {
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: fullName,
+          role,
+          must_change_password: false,
+        },
+      },
+    });
     if (error) return { error: error.message };
     if (data.user) {
-      const { error: profileError } = await supabase.from('profiles').insert({
-        id: data.user.id,
-        email,
-        full_name: fullName,
-        role,
-      });
-      if (profileError) return { error: profileError.message };
+      // Profili krijohet automatikisht nga trigger handle_new_user
       await fetchProfile(data.user.id);
     }
     return { error: null };
