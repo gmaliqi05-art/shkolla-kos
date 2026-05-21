@@ -39,6 +39,7 @@ const LocalitiesManagement = lazy(() => import('./pages/shared/LocalitiesManagem
 const InspectionsManagement = lazy(() => import('./pages/inspektor/InspectionsManagement'));
 const InspectionDetail = lazy(() => import('./pages/inspektor/InspectionDetail'));
 const InspectorDashboard = lazy(() => import('./pages/inspektor/InspectorDashboard'));
+const PedagogDashboard = lazy(() => import('./pages/pedagog/PedagogDashboard'));
 
 const TeacherDashboard = lazy(() => import('./pages/teacher/TeacherDashboard'));
 const MyClasses = lazy(() => import('./pages/teacher/MyClasses'));
@@ -375,7 +376,7 @@ function AppRoutes() {
         <Routes>
           <Route path="/" element={<Navigate to="/pedagog" replace />} />
           <Route element={<DashboardLayout navItems={pedagogNav} role="pedagog" />}>
-            <Route path="/pedagog" element={<DirectorDashboard />} />
+            <Route path="/pedagog" element={<PedagogDashboard />} />
             <Route path="/pedagog/nva" element={<SpecialNeedsManagement />} />
             <Route path="/pedagog/diagnostik" element={<DiagnosticAssessments />} />
             <Route path="/pedagog/portofoli" element={<Portfolio />} />
