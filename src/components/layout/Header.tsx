@@ -3,9 +3,10 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Menu, Bell, LogOut, User, MessageSquare, Megaphone, Clock, X } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
-import { ROLE_LABELS } from '../../types/database';
 import type { UserRole } from '../../types/database';
 import LanguageSwitcher from '../LanguageSwitcher';
+import { useI18n } from '../../lib/i18n/I18nProvider';
+import type { TranslationKey } from '../../lib/i18n/translations';
 
 interface HeaderProps {
   onMenuToggle: () => void;
@@ -31,6 +32,18 @@ const ROLE_TO_URL_PREFIX: Record<UserRole, string> = {
   ministri: 'ministri',
   inspektor: 'inspektor',
   super_admin: 'admin',
+};
+
+const ROLE_LABEL_KEYS: Record<UserRole, TranslationKey> = {
+  drejtor: 'role.school_principal',
+  mesues: 'role.mesues',
+  nxenes: 'role.nxenes',
+  prind: 'role.prind',
+  pedagog: 'role.pedagog',
+  drejtor_komunal: 'role.drejtor_komunal',
+  ministri: 'role.ministri',
+  inspektor: 'role.inspektor',
+  super_admin: 'role.super_admin',
 };
 
 const DEMO_NOTIFS: Record<UserRole, NotifItem[]> = {
@@ -70,6 +83,7 @@ const DEMO_NOTIFS: Record<UserRole, NotifItem[]> = {
 
 export default function Header({ onMenuToggle }: HeaderProps) {
   const { profile, isDemo, signOut } = useAuth();
+  const { t } = useI18n();
   const navigate = useNavigate();
   const [showNotifs, setShowNotifs] = useState(false);
   const [notifs, setNotifs] = useState<NotifItem[]>([]);
@@ -101,6 +115,12 @@ export default function Header({ onMenuToggle }: HeaderProps) {
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
+
+  const formatRelativeTime = (hours: number): string => {
+    if (hours < 1) return t('time.now');
+    if (hours < 24) return `${hours} ${t('time.hours_short')}`;
+    return `${Math.floor(hours / 24)} ${t('time.days_short')}`;
+  };
 
   const loadNotifs = async () => {
     if (!profile) return;
@@ -134,7 +154,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
       (msgRes.data as MsgRow[] || []).forEach((m) => {
         const diff = Date.now() - new Date(m.created_at).getTime();
         const hours = Math.floor(diff / 3600000);
-        const timeStr = hours < 1 ? 'Tani' : hours < 24 ? `${hours} ore` : `${Math.floor(hours / 24)} dite`;
+        const timeStr = formatRelativeTime(hours);
 
         const senderName = Array.isArray(m.sender) ? m.sender[0]?.full_name : m.sender?.full_name;
         items.push({
@@ -151,14 +171,14 @@ export default function Header({ onMenuToggle }: HeaderProps) {
       (annRes.data as AnnRow[] || []).forEach((a) => {
         const diff = Date.now() - new Date(a.created_at).getTime();
         const hours = Math.floor(diff / 3600000);
-        const timeStr = hours < 1 ? 'Tani' : hours < 24 ? `${hours} ore` : `${Math.floor(hours / 24)} dite`;
+        const timeStr = formatRelativeTime(hours);
 
         items.push({
           id: `ann-${a.id}`,
           type: 'announcement',
           title: a.title,
           preview: a.content.substring(0, 80),
-          from: 'Shkolla',
+          from: t('header.school_source'),
           time: timeStr,
           isRead: true,
         });
@@ -199,17 +219,17 @@ export default function Header({ onMenuToggle }: HeaderProps) {
       <div className="flex items-center gap-3">
         <button
           onClick={onMenuToggle}
-          aria-label="Hap menunë"
+          aria-label={t('header.menu_open')}
           className="lg:hidden p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors"
         >
           <Menu className="w-5 h-5" />
         </button>
         <div className="hidden sm:block">
           <h2 className="text-sm font-semibold text-slate-900">
-            Mire se vini, {profile?.full_name || 'Perdorues'}
+            {t('header.welcome_user')}, {profile?.full_name || t('header.user_fallback')}
           </h2>
           <p className="text-xs text-slate-500">
-            {profile ? ROLE_LABELS[profile.role] : ''}
+            {profile ? t(ROLE_LABEL_KEYS[profile.role]) : ''}
           </p>
         </div>
       </div>
@@ -218,9 +238,9 @@ export default function Header({ onMenuToggle }: HeaderProps) {
         <LanguageSwitcher compact />
         <button
           onClick={() => navigate(getMessagePath())}
-          aria-label="Mesazhet"
+          aria-label={t('header.messages')}
           className="relative p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors"
-          title="Mesazhet"
+          title={t('header.messages')}
         >
           <MessageSquare className="w-5 h-5" />
         </button>
@@ -228,7 +248,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setShowNotifs(!showNotifs)}
-            aria-label={unreadCount > 0 ? `${unreadCount} njoftime të reja` : 'Njoftimet'}
+            aria-label={unreadCount > 0 ? `${unreadCount} ${t('header.unread_aria')}` : t('header.notifications_title')}
             className="relative p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors"
           >
             <Bell className="w-5 h-5" />
@@ -244,8 +264,8 @@ export default function Header({ onMenuToggle }: HeaderProps) {
               <div className="fixed inset-0 bg-black/10 sm:hidden z-40" onClick={() => setShowNotifs(false)} />
               <div className="fixed sm:absolute left-2 right-2 top-16 sm:left-auto sm:right-0 sm:top-12 sm:w-96 max-w-[calc(100vw-1rem)] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-50">
               <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
-                <h3 className="text-sm font-semibold text-slate-900">Njoftimet</h3>
-                <button onClick={() => setShowNotifs(false)} aria-label="Mbyll" className="text-slate-400 hover:text-slate-600">
+                <h3 className="text-sm font-semibold text-slate-900">{t('header.notifications_title')}</h3>
+                <button onClick={() => setShowNotifs(false)} aria-label={t('common.close')} className="text-slate-400 hover:text-slate-600">
                   <X className="w-4 h-4" />
                 </button>
               </div>
@@ -253,7 +273,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
                 {notifs.length === 0 ? (
                   <div className="px-4 py-8 text-center">
                     <Bell className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                    <p className="text-xs text-slate-400">Nuk ka njoftime</p>
+                    <p className="text-xs text-slate-400">{t('header.no_notifications')}</p>
                   </div>
                 ) : (
                   notifs.map((n) => (
@@ -297,7 +317,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
                   onClick={() => { setShowNotifs(false); navigate(getMessagePath()); }}
                   className="w-full text-center text-xs text-slate-600 hover:text-slate-900 font-medium transition-colors"
                 >
-                  Shiko te gjitha mesazhet
+                  {t('header.see_all_messages')}
                 </button>
               </div>
               </div>
@@ -308,7 +328,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
         <Link
           to={profile ? `/${ROLE_TO_URL_PREFIX[profile.role] || 'drejtor'}/profili` : '/'}
           className="flex items-center gap-3 ml-2 pl-4 border-l border-slate-200 hover:bg-slate-50 rounded-xl px-2 py-1 transition-colors group"
-          title="Profili Im"
+          title={t('header.profile_tooltip')}
         >
           <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-teal-500 rounded-xl flex items-center justify-center text-white text-sm font-bold overflow-hidden">
             {profile?.avatar_url ? (
@@ -327,7 +347,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
         <button
           onClick={signOut}
           className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
-          title="Dilni"
+          title={t('header.logout')}
         >
           <LogOut className="w-4 h-4" />
         </button>

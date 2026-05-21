@@ -31,9 +31,9 @@ function safeSetItem(key: string, value: string): void {
 function getInitialLanguage(): Language {
   if (typeof window === 'undefined') return 'sq';
   const stored = safeGetItem(STORAGE_KEY);
-  if (stored === 'sq' || stored === 'sr' || stored === 'tr' || stored === 'bs') return stored;
+  if (stored === 'sq' || stored === 'sr' || stored === 'tr' || stored === 'bs' || stored === 'en') return stored;
   const browserLang = navigator.language.slice(0, 2);
-  if (browserLang === 'sr' || browserLang === 'tr' || browserLang === 'bs') return browserLang;
+  if (browserLang === 'sr' || browserLang === 'tr' || browserLang === 'bs' || browserLang === 'en') return browserLang;
   return 'sq';
 }
 

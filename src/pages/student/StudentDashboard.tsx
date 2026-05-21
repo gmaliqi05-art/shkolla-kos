@@ -20,6 +20,7 @@ import {
   FolderOpen,
   GraduationCap,
 } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface SubjectAvg {
   name: string;
@@ -50,6 +51,7 @@ interface Ann {
 
 export default function StudentDashboard() {
   const { profile, isDemo } = useAuth();
+  const { t } = useI18n();
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [className, setClassName] = useState('');
@@ -122,7 +124,7 @@ export default function StudentDashboard() {
       const firstError = [gradesRes, attRes].find(r => r.error)?.error;
       if (firstError) {
         console.error('StudentDashboard load error:', firstError);
-        setLoadError('Disa të dhëna nuk u ngarkuan. ' + firstError.message);
+        setLoadError(t('student.data_load_error') + ' ' + firstError.message);
       }
 
       const grades = gradesRes.data || [];
@@ -218,21 +220,21 @@ export default function StudentDashboard() {
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
-            <p className="text-sm font-semibold text-amber-900">Të dhëna të paplota</p>
+            <p className="text-sm font-semibold text-amber-900">{t('dash.incomplete_data')}</p>
             <p className="text-xs text-amber-700 mt-0.5">{loadError}</p>
           </div>
         </div>
       )}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Paneli Kryesor</h1>
-        <p className="text-slate-500 mt-1">{className || 'Pa klase'} - Semestri II, 2025-2026</p>
+        <h1 className="text-2xl font-bold text-slate-900">{t('nav.dashboard')}</h1>
+        <p className="text-slate-500 mt-1">{className || t('student.no_class')} - {t('student.semester_ii')}, 2025-2026</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard label="Mesatarja Ime" value={overallAvg} icon={Award} color="cyan" />
-        <StatCard label="Nota kete muaj" value={monthGrades} icon={TrendingUp} color="blue" />
-        <StatCard label="Mungesa" value={absences} icon={Calendar} color="rose" />
-        <StatCard label="Lende" value={subjectAverages.length} icon={BookOpen} color="green" />
+        <StatCard label={t('student.my_average')} value={overallAvg} icon={Award} color="cyan" />
+        <StatCard label={t('stat.month_grades')} value={monthGrades} icon={TrendingUp} color="blue" />
+        <StatCard label={t('stat.absences')} value={absences} icon={Calendar} color="rose" />
+        <StatCard label={t('stat.subjects')} value={subjectAverages.length} icon={BookOpen} color="green" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -240,7 +242,7 @@ export default function StudentDashboard() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Clock className="w-5 h-5 text-cyan-500" />
-              <h3 className="font-semibold text-slate-900">Orari i Sotem</h3>
+              <h3 className="font-semibold text-slate-900">{t('dash.today_schedule')}</h3>
             </div>
             <span className="text-xs text-slate-400">
               {formatDayMonth(new Date())}
@@ -262,7 +264,7 @@ export default function StudentDashboard() {
                     <p className="text-xs text-slate-500">{item.teacher} - {item.room}</p>
                   </div>
                   {i === 0 && (
-                    <span className="text-xs px-2 py-0.5 bg-cyan-100 text-cyan-700 rounded-full font-medium animate-pulse">Tani</span>
+                    <span className="text-xs px-2 py-0.5 bg-cyan-100 text-cyan-700 rounded-full font-medium animate-pulse">{t('time.now')}</span>
                   )}
                 </div>
               ))}
@@ -270,7 +272,7 @@ export default function StudentDashboard() {
           ) : (
             <div className="text-center py-8">
               <AlertCircle className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-              <p className="text-sm text-slate-400">Nuk ka ore mesimi per sot</p>
+              <p className="text-sm text-slate-400">{t('student.no_lessons_today')}</p>
             </div>
           )}
         </div>
@@ -279,10 +281,10 @@ export default function StudentDashboard() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Star className="w-5 h-5 text-amber-500" />
-              <h3 className="font-semibold text-slate-900">Notat e Fundit</h3>
+              <h3 className="font-semibold text-slate-900">{t('dash.recent_grades')}</h3>
             </div>
             <Link to="/nxenes/nota" className="text-sm text-cyan-600 hover:text-cyan-800 font-medium flex items-center gap-1">
-              Te gjitha <ChevronRight className="w-4 h-4" />
+              {t('admin.all')} <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
           {recentGrades.length > 0 ? (
@@ -306,7 +308,7 @@ export default function StudentDashboard() {
           ) : (
             <div className="text-center py-8">
               <AlertCircle className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-              <p className="text-sm text-slate-400">Nuk ka nota ende</p>
+              <p className="text-sm text-slate-400">{t('student.no_grades_yet')}</p>
             </div>
           )}
         </div>
@@ -317,10 +319,10 @@ export default function StudentDashboard() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <BookOpen className="w-5 h-5 text-blue-500" />
-              <h3 className="font-semibold text-slate-900">Mesatarja sipas Lendes</h3>
+              <h3 className="font-semibold text-slate-900">{t('student.avg_by_subject')}</h3>
             </div>
             <div className="text-sm text-slate-500">
-              Mesatarja e pergjithshme: <span className="font-bold text-slate-900">{overallAvg}</span>
+              {t('student.overall_average')} <span className="font-bold text-slate-900">{overallAvg}</span>
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -336,7 +338,7 @@ export default function StudentDashboard() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-slate-900 truncate">{subject.name}</p>
-                  <p className="text-xs text-slate-400">{subject.count} nota</p>
+                  <p className="text-xs text-slate-400">{subject.count} {t('student.grades_count')}</p>
                 </div>
                 <div className="w-16 bg-slate-100 rounded-full h-1.5 overflow-hidden">
                   <div
@@ -360,7 +362,7 @@ export default function StudentDashboard() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Megaphone className="w-5 h-5 text-amber-500" />
-              <h3 className="font-semibold text-slate-900">Njoftime nga Shkolla</h3>
+              <h3 className="font-semibold text-slate-900">{t('student.school_announcements')}</h3>
             </div>
           </div>
           {announcements.length > 0 ? (
@@ -373,23 +375,23 @@ export default function StudentDashboard() {
               ))}
             </div>
           ) : (
-            <p className="text-sm text-slate-400 text-center py-6">Nuk ka njoftime aktive</p>
+            <p className="text-sm text-slate-400 text-center py-6">{t('student.no_active_announcements')}</p>
           )}
         </div>
 
         <div className="bg-white rounded-2xl border border-slate-100 p-6">
           <div className="flex items-center gap-2 mb-4">
             <MessageSquare className="w-5 h-5 text-cyan-500" />
-            <h3 className="font-semibold text-slate-900">Veprime të Shpejta</h3>
+            <h3 className="font-semibold text-slate-900">{t('dash.quick_actions')}</h3>
           </div>
           <div className="space-y-2">
             {[
-              { to: '/nxenes/nota', icon: <Award className="w-4 h-4" />, label: 'Notat e Mia', desc: 'Shiko të gjitha notat sipas lëndës' },
-              { to: '/nxenes/orari', icon: <Clock className="w-4 h-4" />, label: 'Orari Javor', desc: 'Shiko orarin e plotë' },
-              { to: '/nxenes/frekuentimi', icon: <Calendar className="w-4 h-4" />, label: 'Frekuentimi Im', desc: 'Shiko mungesat dhe prezencën' },
-              { to: '/nxenes/mesazhet', icon: <MessageSquare className="w-4 h-4" />, label: 'Mesazhe — Mësuesi', desc: 'Dërgo mesazh mësuesit tënd' },
-              { to: '/nxenes/portofoli', icon: <FolderOpen className="w-4 h-4" />, label: 'Portofoli Im', desc: 'Punimet dhe arritjet e mia' },
-              { to: '/nxenes/testet-kombetare', icon: <GraduationCap className="w-4 h-4" />, label: 'Testet Kombëtare', desc: 'Rezultatet e Testit të Arritshmërisë' },
+              { to: '/nxenes/nota', icon: <Award className="w-4 h-4" />, label: t('nav.my_grades'), desc: t('student.qa_my_grades_desc') },
+              { to: '/nxenes/orari', icon: <Clock className="w-4 h-4" />, label: t('student.qa_weekly_schedule'), desc: t('student.qa_weekly_schedule_desc') },
+              { to: '/nxenes/frekuentimi', icon: <Calendar className="w-4 h-4" />, label: t('student.qa_attendance_label'), desc: t('student.qa_attendance_desc') },
+              { to: '/nxenes/mesazhet', icon: <MessageSquare className="w-4 h-4" />, label: t('student.qa_messages_label'), desc: t('student.qa_messages_desc') },
+              { to: '/nxenes/portofoli', icon: <FolderOpen className="w-4 h-4" />, label: t('nav.my_portfolio'), desc: t('student.qa_portfolio_desc') },
+              { to: '/nxenes/testet-kombetare', icon: <GraduationCap className="w-4 h-4" />, label: t('nav.national_tests'), desc: t('student.qa_national_tests_desc') },
             ].map(item => (
               <Link key={item.to} to={item.to} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group">
                 <div className="w-9 h-9 bg-cyan-50 rounded-xl flex items-center justify-center text-cyan-600 group-hover:bg-cyan-100 transition-colors">
