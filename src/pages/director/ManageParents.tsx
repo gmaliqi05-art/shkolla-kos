@@ -86,7 +86,9 @@ export default function ManageParents() {
   };
 
   const loadStudents = async () => {
-    const { data } = await supabase.from('profiles').select('id, full_name').eq('role', 'nxenes').order('full_name');
+    let q = supabase.from('profiles').select('id, full_name').eq('role', 'nxenes').is('deleted_at', null);
+    if (profile?.school_id) q = q.eq('school_id', profile.school_id);
+    const { data } = await q.order('full_name');
     setStudents(data || []);
   };
 

@@ -179,12 +179,21 @@ export default function MessagesPage() {
 
     try {
       const allowedRoles = ROLE_CAN_MESSAGE[profile.role];
-      const { data, error } = await supabase
+      let q = supabase
         .from('profiles')
         .select('id, full_name, role, email')
         .in('role', allowedRoles)
         .neq('id', profile.id)
-        .order('full_name');
+        .is('deleted_at', null);
+
+      // Përdoruesit me school_id (drejtor, mësues, nxënës, prind, pedagog)
+      // sheh vetëm kontaktet e shkollës së vet.
+      // DKA, ministri, inspektor s'kanë school_id — shohin gjerë.
+      if (profile.school_id) {
+        q = q.eq('school_id', profile.school_id);
+      }
+
+      const { data, error } = await q.order('full_name');
 
       if (error) throw error;
       setContacts(data || []);
