@@ -2,15 +2,10 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { Clock, MapPin, User, Loader2, AlertCircle } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
+import type { TranslationKey } from '../../lib/i18n/translations';
 
-const DAYS = ['E Hënë', 'E Martë', 'E Mërkurë', 'E Enjte', 'E Premte'];
-const DAY_NAMES: Record<number, string> = {
-  1: 'E Hënë',
-  2: 'E Martë',
-  3: 'E Mërkurë',
-  4: 'E Enjte',
-  5: 'E Premte',
-};
+const DAY_KEYS: TranslationKey[] = ['day.1', 'day.2', 'day.3', 'day.4', 'day.5'];
 
 interface ScheduleItem {
   id: string;
@@ -40,12 +35,13 @@ const SUBJECT_COLORS: Record<string, string> = {
 
 export default function MySchedule() {
   const { profile, isDemo } = useAuth();
+  const { t } = useI18n();
   const [loading, setLoading] = useState(true);
   const [schedule, setSchedule] = useState<ScheduleItem[]>([]);
   const [view, setView] = useState<'grid' | 'list'>('grid');
 
   const todayIndex = Math.min(new Date().getDay() - 1, 4);
-  const today = todayIndex >= 0 ? DAYS[todayIndex] : DAYS[0];
+  const todayDayNum = todayIndex >= 0 ? todayIndex + 1 : 1;
 
   useEffect(() => {
     loadSchedule();
@@ -165,9 +161,9 @@ export default function MySchedule() {
     return (
       <div className="text-center py-12">
         <AlertCircle className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-        <h3 className="text-lg font-semibold text-slate-900 mb-2">Nuk ka orar</h3>
+        <h3 className="text-lg font-semibold text-slate-900 mb-2">{t('student.schedule.no_schedule_title')}</h3>
         <p className="text-slate-500">
-          {isDemo ? 'Orari nuk është konfiguruar për këtë përdorues demo.' : 'Nuk jeni të regjistruar në asnjë klasë ose klasa nuk ka orar.'}
+          {isDemo ? t('student.schedule.no_schedule_demo') : t('student.schedule.no_schedule_real')}
         </p>
       </div>
     );
@@ -179,8 +175,8 @@ export default function MySchedule() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Orari Im</h1>
-          <p className="text-slate-500 mt-1">Orari javor i mesimit</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('student.schedule.title')}</h1>
+          <p className="text-slate-500 mt-1">{t('student.schedule.subtitle')}</p>
         </div>
         <div className="flex items-center gap-1 bg-slate-100 rounded-xl p-1">
           <button
@@ -189,7 +185,7 @@ export default function MySchedule() {
               view === 'grid' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'
             }`}
           >
-            Tabelë
+            {t('student.schedule.view_grid')}
           </button>
           <button
             onClick={() => setView('list')}
@@ -197,7 +193,7 @@ export default function MySchedule() {
               view === 'list' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'
             }`}
           >
-            Listë
+            {t('student.schedule.view_list')}
           </button>
         </div>
       </div>
@@ -209,16 +205,16 @@ export default function MySchedule() {
               <thead>
                 <tr className="bg-slate-50">
                   <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider text-left w-32">
-                    Ora
+                    {t('student.schedule.time_col')}
                   </th>
-                  {DAYS.map((day) => (
+                  {DAY_KEYS.map((dayKey, idx) => (
                     <th
-                      key={day}
+                      key={dayKey}
                       className={`px-4 py-3 text-xs font-semibold uppercase tracking-wider text-center ${
-                        day === today ? 'text-cyan-600' : 'text-slate-500'
+                        idx + 1 === todayDayNum ? 'text-cyan-600' : 'text-slate-500'
                       }`}
                     >
-                      {day}
+                      {t(dayKey)}
                     </th>
                   ))}
                 </tr>
@@ -265,8 +261,8 @@ export default function MySchedule() {
 
             return (
               <div key={dayNum} className="bg-white rounded-2xl border border-slate-100 p-6">
-                <h3 className={`text-lg font-bold mb-4 ${DAY_NAMES[dayNum] === today ? 'text-cyan-600' : 'text-slate-900'}`}>
-                  {DAY_NAMES[dayNum]}
+                <h3 className={`text-lg font-bold mb-4 ${dayNum === todayDayNum ? 'text-cyan-600' : 'text-slate-900'}`}>
+                  {t(DAY_KEYS[dayNum - 1])}
                 </h3>
                 <div className="space-y-3">
                   {daySchedule.map((item) => (

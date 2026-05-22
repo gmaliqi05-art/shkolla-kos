@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { Check, X, Clock, AlertCircle, Calendar, TrendingUp, Loader2, Users, FileText, Send, CheckCircle } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
+import type { TranslationKey } from '../../lib/i18n/translations';
 
 type AttStatus = 'prezent' | 'mungon' | 'vonese' | 'arsyeshme';
 
@@ -15,16 +17,15 @@ interface WeekTrend {
   rate: number;
 }
 
-const STATUS_CONFIG = {
-  prezent: { icon: Check, color: 'text-emerald-600', bg: 'bg-emerald-100', label: 'Prezent' },
-  mungon: { icon: X, color: 'text-rose-600', bg: 'bg-rose-100', label: 'Mungon' },
-  vonese: { icon: Clock, color: 'text-amber-600', bg: 'bg-amber-100', label: 'Vonese' },
-  arsyeshme: { icon: AlertCircle, color: 'text-blue-600', bg: 'bg-blue-100', label: 'Arsyeshme' },
+const STATUS_CONFIG: Record<AttStatus, { icon: typeof Check; color: string; bg: string; labelKey: TranslationKey }> = {
+  prezent: { icon: Check, color: 'text-emerald-600', bg: 'bg-emerald-100', labelKey: 'attendance.prezent' },
+  mungon: { icon: X, color: 'text-rose-600', bg: 'bg-rose-100', labelKey: 'attendance.mungon' },
+  vonese: { icon: Clock, color: 'text-amber-600', bg: 'bg-amber-100', labelKey: 'attendance.vonese' },
+  arsyeshme: { icon: AlertCircle, color: 'text-blue-600', bg: 'bg-blue-100', labelKey: 'attendance.arsyeshme' },
 };
 
-const DAY_ABBR = ['Diel', 'Hen', 'Mar', 'Mer', 'Enj', 'Pre', 'Sht'];
-
-const MONTH_NAMES = ['Janar', 'Shkurt', 'Mars', 'Prill', 'Maj', 'Qershor', 'Korrik', 'Gusht', 'Shtator', 'Tetor', 'Nentor', 'Dhjetor'];
+const DAY_ABBR_KEYS: TranslationKey[] = ['day_short.sun', 'day_short.mon', 'day_short.tue', 'day_short.wed', 'day_short.thu', 'day_short.fri', 'day_short.sat'];
+const MONTH_KEYS: TranslationKey[] = ['month.1', 'month.2', 'month.3', 'month.4', 'month.5', 'month.6', 'month.7', 'month.8', 'month.9', 'month.10', 'month.11', 'month.12'];
 
 interface ExcuseRequest {
   id: string;
@@ -37,6 +38,7 @@ interface ExcuseRequest {
 
 export default function ChildAttendance() {
   const { profile, isDemo } = useAuth();
+  const { t } = useI18n();
   const [loading, setLoading] = useState(true);
   const [childName, setChildName] = useState('');
   const [childId, setChildId] = useState('');
@@ -59,36 +61,38 @@ export default function ChildAttendance() {
     if (isDemo) {
       setChildName('Ardi Malaj');
       setSummary({ present: 78, absent: 3, late: 2, justified: 2, total: 85 });
+      const mon = t('day_short.mon'), tue = t('day_short.tue'), wed = t('day_short.wed'), thu = t('day_short.thu'), fri = t('day_short.fri');
       setMonthlyData([
         {
-          month: 'Shkurt 2026',
+          month: `${t('month.2')} 2026`,
           days: [
-            { date: '03', day: 'Hen', status: 'prezent' }, { date: '04', day: 'Mar', status: 'prezent' },
-            { date: '05', day: 'Mer', status: 'prezent' }, { date: '06', day: 'Enj', status: 'vonese' },
-            { date: '07', day: 'Pre', status: 'prezent' },
+            { date: '03', day: mon, status: 'prezent' }, { date: '04', day: tue, status: 'prezent' },
+            { date: '05', day: wed, status: 'prezent' }, { date: '06', day: thu, status: 'vonese' },
+            { date: '07', day: fri, status: 'prezent' },
           ],
         },
         {
-          month: 'Janar 2026',
+          month: `${t('month.1')} 2026`,
           days: [
-            { date: '06', day: 'Hen', status: 'prezent' }, { date: '07', day: 'Mar', status: 'prezent' },
-            { date: '08', day: 'Mer', status: 'mungon' }, { date: '09', day: 'Enj', status: 'arsyeshme' },
-            { date: '10', day: 'Pre', status: 'prezent' }, { date: '13', day: 'Hen', status: 'prezent' },
-            { date: '14', day: 'Mar', status: 'prezent' }, { date: '15', day: 'Mer', status: 'prezent' },
-            { date: '16', day: 'Enj', status: 'prezent' }, { date: '17', day: 'Pre', status: 'prezent' },
-            { date: '20', day: 'Hen', status: 'mungon' }, { date: '21', day: 'Mar', status: 'arsyeshme' },
-            { date: '22', day: 'Mer', status: 'prezent' }, { date: '23', day: 'Enj', status: 'prezent' },
-            { date: '24', day: 'Pre', status: 'vonese' }, { date: '27', day: 'Hen', status: 'prezent' },
-            { date: '28', day: 'Mar', status: 'prezent' }, { date: '29', day: 'Mer', status: 'prezent' },
-            { date: '30', day: 'Enj', status: 'prezent' }, { date: '31', day: 'Pre', status: 'mungon' },
+            { date: '06', day: mon, status: 'prezent' }, { date: '07', day: tue, status: 'prezent' },
+            { date: '08', day: wed, status: 'mungon' }, { date: '09', day: thu, status: 'arsyeshme' },
+            { date: '10', day: fri, status: 'prezent' }, { date: '13', day: mon, status: 'prezent' },
+            { date: '14', day: tue, status: 'prezent' }, { date: '15', day: wed, status: 'prezent' },
+            { date: '16', day: thu, status: 'prezent' }, { date: '17', day: fri, status: 'prezent' },
+            { date: '20', day: mon, status: 'mungon' }, { date: '21', day: tue, status: 'arsyeshme' },
+            { date: '22', day: wed, status: 'prezent' }, { date: '23', day: thu, status: 'prezent' },
+            { date: '24', day: fri, status: 'vonese' }, { date: '27', day: mon, status: 'prezent' },
+            { date: '28', day: tue, status: 'prezent' }, { date: '29', day: wed, status: 'prezent' },
+            { date: '30', day: thu, status: 'prezent' }, { date: '31', day: fri, status: 'mungon' },
           ],
         },
       ]);
+      const weekLabel = t('parent.week_long');
       setWeeklyTrend([
-        { week: 'Java 1', rate: 100 }, { week: 'Java 2', rate: 80 },
-        { week: 'Java 3', rate: 100 }, { week: 'Java 4', rate: 60 },
-        { week: 'Java 5', rate: 100 }, { week: 'Java 6', rate: 100 },
-        { week: 'Java 7', rate: 80 }, { week: 'Java 8', rate: 100 },
+        { week: `${weekLabel} 1`, rate: 100 }, { week: `${weekLabel} 2`, rate: 80 },
+        { week: `${weekLabel} 3`, rate: 100 }, { week: `${weekLabel} 4`, rate: 60 },
+        { week: `${weekLabel} 5`, rate: 100 }, { week: `${weekLabel} 6`, rate: 100 },
+        { week: `${weekLabel} 7`, rate: 80 }, { week: `${weekLabel} 8`, rate: 100 },
       ]);
       setLoading(false);
       return;
@@ -134,7 +138,7 @@ export default function ChildAttendance() {
       const grouped: Record<string, { date: string; status: AttStatus }[]> = {};
       records.forEach(r => {
         const d = new Date(r.date);
-        const key = `${MONTH_NAMES[d.getMonth()]} ${d.getFullYear()}`;
+        const key = `${t(MONTH_KEYS[d.getMonth()])} ${d.getFullYear()}`;
         if (!grouped[key]) grouped[key] = [];
         grouped[key].push({ date: r.date, status: r.status as AttStatus });
       });
@@ -145,7 +149,7 @@ export default function ChildAttendance() {
           const d = new Date(r.date);
           return {
             date: String(d.getDate()).padStart(2, '0'),
-            day: DAY_ABBR[d.getDay()],
+            day: t(DAY_ABBR_KEYS[d.getDay()]),
             status: r.status,
           };
         }),
@@ -170,8 +174,9 @@ export default function ChildAttendance() {
 
         const weekNums = Object.keys(weekMap).map(Number).sort((a, b) => a - b);
         const last8 = weekNums.slice(-8);
+        const weekLabel = t('parent.week_long');
         setWeeklyTrend(last8.map((wn, i) => ({
-          week: `Java ${i + 1}`,
+          week: `${weekLabel} ${i + 1}`,
           rate: weekMap[wn].total > 0 ? Math.round((weekMap[wn].present / weekMap[wn].total) * 100) : 100,
         })));
       }
@@ -223,50 +228,52 @@ export default function ChildAttendance() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Frekuentimi</h1>
-          <p className="text-slate-500 mt-1">Ndiqni prezencen e femijes ne shkoll</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('parent.attendance_short')}</h1>
+          <p className="text-slate-500 mt-1">{t('parent.attendance_subtitle_long')}</p>
         </div>
         <div className="text-center py-12 bg-white rounded-2xl border border-slate-100">
           <Users className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-slate-900 mb-2">Nuk ka femije te lidhur</h3>
-          <p className="text-slate-500 text-sm">Kontaktoni drejtorine per te lidhur llogarine me femijen tuaj.</p>
+          <h3 className="text-lg font-semibold text-slate-900 mb-2">{t('parent.no_children')}</h3>
+          <p className="text-slate-500 text-sm">{t('parent.no_children_help')}</p>
         </div>
       </div>
     );
   }
 
   const presenceRate = summary.total > 0 ? ((summary.present / summary.total) * 100).toFixed(1) : '0';
+  const weekShort = t('parent.week_short');
+  const weekLong = t('parent.week_long');
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Frekuentimi i {childName.split(' ')[0]}</h1>
-        <p className="text-slate-500 mt-1">Ndiqni prezencen e femijes ne shkoll</p>
+        <h1 className="text-2xl font-bold text-slate-900">{t('parent.attendance_of')} {childName.split(' ')[0]}</h1>
+        <p className="text-slate-500 mt-1">{t('parent.attendance_subtitle_long')}</p>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
         <div className="bg-white rounded-2xl border border-slate-100 p-4 text-center col-span-2 sm:col-span-1">
           <p className="text-3xl font-bold text-slate-900">{presenceRate}%</p>
-          <p className="text-xs text-slate-500 mt-1">Prezenca</p>
+          <p className="text-xs text-slate-500 mt-1">{t('student.attendance.presence')}</p>
           <div className="w-full bg-slate-100 rounded-full h-2 mt-2">
             <div className="bg-emerald-400 h-2 rounded-full" style={{ width: `${presenceRate}%` }} />
           </div>
         </div>
         <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 text-center">
           <p className="text-3xl font-bold text-emerald-700">{summary.present}</p>
-          <p className="text-xs text-emerald-600 mt-1">Prezent</p>
+          <p className="text-xs text-emerald-600 mt-1">{t('attendance.prezent')}</p>
         </div>
         <div className="bg-rose-50 border border-rose-100 rounded-2xl p-4 text-center">
           <p className="text-3xl font-bold text-rose-700">{summary.absent}</p>
-          <p className="text-xs text-rose-600 mt-1">Mungesa</p>
+          <p className="text-xs text-rose-600 mt-1">{t('stat.absences')}</p>
         </div>
         <div className="bg-amber-50 border border-amber-100 rounded-2xl p-4 text-center">
           <p className="text-3xl font-bold text-amber-700">{summary.late}</p>
-          <p className="text-xs text-amber-600 mt-1">Vonesa</p>
+          <p className="text-xs text-amber-600 mt-1">{t('attendance.vonese')}</p>
         </div>
         <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4 text-center">
           <p className="text-3xl font-bold text-blue-700">{summary.justified}</p>
-          <p className="text-xs text-blue-600 mt-1">Arsyeshme</p>
+          <p className="text-xs text-blue-600 mt-1">{t('attendance.arsyeshme')}</p>
         </div>
       </div>
 
@@ -274,7 +281,7 @@ export default function ChildAttendance() {
         <div className="bg-white rounded-2xl border border-slate-100 p-6">
           <div className="flex items-center gap-2 mb-4">
             <TrendingUp className="w-5 h-5 text-teal-500" />
-            <h3 className="font-semibold text-slate-900">Trendi Javor</h3>
+            <h3 className="font-semibold text-slate-900">{t('parent.weekly_trend')}</h3>
           </div>
           <div className="flex items-end gap-2 h-32">
             {weeklyTrend.map((w) => (
@@ -289,7 +296,7 @@ export default function ChildAttendance() {
                     style={{ height: `${w.rate}%` }}
                   />
                 </div>
-                <span className="text-[10px] text-slate-400">{w.week.replace('Java ', 'J')}</span>
+                <span className="text-[10px] text-slate-400">{w.week.replace(weekLong + ' ', weekShort)}</span>
               </div>
             ))}
           </div>
@@ -311,7 +318,7 @@ export default function ChildAttendance() {
                     <div
                       key={day.date}
                       className={`${cfg.bg} rounded-xl p-2 text-center hover:shadow-md transition-all`}
-                      title={`${day.date} ${month.month} - ${cfg.label}`}
+                      title={`${day.date} ${month.month} - ${t(cfg.labelKey)}`}
                     >
                       <p className={`text-lg font-bold ${cfg.color}`}>{day.date}</p>
                       <p className="text-[10px] text-slate-500">{day.day}</p>
@@ -326,20 +333,20 @@ export default function ChildAttendance() {
       ) : (
         <div className="text-center py-12 bg-white rounded-2xl border border-slate-100">
           <AlertCircle className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-slate-900 mb-2">Nuk ka te dhena</h3>
-          <p className="text-slate-500 text-sm">Nuk ka te dhena te frekuentimit.</p>
+          <h3 className="text-lg font-semibold text-slate-900 mb-2">{t('student.attendance.no_data')}</h3>
+          <p className="text-slate-500 text-sm">{t('parent.attendance_no_data')}</p>
         </div>
       )}
 
       <div className="bg-white rounded-2xl border border-slate-100 p-6">
-        <h3 className="font-semibold text-slate-900 mb-3">Legjenda</h3>
+        <h3 className="font-semibold text-slate-900 mb-3">{t('student.attendance.legend')}</h3>
         <div className="flex flex-wrap gap-4">
-          {Object.entries(STATUS_CONFIG).map(([key, cfg]) => (
+          {(Object.entries(STATUS_CONFIG) as [AttStatus, typeof STATUS_CONFIG[AttStatus]][]).map(([key, cfg]) => (
             <div key={key} className="flex items-center gap-2">
               <div className={`w-6 h-6 ${cfg.bg} rounded-lg flex items-center justify-center`}>
                 <cfg.icon className={`w-3.5 h-3.5 ${cfg.color}`} />
               </div>
-              <span className="text-sm text-slate-600">{cfg.label}</span>
+              <span className="text-sm text-slate-600">{t(cfg.labelKey)}</span>
             </div>
           ))}
         </div>
@@ -349,7 +356,7 @@ export default function ChildAttendance() {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <FileText className="w-5 h-5 text-blue-500" />
-            <h3 className="font-semibold text-slate-900">Arsyetim Mungese</h3>
+            <h3 className="font-semibold text-slate-900">{t('parent.excuse.title')}</h3>
           </div>
           {!showExcuseForm && (
             <button
@@ -357,7 +364,7 @@ export default function ChildAttendance() {
               className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors"
             >
               <Send className="w-4 h-4" />
-              Dorëzo Arsyetim
+              {t('parent.excuse.submit_btn')}
             </button>
           )}
         </div>
@@ -367,37 +374,37 @@ export default function ChildAttendance() {
             {excuseSuccess ? (
               <div className="text-center py-4">
                 <CheckCircle className="w-10 h-10 text-emerald-500 mx-auto mb-2" />
-                <p className="text-sm font-medium text-slate-900">Kerkesa u dergua me sukses!</p>
+                <p className="text-sm font-medium text-slate-900">{t('parent.excuse.success')}</p>
               </div>
             ) : (
               <>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-medium text-slate-700 mb-1">Nga data</label>
+                    <label className="block text-xs font-medium text-slate-700 mb-1">{t('parent.excuse.from_date')}</label>
                     <input type="date" value={excuseDateFrom} onChange={(e) => setExcuseDateFrom(e.target.value)}
                       className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500" />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-700 mb-1">Deri ne date</label>
+                    <label className="block text-xs font-medium text-slate-700 mb-1">{t('parent.excuse.to_date')}</label>
                     <input type="date" value={excuseDateTo} onChange={(e) => setExcuseDateTo(e.target.value)}
                       className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500" />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">Arsyeja</label>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">{t('parent.excuse.reason')}</label>
                   <textarea value={excuseReason} onChange={(e) => setExcuseReason(e.target.value)}
-                    rows={3} placeholder="Pershkruani arsyen e mungesës..."
+                    rows={3} placeholder={t('parent.excuse.reason_placeholder')}
                     className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
                 </div>
                 <div className="flex gap-2">
                   <button onClick={handleSubmitExcuse} disabled={excuseSubmitting || !excuseDateFrom || !excuseReason}
                     className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors flex items-center gap-1.5">
                     {excuseSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                    Dergo
+                    {t('parent.excuse.send')}
                   </button>
                   <button onClick={() => setShowExcuseForm(false)}
                     className="px-4 py-2 text-slate-600 text-sm font-medium rounded-lg hover:bg-slate-100 transition-colors">
-                    Anulo
+                    {t('common.cancel')}
                   </button>
                 </div>
               </>
@@ -425,13 +432,13 @@ export default function ChildAttendance() {
                   exc.status === 'rejected' ? 'bg-rose-100 text-rose-700' :
                   'bg-amber-100 text-amber-700'
                 }`}>
-                  {exc.status === 'approved' ? 'Aprovuar' : exc.status === 'rejected' ? 'Refuzuar' : 'Ne pritje'}
+                  {exc.status === 'approved' ? t('parent.excuse.status_approved') : exc.status === 'rejected' ? t('parent.excuse.status_rejected') : t('parent.excuse.status_pending')}
                 </span>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-sm text-slate-400 text-center">Nuk keni derguar arsyetime ende.</p>
+          <p className="text-sm text-slate-400 text-center">{t('parent.excuse.no_excuses')}</p>
         )}
       </div>
     </div>

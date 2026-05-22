@@ -11,6 +11,7 @@ import {
   type DataDeletionRequest,
 } from '../../types/database';
 import { Loader2, Check, X, Trash2, Shield, AlertTriangle, FileText } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 const CONSENT_ORDER: ConsentType[] = [
   'data_processing',
@@ -28,6 +29,7 @@ interface ChildOption {
 
 export default function PrivacySettings() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const [children, setChildren] = useState<ChildOption[]>([]);
   const [selectedChild, setSelectedChild] = useState('');
   const [consents, setConsents] = useState<Map<ConsentType, Consent>>(new Map());
@@ -106,7 +108,7 @@ export default function PrivacySettings() {
         })
         .eq('id', existing.id);
       if (error) {
-        setMessage('Gabim: ' + error.message);
+        setMessage(`${t('parent.iep.error_prefix')} ${error.message}`);
       } else {
         await logAudit({
           actorId: profile.id,
@@ -131,7 +133,7 @@ export default function PrivacySettings() {
         .select()
         .single();
       if (error) {
-        setMessage('Gabim: ' + error.message);
+        setMessage(`${t('parent.iep.error_prefix')} ${error.message}`);
       } else {
         await logAudit({
           actorId: profile.id,
@@ -173,7 +175,7 @@ export default function PrivacySettings() {
       });
       setShowDeletionModal(false);
       setDeletionReason('');
-      setMessage('Kërkesa u dërgua. Drejtori do ta shqyrtojë brenda 30 ditësh sipas Ligjit 06/L-082.');
+      setMessage(t('parent.priv.deletion_request_sent'));
       loadRequests();
     }
     setSubmittingDeletion(false);
@@ -190,7 +192,7 @@ export default function PrivacySettings() {
   if (children.length === 0) {
     return (
       <div className="text-center py-12 text-slate-400">
-        Nuk keni asnjë fëmijë të lidhur me llogarinë tuaj.
+        {t('parent.privacy.no_children')}
       </div>
     );
   }
@@ -202,14 +204,14 @@ export default function PrivacySettings() {
           <Shield className="w-5 h-5 text-blue-600" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Privatësia & Pëlqimet</h1>
-          <p className="text-slate-500 text-sm">Sipas Ligjit 06/L-082 për Mbrojtjen e të Dhënave Personale</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('parent.priv.title')}</h1>
+          <p className="text-slate-500 text-sm">{t('parent.priv.subtitle')}</p>
         </div>
       </div>
 
       {children.length > 1 && (
         <div className="bg-white rounded-2xl border border-slate-100 p-4">
-          <label className="block text-xs font-medium text-slate-500 mb-1">Fëmija</label>
+          <label className="block text-xs font-medium text-slate-500 mb-1">{t('parent.child_label')}</label>
           <select
             value={selectedChild}
             onChange={(e) => setSelectedChild(e.target.value)}
@@ -232,8 +234,8 @@ export default function PrivacySettings() {
         <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-2">
           <FileText className="w-5 h-5 text-emerald-600" />
           <div>
-            <h2 className="font-semibold text-slate-900">Pëlqimet e Përpunimit të të Dhënave</h2>
-            <p className="text-xs text-slate-500">Mund t'i tërhiqni pëlqimet në çdo kohë.</p>
+            <h2 className="font-semibold text-slate-900">{t('parent.priv.consents_section')}</h2>
+            <p className="text-xs text-slate-500">{t('parent.priv.can_withdraw')}</p>
           </div>
         </div>
         <div className="divide-y divide-slate-100">
@@ -249,10 +251,10 @@ export default function PrivacySettings() {
                   {consent && (
                     <p className="text-xs text-slate-400 mt-1">
                       {isGranted
-                        ? `Dhënë më ${new Date(consent.granted_at).toLocaleDateString('sq-AL')}`
+                        ? `${t('parent.priv.given_on')} ${new Date(consent.granted_at).toLocaleDateString('sq-AL')}`
                         : consent.revoked_at
-                          ? `Tërhequr më ${new Date(consent.revoked_at).toLocaleDateString('sq-AL')}`
-                          : 'I refuzuar'}
+                          ? `${t('parent.priv.withdrawn_on')} ${new Date(consent.revoked_at).toLocaleDateString('sq-AL')}`
+                          : t('parent.priv.refused')}
                     </p>
                   )}
                 </div>
@@ -270,12 +272,12 @@ export default function PrivacySettings() {
                   ) : isGranted ? (
                     <>
                       <Check className="w-4 h-4" />
-                      I dhënë
+                      {t('parent.priv.granted')}
                     </>
                   ) : (
                     <>
                       <X className="w-4 h-4" />
-                      Jo i dhënë
+                      {t('parent.priv.not_granted')}
                     </>
                   )}
                 </button>
@@ -289,14 +291,14 @@ export default function PrivacySettings() {
         <div className="px-6 py-4 border-b border-rose-100 bg-rose-50 flex items-center gap-2">
           <AlertTriangle className="w-5 h-5 text-rose-600" />
           <div>
-            <h2 className="font-semibold text-slate-900">E drejta e harresës</h2>
-            <p className="text-xs text-slate-600">Kërkoni fshirjen e të dhënave personale të fëmijës.</p>
+            <h2 className="font-semibold text-slate-900">{t('parent.priv.right_to_be_forgotten')}</h2>
+            <p className="text-xs text-slate-600">{t('parent.priv.deletion_subtitle')}</p>
           </div>
         </div>
         <div className="px-6 py-4 space-y-3">
           <p className="text-sm text-slate-600">
-            Sipas Ligjit 06/L-082, keni të drejtën të kërkoni fshirjen e të dhënave kur baza ligjore nuk ekziston më.
-            <strong> Vini re:</strong> disa të dhëna (Amza, dëftesat, diplomat) janë me detyrim ligjor të ruhen për një periudhë të caktuar dhe nuk mund të fshihen menjëherë.
+            {t('parent.priv.deletion_explanation')}
+            <strong> {t('parent.priv.deletion_warning')}</strong> {t('parent.priv.deletion_warning_text')}
           </p>
 
           <button
@@ -304,12 +306,12 @@ export default function PrivacySettings() {
             className="inline-flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-medium transition-colors"
           >
             <Trash2 className="w-4 h-4" />
-            Paraqit kërkesë për fshirje
+            {t('parent.priv.request_deletion_btn')}
           </button>
 
           {requests.length > 0 && (
             <div className="mt-4 border-t border-slate-100 pt-3">
-              <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Kërkesat e mëparshme</p>
+              <p className="text-xs font-semibold text-slate-500 uppercase mb-2">{t('parent.priv.previous_requests')}</p>
               <div className="space-y-2">
                 {requests.map((r) => (
                   <div key={r.id} className="flex items-start gap-3 text-sm">
@@ -324,7 +326,7 @@ export default function PrivacySettings() {
                     <div className="flex-1">
                       <p className="text-slate-700">{r.reason}</p>
                       <p className="text-xs text-slate-400">{new Date(r.created_at).toLocaleDateString('sq-AL')}</p>
-                      {r.review_notes && <p className="text-xs text-slate-500 italic mt-0.5">Përgjigja: {r.review_notes}</p>}
+                      {r.review_notes && <p className="text-xs text-slate-500 italic mt-0.5">{t('parent.priv.response_label')} {r.review_notes}</p>}
                     </div>
                   </div>
                 ))}
@@ -337,15 +339,15 @@ export default function PrivacySettings() {
       {showDeletionModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6">
-            <h2 className="text-lg font-bold text-slate-900 mb-2">Kërkesë për Fshirje të të Dhënave</h2>
+            <h2 className="text-lg font-bold text-slate-900 mb-2">{t('parent.priv.modal_title')}</h2>
             <p className="text-sm text-slate-600 mb-4">
-              Ju lutemi shpjegoni pse kërkoni fshirjen e të dhënave. Drejtori do të shqyrtojë kërkesën brenda 30 ditësh.
+              {t('parent.priv.modal_help')}
             </p>
             <textarea
               rows={4}
               value={deletionReason}
               onChange={(e) => setDeletionReason(e.target.value)}
-              placeholder="P.sh., Fëmija nuk vijon më në këtë shkollë dhe dëshirojmë fshirjen e të dhënave të jo-detyrueshme."
+              placeholder={t('parent.priv.modal_placeholder')}
               className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-rose-500 resize-none"
             />
             <div className="flex gap-3 mt-4">
@@ -354,7 +356,7 @@ export default function PrivacySettings() {
                 onClick={() => { setShowDeletionModal(false); setDeletionReason(''); }}
                 className="flex-1 px-4 py-2 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium"
               >
-                Anulo
+                {t('common.cancel')}
               </button>
               <button
                 onClick={submitDeletionRequest}
@@ -362,7 +364,7 @@ export default function PrivacySettings() {
                 className="flex-1 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-medium disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {submittingDeletion && <Loader2 className="w-4 h-4 animate-spin" />}
-                Dërgo
+                {t('parent.priv.send_btn')}
               </button>
             </div>
           </div>
