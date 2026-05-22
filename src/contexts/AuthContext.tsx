@@ -95,13 +95,6 @@ const DEMO_PROFILES: Record<UserRole, Profile> = {
     full_name: 'Valdete Krasniqi',
     role: 'inspektor',
   },
-  super_admin: {
-    ...DEMO_PROFILE_DEFAULTS,
-    id: 'demo-admin',
-    email: 'admin@shkolla-kos.tech',
-    full_name: 'Administrator i Sistemit',
-    role: 'super_admin',
-  },
 };
 
 export function AuthProvider({ children }: { children: ReactNode }) {

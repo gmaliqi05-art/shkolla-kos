@@ -44,7 +44,6 @@ export default function ManageTeachers() {
   const [newCredentials, setNewCredentials] = useState<{ email: string; password: string } | null>(null);
   const [copied, setCopied] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState<TeacherWithAssignments | null>(null);
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [formData, setFormData] = useState<TeacherFormData>({ full_name: '', email: '', phone: '' });
   const [assignClassId, setAssignClassId] = useState('');
   const [assignSubjectId, setAssignSubjectId] = useState('');
@@ -221,44 +220,6 @@ export default function ManageTeachers() {
     setActiveDropdown(null);
   };
 
-  const toggleSelected = (id: string) => {
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
-
-  const toggleSelectAll = () => {
-    if (selectedIds.size === filtered.length && filtered.length > 0) {
-      setSelectedIds(new Set());
-    } else {
-      setSelectedIds(new Set(filtered.map((t) => t.id)));
-    }
-  };
-
-  const handleBulkDelete = async () => {
-    if (selectedIds.size === 0) return;
-    if (!confirm(`Fshij ${selectedIds.size} mësues të zgjedhur? Caktimet e tyre te klasat do të hiqen.`)) return;
-
-    const ids = Array.from(selectedIds);
-    await supabase.from('class_subjects').delete().in('teacher_id', ids);
-    await supabase.from('schedule').delete().in('teacher_id', ids);
-    const { error } = await supabase
-      .from('profiles')
-      .update({ deleted_at: new Date().toISOString() })
-      .in('id', ids);
-
-    if (error) {
-      toast.error('Gabim: ' + error.message);
-      return;
-    }
-    toast.success(`${ids.length} mësues u fshinë.`);
-    setSelectedIds(new Set());
-    await loadTeachers();
-  };
-
   const filtered = teachers.filter((t) =>
     t.full_name.toLowerCase().includes(search.toLowerCase()) ||
     t.email.toLowerCase().includes(search.toLowerCase())
@@ -324,39 +285,6 @@ export default function ManageTeachers() {
         />
       </div>
 
-      {selectedIds.size > 0 && (
-        <div className="bg-teal-50 border border-teal-200 rounded-2xl p-3 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <input
-              type="checkbox"
-              aria-label="Zgjidh të gjithë"
-              checked={filtered.length > 0 && selectedIds.size === filtered.length}
-              onChange={toggleSelectAll}
-              className="w-4 h-4 rounded border-slate-300 text-teal-600 focus:ring-2 focus:ring-teal-500"
-            />
-            <span className="inline-flex items-center justify-center w-8 h-8 bg-teal-600 text-white rounded-lg text-sm font-bold">
-              {selectedIds.size}
-            </span>
-            <span className="text-sm font-medium text-slate-700">mësues të zgjedhur</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setSelectedIds(new Set())}
-              className="px-3 py-1.5 text-sm text-slate-600 hover:text-slate-900"
-            >
-              Hiq zgjedhjen
-            </button>
-            <button
-              onClick={handleBulkDelete}
-              className="inline-flex items-center gap-2 px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-sm font-medium"
-            >
-              <Trash2 className="w-4 h-4" />
-              Fshij të zgjedhurit
-            </button>
-          </div>
-        </div>
-      )}
-
       {filtered.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-2xl border border-slate-100">
           <UserPlus className="w-12 h-12 text-slate-300 mx-auto mb-4" />
@@ -366,16 +294,9 @@ export default function ManageTeachers() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {filtered.map((teacher) => (
-            <div key={teacher.id} className={`bg-white rounded-2xl border border-slate-100 p-5 hover:shadow-lg transition-all ${selectedIds.has(teacher.id) ? 'ring-2 ring-teal-400' : ''}`}>
+            <div key={teacher.id} className="bg-white rounded-2xl border border-slate-100 p-5 hover:shadow-lg transition-all">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    aria-label={`Zgjidh ${teacher.full_name}`}
-                    checked={selectedIds.has(teacher.id)}
-                    onChange={() => toggleSelected(teacher.id)}
-                    className="w-4 h-4 rounded border-slate-300 text-teal-600 focus:ring-2 focus:ring-teal-500"
-                  />
                   <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center text-white font-bold text-lg">
                     {teacher.full_name.charAt(0)}
                   </div>

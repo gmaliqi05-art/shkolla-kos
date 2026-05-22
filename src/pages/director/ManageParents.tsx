@@ -33,7 +33,6 @@ export default function ManageParents() {
   const [students, setStudents] = useState<StudentOption[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [showAddModal, setShowAddModal] = useState(false);
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [showCredentials, setShowCredentials] = useState(false);
@@ -156,41 +155,6 @@ export default function ManageParents() {
     p.email.toLowerCase().includes(search.toLowerCase())
   );
 
-  const toggleSelected = (id: string) => {
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
-
-  const toggleSelectAll = () => {
-    if (selectedIds.size === filtered.length && filtered.length > 0) setSelectedIds(new Set());
-    else setSelectedIds(new Set(filtered.map((p) => p.id)));
-  };
-
-  const handleBulkDelete = async () => {
-    if (selectedIds.size === 0) return;
-    if (!confirm(`Fshij ${selectedIds.size} prindër të zgjedhur? Lidhjet me fëmijët dhe mesazhet do të hiqen.`)) return;
-
-    const ids = Array.from(selectedIds);
-    await supabase.from('messages').delete().or(`sender_id.in.(${ids.join(',')}),receiver_id.in.(${ids.join(',')})`);
-    await supabase.from('parent_students').delete().in('parent_id', ids);
-    const { error } = await supabase
-      .from('profiles')
-      .update({ deleted_at: new Date().toISOString() })
-      .in('id', ids);
-
-    if (error) {
-      toast.error('Gabim: ' + error.message);
-      return;
-    }
-    toast.success(`${ids.length} prindër u fshinë.`);
-    setSelectedIds(new Set());
-    await loadParents();
-  };
-
   const handleExportCSV = () => {
     if (filtered.length === 0) {
       toast.info('Asnjë prind për të eksportuar.');
@@ -237,44 +201,10 @@ export default function ManageParents() {
       {filtered.length === 0 ? (
         <div className="text-center py-16 text-slate-400"><UserPlus className="w-12 h-12 mx-auto mb-3 opacity-40" /><p>Nuk u gjetën prindër.</p></div>
       ) : (
-        <>
-          {selectedIds.size > 0 && (
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 flex items-center justify-between gap-3 mb-3">
-              <div className="flex items-center gap-3">
-                <input
-                  type="checkbox"
-                  aria-label="Zgjidh të gjithë"
-                  checked={filtered.length > 0 && selectedIds.size === filtered.length}
-                  onChange={toggleSelectAll}
-                  className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
-                />
-                <span className="inline-flex items-center justify-center w-7 h-7 bg-blue-600 text-white rounded-lg text-sm font-bold">
-                  {selectedIds.size}
-                </span>
-                <span className="text-sm font-medium text-slate-700">prindër të zgjedhur</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <button onClick={() => setSelectedIds(new Set())} className="px-3 py-1 text-sm text-slate-600 hover:text-slate-900">
-                  Hiq zgjedhjen
-                </button>
-                <button onClick={handleBulkDelete} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-sm font-medium">
-                  <Trash2 className="w-3.5 h-3.5" />
-                  Fshij të zgjedhurit
-                </button>
-              </div>
-            </div>
-          )}
         <div className="space-y-3">
           {filtered.map((parent) => (
-            <div key={parent.id} className={`bg-white border rounded-xl p-4 ${selectedIds.has(parent.id) ? 'border-blue-400 ring-2 ring-blue-200' : 'border-slate-200'}`}>
+            <div key={parent.id} className="bg-white border border-slate-200 rounded-xl p-4">
               <div className="flex items-start justify-between">
-                <input
-                  type="checkbox"
-                  aria-label={`Zgjidh ${parent.full_name}`}
-                  checked={selectedIds.has(parent.id)}
-                  onChange={() => toggleSelected(parent.id)}
-                  className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500 mr-2 mt-1"
-                />
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-medium text-slate-800">{parent.full_name}</span>
@@ -314,7 +244,6 @@ export default function ManageParents() {
             </div>
           ))}
         </div>
-        </>
       )}
 
       {/* Add Parent Modal */}

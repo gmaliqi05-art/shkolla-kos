@@ -38,9 +38,6 @@ const SchoolsManagement = lazy(() => import('./pages/shared/SchoolsManagement'))
 const LocalitiesManagement = lazy(() => import('./pages/shared/LocalitiesManagement'));
 const InspectionsManagement = lazy(() => import('./pages/inspektor/InspectionsManagement'));
 const InspectionDetail = lazy(() => import('./pages/inspektor/InspectionDetail'));
-const InspectorDashboard = lazy(() => import('./pages/inspektor/InspectorDashboard'));
-const PedagogDashboard = lazy(() => import('./pages/pedagog/PedagogDashboard'));
-const SuperAdminDashboard = lazy(() => import('./pages/admin/SuperAdminDashboard'));
 
 const TeacherDashboard = lazy(() => import('./pages/teacher/TeacherDashboard'));
 const MyClasses = lazy(() => import('./pages/teacher/MyClasses'));
@@ -82,7 +79,7 @@ import {
   Calendar, Clock, Star, MessageSquare, Library, UserCog, Shield,
   Activity, Trash2, Lock, Heart, Sparkles, Briefcase, FileCheck, Building2,
   Trophy, MapPin, NotebookPen, FileText, Stethoscope, FolderOpen, FileSpreadsheet, ShieldCheck, Scale,
-  Crown, Building, School, HardDrive, Settings as SettingsIcon,
+  Crown, Building, School,
 } from 'lucide-react';
 
 const directorNav: NavItem[] = [
@@ -208,16 +205,6 @@ const pedagogNav: NavItem[] = [
   { label: 'Mesazhet', labelKey: 'nav.messages', path: '/pedagog/mesazhet', icon: MessageSquare },
   { label: '2FA / Siguria', labelKey: 'nav.two_factor', path: '/pedagog/2fa', icon: ShieldCheck },
   { label: 'Dokumentet Ligjore', labelKey: 'nav.legal_documents', path: '/pedagog/dokumentet-ligjore', icon: Scale },
-];
-
-const adminNav: NavItem[] = [
-  { label: 'Paneli Kryesor', path: '/admin', icon: Shield },
-  { label: 'Përmbajtja Homepage', path: '/admin/content', icon: FileText },
-  { label: 'Politikat', path: '/admin/policies', icon: Scale },
-  { label: 'Logs & Monitorim', path: '/admin/logs', icon: Activity },
-  { label: 'Backup', path: '/admin/backups', icon: HardDrive },
-  { label: 'Migrations DB', path: '/admin/migrations', icon: Building2 },
-  { label: 'Cilësimet', path: '/admin/settings', icon: SettingsIcon },
 ];
 
 function PageLoader() {
@@ -387,7 +374,7 @@ function AppRoutes() {
         <Routes>
           <Route path="/" element={<Navigate to="/pedagog" replace />} />
           <Route element={<DashboardLayout navItems={pedagogNav} role="pedagog" />}>
-            <Route path="/pedagog" element={<PedagogDashboard />} />
+            <Route path="/pedagog" element={<DirectorDashboard />} />
             <Route path="/pedagog/nva" element={<SpecialNeedsManagement />} />
             <Route path="/pedagog/diagnostik" element={<DiagnosticAssessments />} />
             <Route path="/pedagog/portofoli" element={<Portfolio />} />
@@ -432,7 +419,7 @@ function AppRoutes() {
         <Routes>
           <Route path="/" element={<Navigate to="/inspektor" replace />} />
           <Route element={<DashboardLayout navItems={inspektorNav} role="inspektor" />}>
-            <Route path="/inspektor" element={<InspectorDashboard />} />
+            <Route path="/inspektor" element={<InspectionsManagement />} />
             <Route path="/inspektor/inspektimet" element={<InspectionsManagement />} />
             <Route path="/inspektor/inspektimet/:id" element={<InspectionDetail />} />
             <Route path="/inspektor/shkollat" element={<SchoolsManagement />} />
@@ -465,28 +452,6 @@ function AppRoutes() {
             <Route path="/ministri/dokumentet-ligjore" element={<LegalDocuments />} />
           </Route>
           <Route path="*" element={<Navigate to="/ministri" replace />} />
-        </Routes>
-      </Suspense>
-    );
-  }
-
-  if (profile.role === 'super_admin') {
-    return (
-      <Suspense fallback={<PageLoader />}>
-        <Routes>
-          <Route path="/" element={<Navigate to="/admin" replace />} />
-          <Route element={<DashboardLayout navItems={adminNav} role="super_admin" />}>
-            <Route path="/admin" element={<SuperAdminDashboard />} />
-            <Route path="/admin/content" element={<SuperAdminDashboard />} />
-            <Route path="/admin/policies" element={<SuperAdminDashboard />} />
-            <Route path="/admin/logs" element={<SuperAdminDashboard />} />
-            <Route path="/admin/backups" element={<SuperAdminDashboard />} />
-            <Route path="/admin/migrations" element={<SuperAdminDashboard />} />
-            <Route path="/admin/settings" element={<SuperAdminDashboard />} />
-            <Route path="/admin/profili" element={<ProfileSettings />} />
-            <Route path="/admin/2fa" element={<TwoFactorSettings />} />
-          </Route>
-          <Route path="*" element={<Navigate to="/admin" replace />} />
         </Routes>
       </Suspense>
     );

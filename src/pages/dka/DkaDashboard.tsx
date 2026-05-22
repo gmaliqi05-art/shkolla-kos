@@ -5,7 +5,6 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Building, School, Users, GraduationCap, MapPin, BarChart3, ArrowRight, Plus, FileText, ChevronRight, AlertCircle } from 'lucide-react';
 import { DashboardSkeleton } from '../../components/Skeleton';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { useI18n } from '../../lib/i18n/I18nProvider';
 
 const DEMO_SCHOOLS = [
   { id: 'ds1', name: '"Naim Frashëri"', director_name: 'Arben Hoxha', locality_name: 'Prishtinë (qendër)', students_count: 487, teachers_count: 32 },
@@ -34,7 +33,6 @@ interface SchoolRow {
 
 export default function DkaDashboard() {
   const { profile, isDemo } = useAuth();
-  const { t } = useI18n();
   const navigate = useNavigate();
   const [stats, setStats] = useState<DkaStats | null>(null);
   const [schools, setSchools] = useState<SchoolRow[]>([]);
@@ -84,7 +82,7 @@ export default function DkaDashboard() {
     const firstError = [munRes, schoolsRes, studentsRes, teachersRes, directorsRes].find(r => r.error)?.error;
     if (firstError) {
       console.error('DkaDashboard load error:', firstError);
-      setLoadError(t('student.data_load_error') + ' ' + firstError.message);
+      setLoadError('Disa të dhëna nuk u ngarkuan. ' + firstError.message);
     }
 
     const studentsBySchool = new Map<string, number>();
@@ -109,7 +107,7 @@ export default function DkaDashboard() {
     })));
 
     setStats({
-      municipalityName: munRes.data?.name || t('dka.fallback_municipality'),
+      municipalityName: munRes.data?.name || 'Komuna',
       totalSchools: schoolList.length,
       totalStudents: (studentsRes.data || []).length,
       totalTeachers: (teachersRes.data || []).length,
@@ -125,8 +123,8 @@ export default function DkaDashboard() {
   if (!isDemo && !profile?.managed_municipality_id) {
     return (
       <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6">
-        <p className="text-amber-900 font-medium">{t('dka.no_municipality_set')}</p>
-        <p className="text-amber-700 text-sm mt-2">{t('dka.no_municipality_help')}</p>
+        <p className="text-amber-900 font-medium">Nuk është caktuar komuna.</p>
+        <p className="text-amber-700 text-sm mt-2">Ministri (MAShTI) duhet të caktojë komunën që menaxhoni.</p>
       </div>
     );
   }
@@ -137,7 +135,7 @@ export default function DkaDashboard() {
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
-            <p className="text-sm font-semibold text-amber-900">{t('dash.incomplete_data')}</p>
+            <p className="text-sm font-semibold text-amber-900">Të dhëna të paplota</p>
             <p className="text-xs text-amber-700 mt-0.5">{loadError}</p>
           </div>
         </div>
@@ -147,8 +145,8 @@ export default function DkaDashboard() {
           <div className="flex items-center gap-3">
             <Building className="w-8 h-8" />
             <div>
-              <h1 className="text-2xl font-bold">{t('dka.title')}</h1>
-              <p className="text-amber-100 text-sm">{t('dka.municipality_label')} {stats?.municipalityName}</p>
+              <h1 className="text-2xl font-bold">Drejtoria Komunale e Arsimit</h1>
+              <p className="text-amber-100 text-sm">Komuna {stats?.municipalityName}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -157,31 +155,31 @@ export default function DkaDashboard() {
               className="inline-flex items-center gap-1.5 px-3 py-2 bg-white/15 hover:bg-white/25 rounded-lg text-sm font-medium"
             >
               <Plus className="w-4 h-4" />
-              {t('dka.add_school')}
+              Shto shkollë
             </Link>
             <Link
               to="/dka/mesazhet"
               className="inline-flex items-center gap-1.5 px-3 py-2 bg-white/15 hover:bg-white/25 rounded-lg text-sm font-medium"
             >
               <FileText className="w-4 h-4" />
-              {t('header.messages')}
+              Mesazhe
             </Link>
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard icon={School} label={t('nav.schools')} value={stats?.totalSchools || 0} color="amber" />
-        <StatCard icon={Users} label={t('stat.students')} value={stats?.totalStudents || 0} color="cyan" />
-        <StatCard icon={GraduationCap} label={t('stat.teachers')} value={stats?.totalTeachers || 0} color="teal" />
-        <StatCard icon={Building} label={t('stat.directors')} value={stats?.totalDirectors || 0} color="blue" />
+        <StatCard icon={School} label="Shkolla" value={stats?.totalSchools || 0} color="amber" />
+        <StatCard icon={Users} label="Nxënës" value={stats?.totalStudents || 0} color="cyan" />
+        <StatCard icon={GraduationCap} label="Mësues" value={stats?.totalTeachers || 0} color="teal" />
+        <StatCard icon={Building} label="Drejtorë shkollash" value={stats?.totalDirectors || 0} color="blue" />
       </div>
 
       {schools.length > 0 && (
         <div className="bg-white rounded-2xl border border-slate-100 p-5">
           <div className="flex items-center gap-2 mb-4">
             <BarChart3 className="w-5 h-5 text-amber-600" />
-            <h2 className="font-semibold text-slate-900">{t('dka.students_per_school')}</h2>
+            <h2 className="font-semibold text-slate-900">Numri i nxënësve për shkollë</h2>
           </div>
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={schools.slice(0, 10)}>
@@ -189,7 +187,7 @@ export default function DkaDashboard() {
               <XAxis dataKey="name" tick={{ fontSize: 11 }} angle={-15} textAnchor="end" height={60} />
               <YAxis tick={{ fontSize: 11 }} />
               <Tooltip />
-              <Bar dataKey="students_count" fill="#f59e0b" radius={[8, 8, 0, 0]} name={t('stat.students')} />
+              <Bar dataKey="students_count" fill="#f59e0b" radius={[8, 8, 0, 0]} name="Nxënës" />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -197,24 +195,24 @@ export default function DkaDashboard() {
 
       <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
         <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
-          <h2 className="font-semibold text-slate-900">{t('dka.municipality_schools')}</h2>
+          <h2 className="font-semibold text-slate-900">Shkollat e komunës</h2>
           <Link to="/dka/shkollat" className="inline-flex items-center gap-1 text-sm text-amber-700 hover:text-amber-900 font-medium">
-            {t('btn.view_all')}
+            Shiko të gjitha
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
         {schools.length === 0 ? (
-          <div className="px-6 py-12 text-center text-slate-400 text-sm">{t('dka.no_schools')}</div>
+          <div className="px-6 py-12 text-center text-slate-400 text-sm">Asnjë shkollë e regjistruar në këtë komunë.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
             <thead className="bg-slate-50">
               <tr className="text-left text-xs font-semibold text-slate-500 uppercase">
-                <th className="px-4 py-2">{t('dka.tbl_school')}</th>
-                <th className="px-4 py-2">{t('dka.tbl_locality')}</th>
-                <th className="px-4 py-2">{t('dka.tbl_director')}</th>
-                <th className="px-4 py-2 text-center">{t('dka.tbl_students')}</th>
-                <th className="px-4 py-2 text-center">{t('dka.tbl_teachers')}</th>
+                <th className="px-4 py-2">Shkolla</th>
+                <th className="px-4 py-2">Fshati / Qyteti</th>
+                <th className="px-4 py-2">Drejtori</th>
+                <th className="px-4 py-2 text-center">Nxënës</th>
+                <th className="px-4 py-2 text-center">Mësues</th>
                 <th className="px-4 py-2 w-8"></th>
               </tr>
             </thead>

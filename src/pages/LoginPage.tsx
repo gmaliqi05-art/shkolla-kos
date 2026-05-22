@@ -8,23 +8,21 @@ import { GraduationCap, Eye, EyeOff, BookOpen, Users, BarChart3, Shield, Loader2
 import LanguageSwitcher from '../components/LanguageSwitcher';
 // Shield is used both in landing image and MFA challenge screen
 
-import type { TranslationKey } from '../lib/i18n/translations';
-
-const ROLES: { value: UserRole; labelKey: TranslationKey; descKey: TranslationKey }[] = [
-  { value: 'mesues', labelKey: 'role.mesues', descKey: 'role.mesues_desc' },
-  { value: 'nxenes', labelKey: 'role.nxenes', descKey: 'role.nxenes_desc' },
-  { value: 'prind', labelKey: 'role.prind', descKey: 'role.prind_desc' },
+const ROLES: { value: UserRole; label: string; description: string }[] = [
+  { value: 'mesues', label: 'Mesues', description: 'Menaxhoni klasat' },
+  { value: 'nxenes', label: 'Nxenes', description: 'Shikoni notat' },
+  { value: 'prind', label: 'Prind', description: 'Ndiqni femijen' },
 ];
 
-const DEMO_USERS: { role: UserRole; nameKey: TranslationKey; icon: typeof UserCircle; color: string }[] = [
-  { role: 'ministri', nameKey: 'role.ministri', icon: Crown, color: 'from-purple-500 to-purple-600' },
-  { role: 'drejtor_komunal', nameKey: 'role.drejtor_komunal', icon: Building, color: 'from-amber-500 to-amber-600' },
-  { role: 'inspektor', nameKey: 'role.inspektor', icon: ClipboardCheck, color: 'from-orange-500 to-orange-600' },
-  { role: 'drejtor', nameKey: 'role.school_principal', icon: School, color: 'from-blue-500 to-blue-600' },
-  { role: 'pedagog', nameKey: 'role.pedagog', icon: Heart, color: 'from-pink-500 to-pink-600' },
-  { role: 'mesues', nameKey: 'role.mesues', icon: UserCheck, color: 'from-teal-500 to-teal-600' },
-  { role: 'nxenes', nameKey: 'role.nxenes', icon: User, color: 'from-cyan-500 to-cyan-600' },
-  { role: 'prind', nameKey: 'role.prind', icon: Users, color: 'from-slate-600 to-slate-700' },
+const DEMO_USERS: { role: UserRole; name: string; icon: typeof UserCircle; color: string }[] = [
+  { role: 'ministri', name: 'Ministër', icon: Crown, color: 'from-purple-500 to-purple-600' },
+  { role: 'drejtor_komunal', name: 'Drejtor Komunal', icon: Building, color: 'from-amber-500 to-amber-600' },
+  { role: 'inspektor', name: 'Inspektor', icon: ClipboardCheck, color: 'from-orange-500 to-orange-600' },
+  { role: 'drejtor', name: 'Drejtor Shkolle', icon: School, color: 'from-blue-500 to-blue-600' },
+  { role: 'pedagog', name: 'Pedagog', icon: Heart, color: 'from-pink-500 to-pink-600' },
+  { role: 'mesues', name: 'Mësues', icon: UserCheck, color: 'from-teal-500 to-teal-600' },
+  { role: 'nxenes', name: 'Nxënës', icon: User, color: 'from-cyan-500 to-cyan-600' },
+  { role: 'prind', name: 'Prind', icon: Users, color: 'from-slate-600 to-slate-700' },
 ];
 
 export default function LoginPage() {
@@ -77,7 +75,7 @@ export default function LoginPage() {
       code: mfaCode,
     });
     if (err) {
-      setError(t('login.mfa_invalid'));
+      setError('Kodi është i pasaktë. Provo përsëri.');
     } else {
       setMfaFactorId('');
       setMfaChallengeId('');
@@ -115,7 +113,7 @@ export default function LoginPage() {
 
     if (isRegister) {
       if (!fullName.trim()) {
-        setError(t('login.full_name_required'));
+        setError('Ju lutem vendosni emrin e plote');
         setLoading(false);
         return;
       }
@@ -145,14 +143,14 @@ export default function LoginPage() {
               <Shield className="w-6 h-6 text-blue-600" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">{t('login.security_check_title')}</h1>
-              <p className="text-sm text-slate-500">{t('login.security_check_help')}</p>
+              <h1 className="text-xl font-bold text-slate-900">Verifikimi i Sigurisë</h1>
+              <p className="text-sm text-slate-500">Vendos kodin nga aplikacioni i autentifikuesit</p>
             </div>
           </div>
           {error && <div className="mb-4 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl px-4 py-3">{error}</div>}
           <form onSubmit={handleMfaSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">{t('login.mfa_code')}</label>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Kodi 6-shifror</label>
               <input
                 type="text"
                 inputMode="numeric"
@@ -170,7 +168,7 @@ export default function LoginPage() {
               className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {mfaLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-              {t('login.mfa_verify')}
+              Verifiko
             </button>
             <button
               type="button"
@@ -204,39 +202,40 @@ export default function LoginPage() {
             </div>
             <div>
               <h1 className="text-3xl font-bold tracking-tight">Shkolla</h1>
-              <p className="text-blue-200 text-sm">{t('login.system_name')}</p>
+              <p className="text-blue-200 text-sm">Sistemi i Menaxhimit</p>
             </div>
           </div>
 
           <h2 className="text-4xl font-bold leading-tight mb-6">
-            {t('login.hero_line1')}
+            Platforma moderne per
             <br />
-            <span className="text-teal-300">{t('login.hero_line2')}</span>
+            <span className="text-teal-300">menaxhimin e shkolles</span>
           </h2>
           <p className="text-blue-100 text-lg leading-relaxed mb-12 max-w-md">
-            {t('login.hero_description')}
+            Menaxhoni notat, mungesat, orarin dhe komunikoni me te gjithe aktoret
+            e shkolles ne nje vend te vetem.
           </p>
 
           <div className="grid grid-cols-2 gap-4 max-w-md">
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10">
               <BookOpen className="w-6 h-6 mb-2 text-teal-300" />
-              <h3 className="font-semibold text-sm">{t('login.feature_grades')}</h3>
-              <p className="text-blue-200 text-xs mt-1">{t('login.feature_grades_desc')}</p>
+              <h3 className="font-semibold text-sm">Nota Dixhitale</h3>
+              <p className="text-blue-200 text-xs mt-1">Menaxhimi i plote i notave</p>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10">
               <Users className="w-6 h-6 mb-2 text-teal-300" />
-              <h3 className="font-semibold text-sm">{t('login.feature_communication')}</h3>
-              <p className="text-blue-200 text-xs mt-1">{t('login.feature_communication_desc')}</p>
+              <h3 className="font-semibold text-sm">Komunikim</h3>
+              <p className="text-blue-200 text-xs mt-1">Prind, mesues, nxenes</p>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10">
               <BarChart3 className="w-6 h-6 mb-2 text-teal-300" />
-              <h3 className="font-semibold text-sm">{t('login.feature_reports')}</h3>
-              <p className="text-blue-200 text-xs mt-1">{t('login.feature_reports_desc')}</p>
+              <h3 className="font-semibold text-sm">Raporte</h3>
+              <p className="text-blue-200 text-xs mt-1">Statistika te detajuara</p>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10">
               <Shield className="w-6 h-6 mb-2 text-teal-300" />
-              <h3 className="font-semibold text-sm">{t('login.feature_security')}</h3>
-              <p className="text-blue-200 text-xs mt-1">{t('login.feature_security_desc')}</p>
+              <h3 className="font-semibold text-sm">Siguri</h3>
+              <p className="text-blue-200 text-xs mt-1">Te dhena te mbrojtura</p>
             </div>
           </div>
         </div>
@@ -250,7 +249,7 @@ export default function LoginPage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-slate-900">Shkolla</h1>
-              <p className="text-slate-500 text-xs">{t('login.system_name')}</p>
+              <p className="text-slate-500 text-xs">Sistemi i Menaxhimit</p>
             </div>
           </div>
 
@@ -261,11 +260,11 @@ export default function LoginPage() {
                   onClick={() => { setShowReset(false); setError(''); setResetSent(false); }}
                   className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 mb-4 transition-colors"
                 >
-                  <ArrowLeft className="w-4 h-4" /> {t('btn.back')}
+                  <ArrowLeft className="w-4 h-4" /> Kthehu
                 </button>
-                <h2 className="text-2xl font-bold text-slate-900 mb-1">{t('login.reset_password_title')}</h2>
+                <h2 className="text-2xl font-bold text-slate-900 mb-1">Rivendosni fjalekalimin</h2>
                 <p className="text-slate-500 text-sm mb-6">
-                  {t('login.reset_subtitle')}
+                  Vendosni emailin tuaj dhe do t'ju dergojme nje link per rivendosje.
                 </p>
                 {error && (
                   <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
@@ -275,19 +274,19 @@ export default function LoginPage() {
                 {resetSent ? (
                   <div className="text-center py-6">
                     <CheckCircle className="w-12 h-12 text-emerald-500 mx-auto mb-3" />
-                    <p className="text-slate-900 font-semibold">{t('login.email_sent_title')}</p>
-                    <p className="text-sm text-slate-500 mt-1">{t('login.email_sent_help')}</p>
+                    <p className="text-slate-900 font-semibold">Email i derguar!</p>
+                    <p className="text-sm text-slate-500 mt-1">Kontrolloni inbox-in tuaj per linkun e rivendosjes.</p>
                   </div>
                 ) : (
                   <form onSubmit={handleResetPassword} className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('common.email')}</label>
+                      <label className="block text-sm font-medium text-slate-700 mb-1.5">Email</label>
                       <input
                         type="email"
                         value={resetEmail}
                         onChange={(e) => setResetEmail(e.target.value)}
                         className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-slate-900 placeholder-slate-400"
-                        placeholder={t('login.email_placeholder')}
+                        placeholder="emri@shkolla.al"
                         required
                       />
                     </div>
@@ -297,7 +296,7 @@ export default function LoginPage() {
                       className="w-full bg-blue-900 hover:bg-blue-800 text-white py-3 rounded-xl font-semibold transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                     >
                       {resetLoading && <Loader2 className="w-5 h-5 animate-spin" />}
-                      {t('login.send_link')}
+                      Dergo linkun
                     </button>
                   </form>
                 )}
@@ -306,12 +305,12 @@ export default function LoginPage() {
             <>
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-slate-900">
-                {isRegister ? t('login.create_account') : t('login.welcome_title')}
+                {isRegister ? 'Krijo llogari' : 'Mire se vini'}
               </h2>
               <p className="text-slate-500 mt-1">
                 {isRegister
-                  ? t('login.register_subtitle')
-                  : t('login.signin_subtitle')}
+                  ? 'Plotesoni te dhenat per te krijuar llogarine'
+                  : 'Identifikohuni per te hyre ne platforme'}
               </p>
             </div>
 
@@ -326,20 +325,20 @@ export default function LoginPage() {
                 <>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                      {t('login.full_name')}
+                      Emri i plote
                     </label>
                     <input
                       type="text"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-slate-900 placeholder-slate-400"
-                      placeholder={t('login.full_name_placeholder')}
+                      placeholder="Emri Mbiemri"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                      {t('login.role')}
+                      Roli
                     </label>
                     <div className="grid grid-cols-2 gap-2">
                       {ROLES.map((r) => (
@@ -353,8 +352,8 @@ export default function LoginPage() {
                               : 'border-slate-200 hover:border-slate-300 text-slate-700'
                           }`}
                         >
-                          <span className="block text-sm font-semibold">{t(r.labelKey)}</span>
-                          <span className="block text-xs mt-0.5 opacity-70">{t(r.descKey)}</span>
+                          <span className="block text-sm font-semibold">{r.label}</span>
+                          <span className="block text-xs mt-0.5 opacity-70">{r.description}</span>
                         </button>
                       ))}
                     </div>
@@ -363,20 +362,20 @@ export default function LoginPage() {
               )}
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('common.email')}</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Email</label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-slate-900 placeholder-slate-400"
-                  placeholder={t('login.email_placeholder')}
+                  placeholder="emri@shkolla.al"
                   required
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                  {t('login.password')}
+                  Fjalekalimi
                 </label>
                 <div className="relative">
                   <input
@@ -384,7 +383,7 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-slate-900 placeholder-slate-400 pr-12"
-                    placeholder={t('login.password_placeholder')}
+                    placeholder="Minimumi 6 karaktere"
                     required
                     minLength={6}
                   />
@@ -416,7 +415,7 @@ export default function LoginPage() {
                 className="w-full bg-blue-900 hover:bg-blue-800 text-white py-3 rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-blue-900/25"
               >
                 {loading && <Loader2 className="w-5 h-5 animate-spin" />}
-                {isRegister ? t('login.signup') : t('login.signin')}
+                {isRegister ? 'Regjistrohu' : 'Hyr'}
               </button>
             </form>
 
@@ -429,14 +428,14 @@ export default function LoginPage() {
                 className="text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors"
               >
                 {isRegister
-                  ? t('login.have_account_signin')
-                  : t('login.no_account_signup')}
+                  ? 'Keni llogari? Identifikohuni'
+                  : 'Nuk keni llogari? Regjistrohuni'}
               </button>
             </div>
 
             <div className="mt-6 pt-6 border-t border-slate-100">
               <p className="text-center text-sm text-slate-500 mb-4">
-                {t('login.demo_account')}
+                Ose hyni me nje llogari demo
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
                 {DEMO_USERS.map((demo) => (
@@ -447,7 +446,7 @@ export default function LoginPage() {
                     className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-gradient-to-r ${demo.color} text-white text-xs font-medium hover:opacity-90 transition-colors`}
                   >
                     <demo.icon className="w-3 h-3 shrink-0" />
-                    <span className="truncate">{t(demo.nameKey)}</span>
+                    <span className="truncate">{demo.name}</span>
                   </button>
                 ))}
               </div>
@@ -458,10 +457,10 @@ export default function LoginPage() {
 
           <div className="mt-6 text-center space-y-2">
             <Link to="/dokumentet-ligjore" className="text-xs text-slate-500 hover:text-slate-700 underline">
-              {t('login.legal_documents')}
+              Dokumentet Ligjore
             </Link>
             <p className="text-slate-400 text-xs">
-              {t('login.footer')} &copy; 2025
+              Shkolla - Sistemi i Menaxhimit te Shkolles &copy; 2025
             </p>
           </div>
         </div>

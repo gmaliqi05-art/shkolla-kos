@@ -20,7 +20,6 @@ import {
   MessageSquare,
   Send,
 } from 'lucide-react';
-import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface ClassInfo {
   classSubjectId: string;
@@ -57,7 +56,6 @@ interface AtRiskStudent {
 
 export default function TeacherDashboard() {
   const { profile, isDemo } = useAuth();
-  const { t } = useI18n();
   const [loading, setLoading] = useState(true);
   const [totalClasses, setTotalClasses] = useState(0);
   const [totalStudents, setTotalStudents] = useState(0);
@@ -270,15 +268,15 @@ export default function TeacherDashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">{t('nav.dashboard')}</h1>
-        <p className="text-slate-500 mt-1">{t('teacher.welcome')}</p>
+        <h1 className="text-2xl font-bold text-slate-900">Paneli Kryesor</h1>
+        <p className="text-slate-500 mt-1">Mire se vini ne panelin e mesuesit</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard label={t('dash.my_classes')} value={totalClasses} icon={BookOpen} color="teal" />
-        <StatCard label={t('stat.students_total')} value={totalStudents} icon={Users} color="blue" />
-        <StatCard label={t('teacher.grades_this_week')} value={recentGradesCount} icon={ClipboardCheck} color="amber" />
-        <StatCard label={t('stat.average')} value={overallAvg} icon={TrendingUp} color="green" />
+        <StatCard label="Klasat e Mia" value={totalClasses} icon={BookOpen} color="teal" />
+        <StatCard label="Nxenes Gjithsej" value={totalStudents} icon={Users} color="blue" />
+        <StatCard label="Nota kete jave" value={recentGradesCount} icon={ClipboardCheck} color="amber" />
+        <StatCard label="Mesatarja" value={overallAvg} icon={TrendingUp} color="green" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -286,7 +284,7 @@ export default function TeacherDashboard() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Clock className="w-5 h-5 text-teal-500" />
-              <h3 className="font-semibold text-slate-900">{t('dash.today_schedule')}</h3>
+              <h3 className="font-semibold text-slate-900">Orari i Sotem</h3>
             </div>
             <span className="text-xs text-slate-400">
               {formatDayMonth(new Date())}
@@ -307,7 +305,7 @@ export default function TeacherDashboard() {
                     <p className="text-xs text-slate-500">{item.className} - {item.room}</p>
                   </div>
                   {i === 0 && (
-                    <span className="text-xs px-2 py-0.5 bg-teal-100 text-teal-700 rounded-full font-medium">{t('time.now')}</span>
+                    <span className="text-xs px-2 py-0.5 bg-teal-100 text-teal-700 rounded-full font-medium">Tani</span>
                   )}
                 </div>
               ))}
@@ -315,7 +313,7 @@ export default function TeacherDashboard() {
           ) : (
             <div className="text-center py-8">
               <AlertCircle className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-              <p className="text-sm text-slate-400">{t('student.no_lessons_today')}</p>
+              <p className="text-sm text-slate-400">Nuk ka ore mesimi per sot</p>
             </div>
           )}
         </div>
@@ -324,10 +322,10 @@ export default function TeacherDashboard() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Calendar className="w-5 h-5 text-blue-500" />
-              <h3 className="font-semibold text-slate-900">{t('dash.my_classes')}</h3>
+              <h3 className="font-semibold text-slate-900">Klasat e Mia</h3>
             </div>
             <Link to="/mesues/klasa" className="text-sm text-teal-600 hover:text-teal-800 font-medium flex items-center gap-1">
-              {t('admin.all')} <ChevronRight className="w-4 h-4" />
+              Te gjitha <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
           {myClasses.length > 0 ? (
@@ -339,15 +337,15 @@ export default function TeacherDashboard() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-slate-900">{cls.className}</p>
-                    <p className="text-xs text-slate-500">{cls.subjectName} - {cls.studentCount} {t('teacher.students_count')}</p>
+                    <p className="text-xs text-slate-500">{cls.subjectName} - {cls.studentCount} nxenes</p>
                   </div>
                   <Link
                     to="/mesues/klasa"
-                    title={t('teacher.class_details_tooltip')}
+                    title="Detajet e klasës"
                     className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-teal-50 text-teal-700 text-xs font-medium hover:bg-teal-100 transition-all"
                   >
                     <CalendarDays className="w-3.5 h-3.5" />
-                    {t('teacher.details')}
+                    Detajet
                   </Link>
                   <div className="text-right">
                     <p className={`text-lg font-bold ${
@@ -358,7 +356,7 @@ export default function TeacherDashboard() {
                     }`}>
                       {cls.avgGrade > 0 ? cls.avgGrade : '-'}
                     </p>
-                    <p className="text-xs text-slate-400">{t('teacher.avg_short')}</p>
+                    <p className="text-xs text-slate-400">mesatare</p>
                   </div>
                 </div>
               ))}
@@ -366,7 +364,7 @@ export default function TeacherDashboard() {
           ) : (
             <div className="text-center py-8">
               <AlertCircle className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-              <p className="text-sm text-slate-400">{t('teacher.not_assigned_classes')}</p>
+              <p className="text-sm text-slate-400">Nuk jeni caktuar ne asnje klase</p>
             </div>
           )}
         </div>
@@ -374,9 +372,9 @@ export default function TeacherDashboard() {
 
       <div className="bg-white rounded-2xl border border-slate-100 p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold text-slate-900">{t('dash.recent_grades')}</h3>
+          <h3 className="font-semibold text-slate-900">Notat e Fundit</h3>
           <Link to="/mesues/nota" className="text-sm text-teal-600 hover:text-teal-800 font-medium flex items-center gap-1">
-            {t('btn.view_all')} <ChevronRight className="w-4 h-4" />
+            Shiko te gjitha <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
         {recentGrades.length > 0 ? (
@@ -384,12 +382,12 @@ export default function TeacherDashboard() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-slate-100">
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('teacher.tbl_student')}</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('teacher.tbl_class')}</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('teacher.tbl_subject')}</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('teacher.tbl_grade')}</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('teacher.tbl_type')}</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('teacher.tbl_date')}</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Nxenesi</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Klasa</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Lenda</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Nota</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Lloji</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Data</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
@@ -422,7 +420,7 @@ export default function TeacherDashboard() {
         ) : (
           <div className="text-center py-8">
             <AlertCircle className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-            <p className="text-sm text-slate-400">{t('teacher.no_grades_recorded')}</p>
+            <p className="text-sm text-slate-400">Nuk ka nota te regjistruara ende</p>
           </div>
         )}
       </div>
@@ -436,13 +434,13 @@ export default function TeacherDashboard() {
                   <AlertTriangle className="w-4 h-4 text-amber-600" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-slate-900">{t('teacher.at_risk_title')}</h3>
-                  <p className="text-xs text-slate-500">{t('teacher.at_risk_subtitle')}</p>
+                  <h3 className="font-semibold text-slate-900">Nxënës në Rrezik</h3>
+                  <p className="text-xs text-slate-500">Mesatare nën 2.5 ose mungesa të larta</p>
                 </div>
               </div>
               <Link to="/mesues/mesazhet" className="flex items-center gap-1.5 text-xs font-semibold text-teal-600 hover:text-teal-800">
                 <Send className="w-3.5 h-3.5" />
-                {t('teacher.notify_parents')}
+                Njofto Prindërit
               </Link>
             </div>
             <div className="space-y-3">
@@ -457,7 +455,7 @@ export default function TeacherDashboard() {
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-bold text-rose-600">{s.avg}</p>
-                    <p className="text-xs text-slate-400">{s.absences} {t('teacher.absences_short')}</p>
+                    <p className="text-xs text-slate-400">{s.absences} mung.</p>
                   </div>
                 </div>
               ))}
@@ -468,14 +466,14 @@ export default function TeacherDashboard() {
         <div className="bg-white rounded-2xl border border-slate-100 p-6">
           <div className="flex items-center gap-2 mb-4">
             <MessageSquare className="w-5 h-5 text-teal-500" />
-            <h3 className="font-semibold text-slate-900">{t('teacher.communication')}</h3>
+            <h3 className="font-semibold text-slate-900">Komunikimi</h3>
           </div>
           <div className="space-y-2">
             {[
-              { to: '/mesues/mesazhet', icon: <MessageSquare className="w-4 h-4" />, label: t('teacher.qa_msg_label'), desc: t('teacher.qa_msg_desc') },
-              { to: '/mesues/nota', icon: <ClipboardCheck className="w-4 h-4" />, label: t('teacher.qa_grades_label'), desc: t('teacher.qa_grades_desc') },
-              { to: '/mesues/frekuentimi', icon: <Calendar className="w-4 h-4" />, label: t('teacher.qa_attendance_label'), desc: t('teacher.qa_attendance_desc') },
-              { to: '/mesues/orari', icon: <CalendarDays className="w-4 h-4" />, label: t('teacher.qa_schedule_label'), desc: t('teacher.qa_schedule_desc') },
+              { to: '/mesues/mesazhet', icon: <MessageSquare className="w-4 h-4" />, label: 'Mesazhe — Drejtor / Prindër', desc: 'Dërgo ose lexo mesazhe' },
+              { to: '/mesues/nota', icon: <ClipboardCheck className="w-4 h-4" />, label: 'Regjistro Nota', desc: 'Shto vlerësimet e nxënësve' },
+              { to: '/mesues/frekuentimi', icon: <Calendar className="w-4 h-4" />, label: 'Regjistro Frekuentimin', desc: 'Shëno prezencën e sotme' },
+              { to: '/mesues/orari', icon: <CalendarDays className="w-4 h-4" />, label: 'Shiko / Ndrysho Orarin', desc: 'Menaxho oraret mësimore' },
             ].map(item => (
               <Link key={item.to} to={item.to} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group">
                 <div className="w-9 h-9 bg-teal-50 rounded-xl flex items-center justify-center text-teal-600 group-hover:bg-teal-100 transition-colors">
