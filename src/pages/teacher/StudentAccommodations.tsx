@@ -9,6 +9,7 @@ import {
   type IndividualEducationPlan,
 } from '../../types/database';
 import { Loader2, Sparkles, Heart, Info } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface StudentInfo {
   id: string;
@@ -19,6 +20,7 @@ interface StudentInfo {
 
 export default function StudentAccommodations() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const [students, setStudents] = useState<StudentInfo[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -117,26 +119,23 @@ export default function StudentAccommodations() {
           <Sparkles className="w-5 h-5 text-pink-600" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Nxënësit me Akomodime</h1>
-          <p className="text-slate-500 text-sm">Informacion për përshtatjen e mësimdhënies (Konfidencial)</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('sa.title')}</h1>
+          <p className="text-slate-500 text-sm">{t('sa.subtitle')}</p>
         </div>
       </div>
 
       <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex items-start gap-3">
         <Info className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
         <div className="text-sm text-blue-900">
-          <p className="font-medium">Kjo është informacion konfidencial.</p>
-          <p className="text-blue-700 mt-1">
-            Përdorni këto akomodime gjatë mësimdhënies dhe vlerësimit. Mos i ndani me askënd jashtë stafit shkollor.
-            Sipas Ligjit 04/L-032 (Neni 40), nxënësit me NVA kanë të drejtën e akomodimeve të arsyeshme.
-          </p>
+          <p className="font-medium">{t('sa.confidential_title')}</p>
+          <p className="text-blue-700 mt-1">{t('sa.confidential_help')}</p>
         </div>
       </div>
 
       <div className="space-y-3">
         {students.length === 0 ? (
           <div className="bg-white rounded-2xl border border-slate-100 px-6 py-12 text-center text-slate-400 text-sm">
-            Asnjë nxënës me NVA ose PIA në klasat tuaja.
+            {t('sa.no_sen_students')}
           </div>
         ) : (
           students.map((s) => (
@@ -148,7 +147,7 @@ export default function StudentAccommodations() {
                   <div className="mt-3">
                     <h4 className="text-xs font-semibold text-slate-500 uppercase mb-1.5 flex items-center gap-1.5">
                       <Heart className="w-3.5 h-3.5 text-rose-500" />
-                      Nevojat
+                      {t('sa.needs_label')}
                     </h4>
                     <div className="flex flex-wrap gap-1.5">
                       {s.needs.map((n) => (
@@ -164,7 +163,7 @@ export default function StudentAccommodations() {
                   <div className="mt-3">
                     <h4 className="text-xs font-semibold text-slate-500 uppercase mb-1.5 flex items-center gap-1.5">
                       <Sparkles className="w-3.5 h-3.5 text-purple-500" />
-                      Akomodimet
+                      {t('sa.accommodations_label')}
                     </h4>
                     <ul className="space-y-1.5">
                       {s.accommodations.map((a) => (

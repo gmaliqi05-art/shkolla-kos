@@ -9,6 +9,7 @@ import {
   type MeetingStatus,
 } from '../../types/database';
 import { Loader2, Plus, X, Users, Calendar, MapPin, Edit2, FileText } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface MeetingRow extends ParentMeeting {
   class_name?: string;
@@ -24,6 +25,7 @@ const STATUS_COLORS: Record<MeetingStatus, string> = {
 
 export default function ParentMeetings() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const isParent = profile?.role === 'prind';
   const canManage = profile?.role === 'drejtor' || profile?.role === 'mesues';
 
@@ -170,16 +172,16 @@ export default function ParentMeetings() {
             <Users className="w-5 h-5 text-teal-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">{isParent ? 'Takimet me Prindër' : 'Takimet me Prindër'}</h1>
+            <h1 className="text-2xl font-bold text-slate-900">{t('pm.title')}</h1>
             <p className="text-slate-500 text-sm">
-              {isParent ? 'Takimet ku ju jeni i ftuar' : 'Organizoni takime klasore, individuale ose të përgjithshme'}
+              {isParent ? t('pm.subtitle_parent') : t('pm.subtitle_teacher')}
             </p>
           </div>
         </div>
         {canManage && (
           <button onClick={openNew} className="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-medium">
             <Plus className="w-4 h-4" />
-            Krijo Takim
+            {t('pm.create_btn')}
           </button>
         )}
       </div>
@@ -187,7 +189,7 @@ export default function ParentMeetings() {
       <div className="space-y-3">
         {meetings.length === 0 ? (
           <div className="bg-white rounded-2xl border border-slate-100 px-6 py-12 text-center text-slate-400 text-sm">
-            Asnjë takim i regjistruar.
+            {t('pm.none_registered')}
           </div>
         ) : (
           meetings.map((m) => (
@@ -215,15 +217,15 @@ export default function ParentMeetings() {
                         {m.location}
                       </span>
                     )}
-                    {m.class_name && <span>Klasa: <strong>{m.class_name}</strong></span>}
-                    {m.student_name && <span>Për: <strong>{m.student_name}</strong></span>}
+                    {m.class_name && <span>{t('pm.class_label')} <strong>{m.class_name}</strong></span>}
+                    {m.student_name && <span>{t('pm.for_label')} <strong>{m.student_name}</strong></span>}
                   </div>
-                  {m.agenda && <p className="text-sm text-slate-700 mt-2 italic">Agjenda: {m.agenda}</p>}
+                  {m.agenda && <p className="text-sm text-slate-700 mt-2 italic">{t('pm.agenda_label')} {m.agenda}</p>}
                   {m.notes && (
                     <div className="mt-2 bg-slate-50 rounded-lg px-3 py-2">
                       <p className="text-xs font-semibold text-slate-700 mb-0.5 flex items-center gap-1">
                         <FileText className="w-3 h-3" />
-                        Shënime nga takimi
+                        {t('pm.meeting_notes')}
                       </p>
                       <p className="text-sm text-slate-700 whitespace-pre-wrap">{m.notes}</p>
                     </div>
@@ -244,67 +246,67 @@ export default function ParentMeetings() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-slate-900">{editing ? 'Edito Takimin' : 'Takim i Ri'}</h2>
-              <button onClick={() => setShowModal(false)} aria-label="Mbyll"><X className="w-5 h-5 text-slate-400" /></button>
+              <h2 className="text-lg font-bold text-slate-900">{editing ? t('pm.modal_edit') : t('pm.new')}</h2>
+              <button onClick={() => setShowModal(false)} aria-label={t('common.close')}><X className="w-5 h-5 text-slate-400" /></button>
             </div>
             {error && <div className="mb-3 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl px-3 py-2">{error}</div>}
             <form onSubmit={submit} className="space-y-3">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Lloji *</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('pm.field_type')}</label>
                 <select required value={form.meeting_type} onChange={(e) => setForm({ ...form, meeting_type: e.target.value as ParentMeetingType })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-teal-500">
-                  {(Object.keys(PARENT_MEETING_TYPE_LABELS) as ParentMeetingType[]).map((t) => (
-                    <option key={t} value={t}>{PARENT_MEETING_TYPE_LABELS[t]}</option>
+                  {(Object.keys(PARENT_MEETING_TYPE_LABELS) as ParentMeetingType[]).map((mtype) => (
+                    <option key={mtype} value={mtype}>{PARENT_MEETING_TYPE_LABELS[mtype]}</option>
                   ))}
                 </select>
               </div>
               {form.meeting_type === 'klase' && (
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Klasa *</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('pm.field_class')}</label>
                   <select required value={form.class_id} onChange={(e) => setForm({ ...form, class_id: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-teal-500">
-                    <option value="">— Zgjidh —</option>
+                    <option value="">{t('diary.choose')}</option>
                     {classes.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                   </select>
                 </div>
               )}
               {form.meeting_type === 'individuale' && (
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Nxënësi *</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('pm.field_student')}</label>
                   <select required value={form.student_id} onChange={(e) => setForm({ ...form, student_id: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-teal-500">
-                    <option value="">— Zgjidh —</option>
+                    <option value="">{t('diary.choose')}</option>
                     {students.map((s) => <option key={s.id} value={s.id}>{s.full_name}</option>)}
                   </select>
                 </div>
               )}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Titulli *</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('pm.field_title')}</label>
                 <input required type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-teal-500" />
               </div>
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Data *</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('pm.field_date')}</label>
                   <input required type="date" value={form.meeting_date} onChange={(e) => setForm({ ...form, meeting_date: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-teal-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Nga</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('pm.field_from')}</label>
                   <input type="time" value={form.start_time} onChange={(e) => setForm({ ...form, start_time: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-teal-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Deri</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('pm.field_to')}</label>
                   <input type="time" value={form.end_time} onChange={(e) => setForm({ ...form, end_time: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-teal-500" />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Vendi</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('pm.field_location')}</label>
                 <input type="text" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-teal-500" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Agjenda</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('pm.field_agenda')}</label>
                 <textarea rows={2} value={form.agenda} onChange={(e) => setForm({ ...form, agenda: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-teal-500 resize-none" />
               </div>
               {editing && (
                 <>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Statusi</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">{t('pm.field_status')}</label>
                     <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as MeetingStatus })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-teal-500">
                       {(Object.keys(MEETING_STATUS_LABELS) as MeetingStatus[]).map((s) => (
                         <option key={s} value={s}>{MEETING_STATUS_LABELS[s]}</option>
@@ -312,16 +314,16 @@ export default function ParentMeetings() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Shënime pas takimit</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">{t('pm.field_after_notes')}</label>
                     <textarea rows={3} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-teal-500 resize-none" />
                   </div>
                 </>
               )}
               <div className="flex gap-3 pt-3">
-                <button type="button" onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium">Anulo</button>
+                <button type="button" onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium">{t('common.cancel')}</button>
                 <button type="submit" disabled={submitting} className="flex-1 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-medium disabled:opacity-50 flex items-center justify-center gap-2">
                   {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
-                  Ruaj
+                  {t('common.save')}
                 </button>
               </div>
             </form>

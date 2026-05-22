@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { useToast } from '../../components/ToastProvider';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 import {
   Plus,
   Pencil,
@@ -101,6 +102,7 @@ export default function SubjectsPage() {
   const { isDemo } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();
+  const { t } = useI18n();
 
   const [loading, setLoading] = useState(true);
   const [subjectGrades, setSubjectGrades] = useState<SubjectGrade[]>([]);
@@ -307,8 +309,8 @@ export default function SubjectsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Lëndët Mësimore</h1>
-          <p className="text-slate-500 mt-1">Kurrikula kosovare — Klasa 1 deri 9</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('sp.title')}</h1>
+          <p className="text-slate-500 mt-1">{t('sp.subtitle')}</p>
         </div>
         <button
           onClick={openAdd}

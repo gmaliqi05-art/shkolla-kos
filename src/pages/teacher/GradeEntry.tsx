@@ -3,6 +3,7 @@ import { Save, Check, BookOpen, AlertCircle, Loader2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import type { Grade } from '../../types/database';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface StudentGradeData {
   student_id: string;
@@ -64,6 +65,7 @@ const DEMO_STUDENTS: Record<string, StudentGradeData[]> = {
 
 export default function GradeEntry() {
   const { profile, isDemo } = useAuth();
+  const { t } = useI18n();
   const [classes, setClasses] = useState<TeacherClass[]>([]);
   const [selectedClassSubject, setSelectedClassSubject] = useState<string>('');
   const [semester, setSemester] = useState<number>(1);
@@ -412,13 +414,13 @@ export default function GradeEntry() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Vendosni Nota</h1>
-          <p className="text-slate-500 mt-1">Sistemi i vleresimit te Kosoves (1-5)</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('ge.title')}</h1>
+          <p className="text-slate-500 mt-1">{t('ge.subtitle')}</p>
         </div>
         <div className="text-center py-12 bg-white rounded-2xl border border-slate-100">
           <AlertCircle className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-slate-900 mb-2">Nuk jeni caktuar ne asnje klase</h3>
-          <p className="text-sm text-slate-500">Kontaktoni drejtorine per t'u caktuar ne klase dhe lende.</p>
+          <h3 className="text-lg font-semibold text-slate-900 mb-2">{t('teacher.not_assigned_short')}</h3>
+          <p className="text-sm text-slate-500">{t('teacher.not_assigned_help')}</p>
         </div>
       </div>
     );
@@ -430,8 +432,8 @@ export default function GradeEntry() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Vendosni Nota</h1>
-          <p className="text-slate-500 mt-1">Sistemi i vleresimit te Kosoves - 4 vlersime + perfundimtare (1-5)</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('ge.title')}</h1>
+          <p className="text-slate-500 mt-1">{t('ge.subtitle')}</p>
         </div>
         <button
           onClick={handleSave}

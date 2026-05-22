@@ -8,6 +8,7 @@ import {
   type HomeworkSubmission,
   type HomeworkSubmissionStatus,
 } from '../../types/database';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface ClassOption { id: string; name: string }
 interface SubjectOption { id: string; name: string }
@@ -28,6 +29,7 @@ const STATUS_COLORS: Record<HomeworkSubmissionStatus, string> = {
 
 export default function HomeworkPage() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const [classes, setClasses] = useState<ClassOption[]>([]);
   const [subjects, setSubjects] = useState<SubjectOption[]>([]);
   const [homeworks, setHomeworks] = useState<HomeworkRow[]>([]);
@@ -188,19 +190,19 @@ export default function HomeworkPage() {
             <FileText className="w-5 h-5 text-cyan-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Detyrat e Shtëpisë</h1>
-            <p className="text-slate-500 text-sm">Caktoni detyra dhe vlerësoni dorëzimet</p>
+            <h1 className="text-2xl font-bold text-slate-900">{t('hw.title')}</h1>
+            <p className="text-slate-500 text-sm">{t('hw.subtitle')}</p>
           </div>
         </div>
         <button onClick={openNew} disabled={classes.length === 0} className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl font-medium disabled:opacity-50">
           <Plus className="w-4 h-4" />
-          Cakto Detyrë
+          {t('hw.assign_btn')}
         </button>
       </div>
 
       {homeworks.length === 0 ? (
         <div className="bg-white rounded-2xl border border-slate-100 px-6 py-12 text-center text-slate-400 text-sm">
-          Asnjë detyrë e caktuar ende.
+          {t('hw.none_assigned')}
         </div>
       ) : (
         <div className="space-y-3">
@@ -217,11 +219,11 @@ export default function HomeworkPage() {
                     </div>
                     <h3 className="font-semibold text-slate-900 mt-1">{h.title}</h3>
                     <p className="text-xs text-slate-500 mt-0.5">
-                      Caktuar: {h.assigned_date}
-                      {h.due_date && ` · Dorëzimi deri: ${h.due_date}`}
+                      {t('hw.assigned_on')} {h.assigned_date}
+                      {h.due_date && ` · ${t('hw.delivery_until')} ${h.due_date}`}
                     </p>
                     <p className="text-xs text-slate-500 mt-1">
-                      {h.submission_count} dorëzime · {h.graded_count} të vlerësuara
+                      {h.submission_count} {t('hw.submissions_label')} · {h.graded_count} {t('hw.graded_label')}
                     </p>
                     {h.description && <p className="text-sm text-slate-600 mt-2 italic">{h.description}</p>}
                   </div>
@@ -231,9 +233,9 @@ export default function HomeworkPage() {
                 </div>
                 {isOpen && (
                   <div className="border-t border-slate-100 px-5 py-3 bg-slate-50">
-                    <h4 className="text-sm font-semibold text-slate-900 mb-2">Dorëzimet e nxënësve</h4>
+                    <h4 className="text-sm font-semibold text-slate-900 mb-2">{t('hw.student_submissions')}</h4>
                     {subs.length === 0 ? (
-                      <p className="text-xs text-slate-400 italic">Asnjë dorëzim ende.</p>
+                      <p className="text-xs text-slate-400 italic">{t('hw.no_submissions')}</p>
                     ) : (
                       <ul className="space-y-1">
                         {subs.map((s) => (
@@ -242,7 +244,7 @@ export default function HomeworkPage() {
                             <span className={`px-2 py-0.5 rounded text-xs ${STATUS_COLORS[s.status]}`}>
                               {HOMEWORK_SUBMISSION_STATUS_LABELS[s.status]}
                             </span>
-                            {s.grade !== null && <span className="text-xs font-mono text-slate-700">Notë: {s.grade}</span>}
+                            {s.grade !== null && <span className="text-xs font-mono text-slate-700">{t('hw.grade_label')} {s.grade}</span>}
                             {s.submitted_at && (
                               <span className="text-xs text-slate-500 ml-auto flex items-center gap-1">
                                 <Clock className="w-3 h-3" />
@@ -265,50 +267,50 @@ export default function HomeworkPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-slate-900">Detyrë e Re</h2>
-              <button onClick={() => setShowModal(false)} aria-label="Mbyll"><X className="w-5 h-5 text-slate-400" /></button>
+              <h2 className="text-lg font-bold text-slate-900">{t('hw.modal_new')}</h2>
+              <button onClick={() => setShowModal(false)} aria-label={t('common.close')}><X className="w-5 h-5 text-slate-400" /></button>
             </div>
             {error && <div className="mb-3 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl px-3 py-2">{error}</div>}
             <form onSubmit={submit} className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Klasa *</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('hw.field_class')}</label>
                   <select required value={form.class_id} onChange={(e) => setForm({ ...form, class_id: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-cyan-500">
-                    <option value="">— Zgjidh —</option>
+                    <option value="">{t('diary.choose')}</option>
                     {classes.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Lënda *</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('hw.field_subject')}</label>
                   <select required value={form.subject_id} onChange={(e) => setForm({ ...form, subject_id: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-cyan-500">
-                    <option value="">— Zgjidh —</option>
+                    <option value="">{t('diary.choose')}</option>
                     {subjects.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
                   </select>
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Titulli *</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('hw.field_title')}</label>
                 <input required type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-cyan-500" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Përshkrimi i detyrës</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('hw.field_desc')}</label>
                 <textarea rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-cyan-500 resize-none" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Data e caktimit *</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('hw.field_assigned_date')}</label>
                   <input required type="date" value={form.assigned_date} onChange={(e) => setForm({ ...form, assigned_date: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-cyan-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Dorëzimi deri</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('hw.due_date').replace(' *', '')}</label>
                   <input type="date" value={form.due_date} onChange={(e) => setForm({ ...form, due_date: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-cyan-500" />
                 </div>
               </div>
               <div className="flex gap-3 pt-3">
-                <button type="button" onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium">Anulo</button>
+                <button type="button" onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium">{t('common.cancel')}</button>
                 <button type="submit" disabled={submitting} className="flex-1 px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl font-medium disabled:opacity-50 flex items-center justify-center gap-2">
                   {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
-                  Cakto
+                  {t('hw.assign_short')}
                 </button>
               </div>
             </form>

@@ -5,9 +5,16 @@ import { Loader2, Save, ClipboardCheck } from 'lucide-react';
 import {
   BEHAVIOR_LEVEL_LABELS,
   BEHAVIOR_LEVEL_COLORS,
-  PERIOD_LABELS,
   type BehaviorLevel,
 } from '../../types/database';
+import { useI18n } from '../../lib/i18n/I18nProvider';
+import type { TranslationKey } from '../../lib/i18n/translations';
+
+const PERIOD_KEYS: Record<number, TranslationKey> = {
+  1: 'period.1',
+  2: 'period.2',
+  3: 'period.3',
+};
 
 interface ClassOption {
   id: string;
@@ -26,6 +33,7 @@ const BEHAVIOR_OPTIONS: BehaviorLevel[] = ['shembullor', 'shume_mire', 'mire', '
 
 export default function BehaviorPage() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const [classes, setClasses] = useState<ClassOption[]>([]);
   const [selectedClass, setSelectedClass] = useState('');
   const [period, setPeriod] = useState(1);
@@ -142,7 +150,7 @@ export default function BehaviorPage() {
       }));
 
     if (toUpsert.length === 0) {
-      setMessage('Asgjë për të ruajtur.');
+      setMessage(t('beh.no_assessments'));
       setSaving(false);
       return;
     }
@@ -152,9 +160,9 @@ export default function BehaviorPage() {
       .upsert(toUpsert, { onConflict: 'student_id,class_id,period' });
 
     if (error) {
-      setMessage('Gabim: ' + error.message);
+      setMessage(`${t('common.error')}: ${error.message}`);
     } else {
-      setMessage(`U ruajtën ${toUpsert.length} vlerësime sjelljeje.`);
+      setMessage(`${toUpsert.length} ${t('beh.title').toLowerCase()}`);
       loadStudents();
     }
     setSaving(false);
@@ -167,34 +175,34 @@ export default function BehaviorPage() {
           <ClipboardCheck className="w-5 h-5 text-purple-600" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Vlerësimi i Sjelljes</h1>
-          <p className="text-slate-500 text-sm">Sipas UA 06/2022 — një vlerësim për nxënës për periudhë</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('beh.title')}</h1>
+          <p className="text-slate-500 text-sm">{t('beh.subtitle')}</p>
         </div>
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-100 p-4 flex flex-wrap gap-3">
         <div>
-          <label className="block text-xs font-medium text-slate-500 mb-1">Klasa</label>
+          <label className="block text-xs font-medium text-slate-500 mb-1">{t('teacher.tbl_class')}</label>
           <select
             value={selectedClass}
             onChange={(e) => setSelectedClass(e.target.value)}
             className="px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-500"
           >
-            {classes.length === 0 && <option value="">— Asnjë klasë —</option>}
+            {classes.length === 0 && <option value="">— {t('tch.no_classes_assigned')} —</option>}
             {classes.map((c) => (
               <option key={c.id} value={c.id}>{c.name}</option>
             ))}
           </select>
         </div>
         <div>
-          <label className="block text-xs font-medium text-slate-500 mb-1">Periudha</label>
+          <label className="block text-xs font-medium text-slate-500 mb-1">{t('ge.period_label')}</label>
           <select
             value={period}
             onChange={(e) => setPeriod(Number(e.target.value))}
             className="px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-500"
           >
             {[1, 2, 3].map((p) => (
-              <option key={p} value={p}>{PERIOD_LABELS[p]}</option>
+              <option key={p} value={p}>{t(PERIOD_KEYS[p])}</option>
             ))}
           </select>
         </div>
@@ -205,7 +213,7 @@ export default function BehaviorPage() {
             className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-medium disabled:opacity-50 transition-colors"
           >
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            Ruaj Vlerësimet
+            {t('common.save')}
           </button>
         </div>
       </div>
@@ -223,16 +231,16 @@ export default function BehaviorPage() {
           </div>
         ) : students.length === 0 ? (
           <div className="px-6 py-12 text-center text-slate-400 text-sm">
-            {selectedClass ? 'Asnjë nxënës i regjistruar në këtë klasë.' : 'Zgjidh një klasë për të vazhduar.'}
+            {selectedClass ? t('att.no_students_for_class') : t('tch.select_class')}
           </div>
         ) : (
           <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-100 text-left text-xs font-semibold text-slate-500 uppercase">
-                <th className="px-6 py-3">Nxënësi</th>
-                <th className="px-6 py-3">Niveli i sjelljes</th>
-                <th className="px-6 py-3">Komenti</th>
+                <th className="px-6 py-3">{t('teacher.tbl_student')}</th>
+                <th className="px-6 py-3">{t('beh.behavior_label').replace(' *', '')}</th>
+                <th className="px-6 py-3">{t('beh.observations')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
@@ -262,7 +270,7 @@ export default function BehaviorPage() {
                       type="text"
                       value={s.current_comment}
                       onChange={(e) => updateStudent(s.id, { current_comment: e.target.value })}
-                      placeholder="Komenti (opsional)"
+                      placeholder={`${t('beh.observations')} (${t('common.optional').toLowerCase()})`}
                       className="w-full px-3 py-1.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-purple-500"
                     />
                   </td>
