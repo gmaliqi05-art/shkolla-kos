@@ -1,62 +1,65 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Scale, Shield, FileText, Heart, AlertTriangle, Cookie, ArrowLeft, Mail } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
+import type { TranslationKey } from '../../lib/i18n/translations';
 
 type DocId = 'privacy' | 'terms' | 'child_protection' | 'code_of_conduct' | 'cookies';
 
 interface DocSection {
   id: DocId;
-  title: string;
+  titleKey: TranslationKey;
   icon: typeof Shield;
   color: string;
-  legalBasis: string;
+  legalKey: TranslationKey;
   updated: string;
 }
 
 const DOCS: DocSection[] = [
   {
     id: 'privacy',
-    title: 'Politika e Privatësisë',
+    titleKey: 'ld.doc_privacy',
     icon: Shield,
     color: 'bg-blue-100 text-blue-700',
-    legalBasis: 'Ligji Nr. 06/L-082 për Mbrojtjen e të Dhënave Personale',
+    legalKey: 'ld.legal_privacy',
     updated: '19 Maj 2026',
   },
   {
     id: 'terms',
-    title: 'Kushtet e Përdorimit',
+    titleKey: 'ld.doc_terms',
     icon: FileText,
     color: 'bg-purple-100 text-purple-700',
-    legalBasis: 'Kushtet e shërbimit për platformën Shkolla Kos',
+    legalKey: 'ld.legal_terms',
     updated: '19 Maj 2026',
   },
   {
     id: 'child_protection',
-    title: 'Politika e Mbrojtjes së Fëmijëve',
+    titleKey: 'ld.doc_child_protection',
     icon: Heart,
     color: 'bg-rose-100 text-rose-700',
-    legalBasis: 'UA Nr. 13/2018 për Mbrojtjen e Fëmijëve nga Dhuna në Sistemin e Arsimit',
+    legalKey: 'ld.legal_child',
     updated: '19 Maj 2026',
   },
   {
     id: 'code_of_conduct',
-    title: 'Kodi i Sjelljes',
+    titleKey: 'ld.doc_code_of_conduct',
     icon: AlertTriangle,
     color: 'bg-amber-100 text-amber-700',
-    legalBasis: 'Ligji 04/L-032 dhe UA për Disiplinën Shkollore',
+    legalKey: 'ld.legal_conduct',
     updated: '19 Maj 2026',
   },
   {
     id: 'cookies',
-    title: 'Politika e Kukit',
+    titleKey: 'ld.doc_cookies',
     icon: Cookie,
     color: 'bg-emerald-100 text-emerald-700',
-    legalBasis: 'Direktiva e BE për kuki + Ligji 06/L-082',
+    legalKey: 'ld.legal_cookies',
     updated: '19 Maj 2026',
   },
 ];
 
 export default function LegalDocuments() {
+  const { t, language } = useI18n();
   const [active, setActive] = useState<DocId>('privacy');
   const current = DOCS.find((d) => d.id === active)!;
 
@@ -66,15 +69,15 @@ export default function LegalDocuments() {
         <div className="mb-6">
           <Link to="/" className="inline-flex items-center gap-1 text-sm text-slate-600 hover:text-slate-900 mb-4">
             <ArrowLeft className="w-4 h-4" />
-            Kthehu
+            {t('btn.back')}
           </Link>
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center">
               <Scale className="w-6 h-6 text-blue-600" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-slate-900">Dokumentet Ligjore</h1>
-              <p className="text-slate-500">Të gjitha politikat dhe rregullat e platformës</p>
+              <h1 className="text-3xl font-bold text-slate-900">{t('ld.title')}</h1>
+              <p className="text-slate-500">{t('ld.subtitle')}</p>
             </div>
           </div>
         </div>
@@ -97,7 +100,7 @@ export default function LegalDocuments() {
                     <Icon className="w-4 h-4" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className={`font-medium text-sm ${isActive ? 'text-blue-900' : 'text-slate-900'}`}>{d.title}</p>
+                    <p className={`font-medium text-sm ${isActive ? 'text-blue-900' : 'text-slate-900'}`}>{t(d.titleKey)}</p>
                   </div>
                 </button>
               );
@@ -111,10 +114,16 @@ export default function LegalDocuments() {
                 <current.icon className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-slate-900">{current.title}</h2>
-                <p className="text-xs text-slate-500">Bazuar te: {current.legalBasis} · Përditësuar: {current.updated}</p>
+                <h2 className="text-2xl font-bold text-slate-900">{t(current.titleKey)}</h2>
+                <p className="text-xs text-slate-500">{t('ld.based_on')} {t(current.legalKey)} · {t('ld.updated_label')} {current.updated}</p>
               </div>
             </div>
+
+            {language !== 'sq' && (
+              <div className="mt-4 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2 text-xs text-amber-900">
+                {t('ld.legal_text_note')}
+              </div>
+            )}
 
             <div className="prose prose-slate max-w-none mt-6 text-sm">
               {active === 'privacy' && <PrivacyContent />}
@@ -425,17 +434,18 @@ function CookiesContent() {
 }
 
 function ContactBox() {
+  const { t } = useI18n();
   return (
     <div className="mt-8 pt-6 border-t border-slate-200">
       <div className="bg-slate-50 rounded-xl p-4 flex items-start gap-3">
         <Mail className="w-5 h-5 text-slate-500 mt-0.5" />
         <div className="text-sm">
-          <p className="font-semibold text-slate-900">Kontakt për pyetje ligjore</p>
+          <p className="font-semibold text-slate-900">{t('ld.contact_title')}</p>
           <p className="text-slate-600 mt-1">
-            Drejtoria e shkollës — për pyetje për të dhëna personale<br />
+            {t('ld.contact_school')}<br />
             <a href="https://aip.rks-gov.net" target="_blank" rel="noreferrer" className="text-blue-600 underline">
-              Agjencia për Informim dhe Privatësi (AIP)
-            </a> — për ankesa zyrtare
+              {t('ld.contact_aip')}
+            </a> {t('ld.contact_aip_suffix')}
           </p>
         </div>
       </div>

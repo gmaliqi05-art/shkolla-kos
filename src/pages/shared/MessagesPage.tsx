@@ -6,7 +6,20 @@ import {
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import type { UserRole } from '../../types/database';
-import { ROLE_LABELS } from '../../types/database';
+import { useI18n } from '../../lib/i18n/I18nProvider';
+import type { TranslationKey } from '../../lib/i18n/translations';
+
+const ROLE_LABEL_KEYS: Record<UserRole, TranslationKey> = {
+  drejtor: 'role.drejtor',
+  mesues: 'role.mesues',
+  nxenes: 'role.nxenes',
+  prind: 'role.prind',
+  pedagog: 'role.pedagog',
+  drejtor_komunal: 'role.drejtor_komunal',
+  ministri: 'role.ministri',
+  inspektor: 'role.inspektor',
+  super_admin: 'role.super_admin',
+};
 
 interface MessageItem {
   id: string;
@@ -58,6 +71,7 @@ const DEMO_CONTACTS: ContactItem[] = [
 
 export default function MessagesPage() {
   const { profile, isDemo } = useAuth();
+  const { t } = useI18n();
   const [tab, setTab] = useState<'inbox' | 'sent'>('inbox');
   const [messages, setMessages] = useState<MessageItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -332,7 +346,7 @@ export default function MessagesPage() {
 
   const filteredContacts = contacts.filter(c =>
     c.full_name.toLowerCase().includes(contactSearch.toLowerCase()) ||
-    ROLE_LABELS[c.role].toLowerCase().includes(contactSearch.toLowerCase())
+    t(ROLE_LABEL_KEYS[c.role]).toLowerCase().includes(contactSearch.toLowerCase())
   );
 
   if (selectedMessage) {
@@ -347,7 +361,7 @@ export default function MessagesPage() {
           className="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          Kthehu te mesazhet
+          {t('msg.back_to_messages')}
         </button>
 
         <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
@@ -361,10 +375,10 @@ export default function MessagesPage() {
                   <h2 className="text-lg font-bold text-slate-900">{selectedMessage.subject}</h2>
                   <div className="flex items-center gap-2 mt-1">
                     <span className="text-sm text-slate-600">
-                      {isOwn ? 'Derguar te' : 'Nga'}: {otherName}
+                      {isOwn ? t('msg.sent_to') : t('msg.from')}: {otherName}
                     </span>
                     <span className={`text-xs px-2 py-0.5 rounded-full ${getRoleColor(otherRole)}`}>
-                      {ROLE_LABELS[otherRole]}
+                      {t(ROLE_LABEL_KEYS[otherRole])}
                     </span>
                   </div>
                 </div>
@@ -412,7 +426,7 @@ export default function MessagesPage() {
                 className="flex items-center gap-2 px-4 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-semibold hover:bg-slate-800 transition-colors"
               >
                 <Send className="w-4 h-4" />
-                Pergjigju
+                {t('msg.reply')}
               </button>
             </div>
           )}
@@ -425,15 +439,15 @@ export default function MessagesPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Mesazhet</h1>
-          <p className="text-slate-500 mt-1">Komunikoni me stafin dhe nxenesit</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('msg.title')}</h1>
+          <p className="text-slate-500 mt-1">{t('msg.subtitle')}</p>
         </div>
         <button
           onClick={() => setShowCompose(true)}
           className="flex items-center gap-2 px-4 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-semibold hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/25"
         >
           <Plus className="w-4 h-4" />
-          Mesazh i Ri
+          {t('msg.new_msg')}
         </button>
       </div>
 
@@ -445,7 +459,7 @@ export default function MessagesPage() {
           }`}
         >
           <Inbox className="w-4 h-4" />
-          Te marra
+          {t('msg.tab_inbox')}
           {unreadCount > 0 && (
             <span className="ml-1 bg-rose-500 text-white text-xs px-1.5 py-0.5 rounded-full min-w-[20px] text-center">
               {unreadCount}
@@ -459,7 +473,7 @@ export default function MessagesPage() {
           }`}
         >
           <Send className="w-4 h-4" />
-          Te derguara
+          {t('msg.tab_sent')}
         </button>
       </div>
 
@@ -471,10 +485,10 @@ export default function MessagesPage() {
         <div className="text-center py-16 bg-white rounded-2xl border border-slate-100">
           <MessageSquare className="w-12 h-12 text-slate-300 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-slate-900 mb-2">
-            {tab === 'inbox' ? 'Nuk ka mesazhe te marra' : 'Nuk ka mesazhe te derguara'}
+            {tab === 'inbox' ? t('msg.no_inbox') : t('msg.no_sent')}
           </h3>
           <p className="text-slate-500 text-sm">
-            {tab === 'inbox' ? 'Kutia juaj e mesazheve eshte bosh.' : 'Nuk keni derguar asnje mesazh ende.'}
+            {tab === 'inbox' ? t('msg.inbox_empty_help') : t('msg.sent_empty_help')}
           </p>
         </div>
       ) : (
@@ -501,7 +515,7 @@ export default function MessagesPage() {
                       {otherName}
                     </span>
                     <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${getRoleColor(otherRole)}`}>
-                      {ROLE_LABELS[otherRole]}
+                      {t(ROLE_LABEL_KEYS[otherRole])}
                     </span>
                   </div>
                   <p className={`text-sm truncate mt-0.5 ${!msg.is_read && !isOwn ? 'font-semibold text-slate-800' : 'text-slate-600'}`}>
@@ -527,14 +541,14 @@ export default function MessagesPage() {
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl max-h-[90vh] flex flex-col">
             <div className="flex items-center justify-between p-6 border-b border-slate-100">
-              <h3 className="text-lg font-semibold text-slate-900">Mesazh i Ri</h3>
-              <button onClick={closeCompose} aria-label="Mbyll" className="text-slate-400 hover:text-slate-600">
+              <h3 className="text-lg font-semibold text-slate-900">{t('msg.new_msg')}</h3>
+              <button onClick={closeCompose} aria-label={t('common.close')} className="text-slate-400 hover:text-slate-600">
                 <X className="w-5 h-5" />
               </button>
             </div>
             <form onSubmit={handleSend} className="p-6 space-y-4 overflow-y-auto flex-1">
               <div className="relative" ref={dropdownRef}>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Merruesi</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('msg.recipient')}</label>
                 {selectedContact ? (
                   <div className="flex items-center gap-2 px-4 py-2.5 border border-slate-200 rounded-xl">
                     <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${getRoleAvatarColor(selectedContact.role)} flex items-center justify-center text-white text-xs font-bold`}>
@@ -542,7 +556,7 @@ export default function MessagesPage() {
                     </div>
                     <span className="text-sm font-medium text-slate-900 flex-1">{selectedContact.full_name}</span>
                     <span className={`text-xs px-1.5 py-0.5 rounded-full ${getRoleColor(selectedContact.role)}`}>
-                      {ROLE_LABELS[selectedContact.role]}
+                      {t(ROLE_LABEL_KEYS[selectedContact.role])}
                     </span>
                     <button type="button" onClick={() => setSelectedContact(null)} className="text-slate-400 hover:text-slate-600">
                       <X className="w-4 h-4" />
@@ -557,7 +571,7 @@ export default function MessagesPage() {
                         value={contactSearch}
                         onChange={(e) => { setContactSearch(e.target.value); setShowContactDropdown(true); }}
                         onFocus={() => setShowContactDropdown(true)}
-                        placeholder="Kerko kontakt..."
+                        placeholder={t('msg.search_contact')}
                         className="flex-1 outline-none text-sm"
                       />
                       <ChevronDown className="w-4 h-4 text-slate-400" />
@@ -565,7 +579,7 @@ export default function MessagesPage() {
                     {showContactDropdown && (
                       <div className="absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
                         {filteredContacts.length === 0 ? (
-                          <div className="px-4 py-3 text-sm text-slate-400">Nuk u gjet asnje kontakt</div>
+                          <div className="px-4 py-3 text-sm text-slate-400">{t('msg.no_contact_found')}</div>
                         ) : (
                           filteredContacts.map((c) => (
                             <button
@@ -581,7 +595,7 @@ export default function MessagesPage() {
                                 <p className="text-sm font-medium text-slate-900">{c.full_name}</p>
                               </div>
                               <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${getRoleColor(c.role)}`}>
-                                {ROLE_LABELS[c.role]}
+                                {t(ROLE_LABEL_KEYS[c.role])}
                               </span>
                             </button>
                           ))
@@ -592,7 +606,7 @@ export default function MessagesPage() {
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Tema</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('msg.subject_label')}</label>
                 <input
                   type="text"
                   value={msgSubject}
@@ -602,7 +616,7 @@ export default function MessagesPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Mesazhi</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('msg.body_label')}</label>
                 <textarea
                   value={msgContent}
                   onChange={(e) => setMsgContent(e.target.value)}
@@ -617,7 +631,7 @@ export default function MessagesPage() {
                   onClick={closeCompose}
                   className="flex-1 py-2.5 border border-slate-200 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
                 >
-                  Anullo
+                  {t('common.cancel')}
                 </button>
                 <button
                   type="submit"
@@ -625,7 +639,7 @@ export default function MessagesPage() {
                   className="flex-1 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-semibold hover:bg-slate-800 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                  Dergo
+                  {t('msg.send_btn')}
                 </button>
               </div>
             </form>
