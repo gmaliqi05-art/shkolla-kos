@@ -36,18 +36,22 @@
     </div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
-      // Nese app nuk ngarkohet brenda 8 sekondave, pastro SW cache dhe rifresko
+      // Nese app nuk ngarkohet brenda 10 sekondave, pastro SW cache VETEM 1 HERE
       setTimeout(function() {
         if (document.getElementById('initial-loader')) {
-          if ('caches' in window) {
-            caches.keys().then(function(names) {
-              return Promise.all(names.map(function(n) { return caches.delete(n); }));
-            }).then(function() {
+          var key = 'shkolla-cache-cleared';
+          if (!sessionStorage.getItem(key)) {
+            sessionStorage.setItem(key, '1');
+            if ('caches' in window) {
+              caches.keys().then(function(names) {
+                return Promise.all(names.map(function(n) { return caches.delete(n); }));
+              }).then(function() { window.location.reload(); });
+            } else {
               window.location.reload();
-            });
+            }
           }
         }
-      }, 8000);
+      }, 10000);
     </script>
   </body>
 </html>

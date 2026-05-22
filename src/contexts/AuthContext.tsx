@@ -122,40 +122,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    let didFinish = false;
+    const finish = () => { if (!didFinish) { didFinish = true; setLoading(false); } };
+
+    const timeout = setTimeout(finish, 5000);
+
     supabase.auth.getSession()
       .then(({ data: { session: s } }) => {
         setSession(s);
         setUser(s?.user ?? null);
         if (s?.user) {
-          fetchProfile(s.user.id).then(() => setLoading(false));
+          fetchProfile(s.user.id).catch(() => {}).finally(finish);
         } else {
-          setLoading(false);
+          finish();
         }
       })
-      .catch((error) => {
-        console.error('Session error:', error);
-        setLoading(false);
+      .catch(() => {
+        finish();
       });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
       setSession(s);
       setUser(s?.user ?? null);
       if (s?.user) {
-        (async () => {
-          try {
-            await fetchProfile(s.user.id);
-          } catch (error) {
-            console.error('Profile fetch error:', error);
-          }
-          setLoading(false);
-        })();
+        fetchProfile(s.user.id).catch(() => {}).finally(() => setLoading(false));
       } else {
         setProfile(null);
         setLoading(false);
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      clearTimeout(timeout);
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signUp = async (email: string, password: string, fullName: string, role: UserRole) => {
