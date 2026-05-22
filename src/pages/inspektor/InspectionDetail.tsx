@@ -23,10 +23,12 @@ import {
   type RecommendationStatus,
 } from '../../types/database';
 import { Loader2, ArrowLeft, Plus, X, AlertTriangle, Lightbulb, CheckCircle, Edit2, Trash2, Printer } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 export default function InspectionDetail() {
   const { id } = useParams();
   const { profile } = useAuth();
+  const { t } = useI18n();
   const isInspector = profile?.role === 'inspektor';
   const isDirector = profile?.role === 'drejtor';
 
@@ -220,7 +222,7 @@ export default function InspectionDetail() {
             </span>
           )}
         </div>
-        <h1 className="text-2xl font-bold">Inspektim — {schoolName}</h1>
+        <h1 className="text-2xl font-bold">{t('id.title')} — {schoolName}</h1>
         <p className="text-orange-100 text-sm mt-1">
           Planifikuar: {inspection.planned_date}
           {inspection.conducted_date && ` · Mbajtur: ${inspection.conducted_date}`}

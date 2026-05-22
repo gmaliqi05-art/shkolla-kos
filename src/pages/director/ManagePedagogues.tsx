@@ -3,6 +3,7 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import type { Profile } from '../../types/database';
 import { Search, Phone, Mail, MoreVertical, Plus, CreditCard as Edit2, Trash2, X, UserPlus, Loader2, Copy, Check as CheckIcon, Heart } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 import { useToast } from '../../components/ToastProvider';
 
 interface FormData {
@@ -23,6 +24,7 @@ function generateSecurePassword() {
 export default function ManagePedagogues() {
   const { profile } = useAuth();
   const toast = useToast();
+  const { t } = useI18n();
   const [pedagogues, setPedagogues] = useState<Profile[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
@@ -150,8 +152,8 @@ export default function ManagePedagogues() {
             <Heart className="w-5 h-5 text-pink-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Pedagogët</h1>
-            <p className="text-slate-500 text-sm">{pedagogues.length} pedagog gjithsej</p>
+            <h1 className="text-2xl font-bold text-slate-900">{t('mpd.title')}</h1>
+            <p className="text-slate-500 text-sm">{pedagogues.length} {t('mpd.subtitle').toLowerCase()}</p>
           </div>
         </div>
         <button

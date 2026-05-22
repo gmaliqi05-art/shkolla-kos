@@ -3,12 +3,14 @@ import { supabase } from '../../lib/supabase';
 import { logAudit } from '../../lib/audit';
 import { useAuth } from '../../contexts/AuthContext';
 import { Loader2, Building2, Save } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 import { SCHOOL_TYPE_LABELS, type SchoolInfo, type SchoolType, type Municipality, type Locality } from '../../types/database';
 import FileUpload from '../../components/FileUpload';
 import SearchableSelect from '../../components/SearchableSelect';
 
 export default function SchoolSettings() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const [info, setInfo] = useState<SchoolInfo | null>(null);
   const [municipalities, setMunicipalities] = useState<Municipality[]>([]);
   const [localities, setLocalities] = useState<Locality[]>([]);
@@ -119,8 +121,8 @@ export default function SchoolSettings() {
           <Building2 className="w-5 h-5 text-blue-600" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Cilësimet e Shkollës</h1>
-          <p className="text-slate-500 text-sm">Të dhënat zyrtare që shfaqen në dëftesa dhe diploma</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('ss.title')}</h1>
+          <p className="text-slate-500 text-sm">{t('ss.subtitle')}</p>
         </div>
       </div>
 

@@ -17,6 +17,7 @@ import {
 import {
   Loader2, Plus, X, Users, Calendar, FileText, Check, Edit2, ChevronRight, ChevronDown, UserCog, Briefcase,
 } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 type Tab = 'councils' | 'meetings' | 'minutes';
 
@@ -39,6 +40,7 @@ const COUNCIL_TYPE_COLORS: Record<CouncilType, string> = {
 
 export default function SchoolCouncils() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const [tab, setTab] = useState<Tab>('councils');
   const [councils, setCouncils] = useState<SchoolCouncil[]>([]);
   const [members, setMembers] = useState<MemberWithProfile[]>([]);
@@ -339,8 +341,8 @@ export default function SchoolCouncils() {
           <Briefcase className="w-5 h-5 text-blue-600" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Organet Shkollore</h1>
-          <p className="text-slate-500 text-sm">Këshilli Drejtues, Prindërve, Nxënësve, Profesional — Ligji 04/L-032, Nenet 18–23</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('scc.title')}</h1>
+          <p className="text-slate-500 text-sm">{t('scc.subtitle')}</p>
         </div>
       </div>
 

@@ -14,6 +14,7 @@ import {
 } from '../../types/database';
 import { Link } from 'react-router-dom';
 import { Loader2, ClipboardCheck, Plus, X, Edit2, CheckCircle } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface SchoolOption { id: string; name: string; municipality?: string }
 interface InspectionRow extends Inspection {
@@ -22,6 +23,7 @@ interface InspectionRow extends Inspection {
 
 export default function InspectionsManagement() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const isInspector = profile?.role === 'inspektor';
   const isDirector = profile?.role === 'drejtor';
   const isMinistri = profile?.role === 'ministri';
@@ -169,8 +171,8 @@ export default function InspectionsManagement() {
             <ClipboardCheck className="w-5 h-5 text-orange-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Inspektimet Shkollore</h1>
-            <p className="text-slate-500 text-sm">Ligji 06/L-046 — Inspektorati i Arsimit</p>
+            <h1 className="text-2xl font-bold text-slate-900">{t('im.title')}</h1>
+            <p className="text-slate-500 text-sm">{t('im.subtitle')}</p>
           </div>
         </div>
         {isInspector && (

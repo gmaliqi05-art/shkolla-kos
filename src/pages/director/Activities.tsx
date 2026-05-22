@@ -8,6 +8,7 @@ import {
   type ActivityParticipant,
 } from '../../types/database';
 import { Loader2, Plus, X, Trophy, Users, Edit2, ChevronDown, ChevronRight, UserPlus, Check, UserX } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface ActivityWithDetails extends ExtracurricularActivity {
   coordinator_name?: string;
@@ -34,6 +35,7 @@ const CATEGORY_COLORS: Record<ActivityCategory, string> = {
 
 export default function Activities() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const [activities, setActivities] = useState<ActivityWithDetails[]>([]);
   const [teachers, setTeachers] = useState<{ id: string; full_name: string }[]>([]);
   const [students, setStudents] = useState<{ id: string; full_name: string }[]>([]);
@@ -190,8 +192,8 @@ export default function Activities() {
             <Trophy className="w-5 h-5 text-amber-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Aktivitetet Jashtëmësimore</h1>
-            <p className="text-slate-500 text-sm">Klube, sport, olimpiada — sipas KKK</p>
+            <h1 className="text-2xl font-bold text-slate-900">{t('act.title')}</h1>
+            <p className="text-slate-500 text-sm">{t('act.subtitle')}</p>
           </div>
         </div>
         {canManage && (

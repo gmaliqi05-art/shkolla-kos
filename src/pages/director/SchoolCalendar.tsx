@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import { Loader2, Plus, Calendar, X, Edit2 } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 import {
   SCHOOL_EVENT_LABELS,
   SCHOOL_EVENT_COLORS,
@@ -11,6 +12,7 @@ import {
 
 export default function SchoolCalendar() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const isDirector = profile?.role === 'drejtor';
 
   const [events, setEvents] = useState<SchoolCalendarEvent[]>([]);
@@ -127,8 +129,8 @@ export default function SchoolCalendar() {
             <Calendar className="w-5 h-5 text-blue-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Kalendari Shkollor</h1>
-            <p className="text-slate-500 text-sm">Festat, pushimet, provimet dhe aktivitetet</p>
+            <h1 className="text-2xl font-bold text-slate-900">{t('sc.title')}</h1>
+            <p className="text-slate-500 text-sm">{t('sc.subtitle')}</p>
           </div>
         </div>
         {isDirector && (

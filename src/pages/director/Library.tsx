@@ -12,6 +12,7 @@ import {
   type BookLoanStatus,
 } from '../../types/database';
 import { Loader2, Plus, X, BookOpen, Library, Search, Edit2, Trash2, ArrowRight } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 type Tab = 'books' | 'loans';
 
@@ -23,6 +24,7 @@ interface LoanRow extends BookLoan {
 export default function LibraryPage() {
   const { profile } = useAuth();
   const toast = useToast();
+  const { t } = useI18n();
   const [tab, setTab] = useState<Tab>('books');
   const [books, setBooks] = useState<LibraryBook[]>([]);
   const [loans, setLoans] = useState<LoanRow[]>([]);
@@ -234,8 +236,8 @@ export default function LibraryPage() {
             <Library className="w-5 h-5 text-indigo-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Biblioteka Shkollore</h1>
-            <p className="text-slate-500 text-sm">Katalog librash dhe gjurmim huazimesh</p>
+            <h1 className="text-2xl font-bold text-slate-900">{t('lib.title')}</h1>
+            <p className="text-slate-500 text-sm">{t('lib.subtitle')}</p>
           </div>
         </div>
         {tab === 'books' && (

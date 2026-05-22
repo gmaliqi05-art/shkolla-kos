@@ -3,6 +3,7 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import { generateSecurePassword } from '../../lib/utils';
 import type { Profile } from '../../types/database';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 import {
   Search, Plus, Trash2, X, UserPlus, Loader2, Mail, Phone,
   Link2, MoreVertical, Copy, Check as CheckIcon, FileDown,
@@ -29,6 +30,7 @@ interface ParentWithChildren extends Profile {
 export default function ManageParents() {
   const { profile } = useAuth();
   const toast = useToast();
+  const { t } = useI18n();
   const [parents, setParents] = useState<ParentWithChildren[]>([]);
   const [students, setStudents] = useState<StudentOption[]>([]);
   const [search, setSearch] = useState('');
@@ -211,8 +213,8 @@ export default function ManageParents() {
     <div className="p-6 max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-800">Prindërit</h1>
-          <p className="text-slate-500 text-sm mt-1">{parents.length} prindër të regjistruar</p>
+          <h1 className="text-2xl font-semibold text-slate-800">{t('mp.title')}</h1>
+          <p className="text-slate-500 text-sm mt-1">{parents.length} {t('mp.subtitle').toLowerCase()}</p>
         </div>
         <div className="flex items-center gap-2">
           <button

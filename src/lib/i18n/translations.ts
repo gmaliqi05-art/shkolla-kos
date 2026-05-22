@@ -1218,6 +1218,133 @@ export const translations = {
   'ts.title': { sq: 'Orari Im Mësimor', sr: 'Moj nastavni raspored', tr: 'Ders Programım', bs: 'Moj nastavni raspored', en: 'My Teaching Schedule' },
   'ts.subtitle': { sq: 'Menaxhoni oraret e mësimit', sr: 'Upravljajte rasporedima časova', tr: 'Ders programlarınızı yönetin', bs: 'Upravljajte rasporedima časova', en: 'Manage your lesson schedules' },
   'ts.no_lessons': { sq: 'Nuk keni orë mësimi', sr: 'Nemate časove', tr: 'Dersiniz yok', bs: 'Nemate časove', en: 'No lessons assigned' },
+
+  // === DIRECTOR PAGES ===
+  // Municipalities
+  'mun.title': { sq: 'Komunat', sr: 'Opštine', tr: 'Belediyeler', bs: 'Općine', en: 'Municipalities' },
+  'mun.subtitle': { sq: 'Lista e 38 komunave të Kosovës', sr: 'Lista 38 opština Kosova', tr: 'Kosova\'nın 38 belediyesi listesi', bs: 'Lista 38 općina Kosova', en: 'List of Kosovo\'s 38 municipalities' },
+  'mun.region': { sq: 'Rajoni', sr: 'Region', tr: 'Bölge', bs: 'Regija', en: 'Region' },
+
+  // AuditLogs
+  'al.title': { sq: 'Audit Log', sr: 'Dnevnik aktivnosti', tr: 'Denetim Kaydı', bs: 'Dnevnik aktivnosti', en: 'Audit Log' },
+  'al.subtitle': { sq: 'Të gjitha veprimet në sistem (Ligji 06/L-082)', sr: 'Sve akcije u sistemu (Zakon 06/L-082)', tr: 'Sistemdeki tüm işlemler (Kanun 06/L-082)', bs: 'Sve akcije u sistemu (Zakon 06/L-082)', en: 'All system actions (Law 06/L-082)' },
+  'al.no_logs': { sq: 'Asnjë regjistrim audit', sr: 'Nema audit zapisa', tr: 'Denetim kaydı yok', bs: 'Nema audit zapisa', en: 'No audit records' },
+  'al.col_when': { sq: 'Kur', sr: 'Kada', tr: 'Ne zaman', bs: 'Kada', en: 'When' },
+  'al.col_actor': { sq: 'Aktori', sr: 'Akter', tr: 'Aktör', bs: 'Akter', en: 'Actor' },
+  'al.col_action': { sq: 'Veprimi', sr: 'Akcija', tr: 'Eylem', bs: 'Akcija', en: 'Action' },
+  'al.col_resource': { sq: 'Burimi', sr: 'Resurs', tr: 'Kaynak', bs: 'Resurs', en: 'Resource' },
+  'al.col_target': { sq: 'Cak', sr: 'Cilj', tr: 'Hedef', bs: 'Cilj', en: 'Target' },
+
+  // ReportCards
+  'rc.title': { sq: 'Dëftesat', sr: 'Svedočanstva', tr: 'Karneler', bs: 'Svjedočanstva', en: 'Report Cards' },
+  'rc.subtitle': { sq: 'Lëshimi dhe nënshkrimi i dëftesave përfundimtare', sr: 'Izdavanje i potpisivanje završnih svedočanstava', tr: 'Yıl sonu karnelerinin verilmesi ve imzalanması', bs: 'Izdavanje i potpisivanje završnih svjedočanstava', en: 'Issuing and signing final report cards' },
+  'rc.generate': { sq: 'Gjenero Dëftesa', sr: 'Generiši svedočanstva', tr: 'Karne Oluştur', bs: 'Generiši svjedočanstva', en: 'Generate Report Cards' },
+  'rc.no_cards': { sq: 'Asnjë dëftesë e gjeneruar', sr: 'Nema generisanih svedočanstava', tr: 'Oluşturulmuş karne yok', bs: 'Nema generisanih svjedočanstava', en: 'No report cards generated' },
+
+  // DeletionRequests
+  'dr.title': { sq: 'Kërkesat e Fshirjes', sr: 'Zahtevi za brisanje', tr: 'Silme Talepleri', bs: 'Zahtjevi za brisanje', en: 'Deletion Requests' },
+  'dr.subtitle': { sq: 'Menaxho kërkesat e fshirjes së të dhënave (Ligji 06/L-082)', sr: 'Upravljaj zahtevima za brisanje podataka (Zakon 06/L-082)', tr: 'Veri silme taleplerini yönetin (Kanun 06/L-082)', bs: 'Upravljaj zahtjevima za brisanje podataka (Zakon 06/L-082)', en: 'Manage data deletion requests (Law 06/L-082)' },
+  'dr.no_requests': { sq: 'Asnjë kërkesë e pritur', sr: 'Nema zahteva na čekanju', tr: 'Bekleyen talep yok', bs: 'Nema zahtjeva na čekanju', en: 'No pending requests' },
+  'dr.approve': { sq: 'Aprovo', sr: 'Odobri', tr: 'Onayla', bs: 'Odobri', en: 'Approve' },
+  'dr.reject': { sq: 'Refuzo', sr: 'Odbij', tr: 'Reddet', bs: 'Odbij', en: 'Reject' },
+  'dr.notes_label': { sq: 'Shënime për prindin', sr: 'Beleške za roditelja', tr: 'Veli için notlar', bs: 'Bilješke za roditelja', en: 'Notes for parent' },
+
+  // SchoolCalendar
+  'sc.title': { sq: 'Kalendari i Shkollës', sr: 'Školski kalendar', tr: 'Okul Takvimi', bs: 'Školski kalendar', en: 'School Calendar' },
+  'sc.subtitle': { sq: 'Pushimet, ngjarjet, datat e rëndësishme', sr: 'Praznici, događaji, važni datumi', tr: 'Tatiller, etkinlikler, önemli tarihler', bs: 'Praznici, događaji, važni datumi', en: 'Holidays, events, important dates' },
+  'sc.add_event': { sq: 'Shto Ngjarje', sr: 'Dodaj događaj', tr: 'Etkinlik Ekle', bs: 'Dodaj događaj', en: 'Add Event' },
+  'sc.no_events': { sq: 'Asnjë ngjarje e planifikuar', sr: 'Nema planiranih događaja', tr: 'Planlanan etkinlik yok', bs: 'Nema planiranih događaja', en: 'No scheduled events' },
+  'sc.event_title': { sq: 'Titulli i ngjarjes *', sr: 'Naslov događaja *', tr: 'Etkinlik başlığı *', bs: 'Naslov događaja *', en: 'Event title *' },
+  'sc.event_type': { sq: 'Lloji', sr: 'Tip', tr: 'Tür', bs: 'Tip', en: 'Type' },
+  'sc.start_date': { sq: 'Data e fillimit *', sr: 'Datum početka *', tr: 'Başlangıç tarihi *', bs: 'Datum početka *', en: 'Start date *' },
+  'sc.end_date': { sq: 'Data e mbarimit', sr: 'Datum završetka', tr: 'Bitiş tarihi', bs: 'Datum završetka', en: 'End date' },
+
+  // SchoolSettings
+  'ss.title': { sq: 'Cilësimet e Shkollës', sr: 'Postavke škole', tr: 'Okul Ayarları', bs: 'Postavke škole', en: 'School Settings' },
+  'ss.subtitle': { sq: 'Informacione bazike dhe konfigurimi i shkollës', sr: 'Osnovne informacije i konfiguracija škole', tr: 'Temel bilgiler ve okul yapılandırması', bs: 'Osnovne informacije i konfiguracija škole', en: 'Basic info and school configuration' },
+  'ss.school_info': { sq: 'Informacioni i shkollës', sr: 'Informacije o školi', tr: 'Okul bilgileri', bs: 'Informacije o školi', en: 'School information' },
+  'ss.save_changes': { sq: 'Ruaj ndryshimet', sr: 'Sačuvaj promene', tr: 'Değişiklikleri kaydet', bs: 'Sačuvaj promjene', en: 'Save changes' },
+
+  // TeacherLicensing
+  'tl.title': { sq: 'Licencimi i Mësuesve', sr: 'Licenciranje nastavnika', tr: 'Öğretmen Lisanslama', bs: 'Licenciranje nastavnika', en: 'Teacher Licensing' },
+  'tl.subtitle': { sq: 'Menaxho licencat dhe ZHPM të mësuesve (UA 02/2017, 05/2017)', sr: 'Upravljaj licencama i SU nastavnika', tr: 'Öğretmen lisanslarını ve mesleki gelişimi yönet', bs: 'Upravljaj licencama i SU nastavnika', en: 'Manage teacher licenses and PD (UA 02/2017, 05/2017)' },
+  'tl.verify_hours': { sq: 'Verifiko orët', sr: 'Verifikuj sate', tr: 'Saatleri doğrula', bs: 'Verifikuj sate', en: 'Verify hours' },
+  'tl.no_teachers': { sq: 'Asnjë mësues', sr: 'Nema nastavnika', tr: 'Öğretmen yok', bs: 'Nema nastavnika', en: 'No teachers' },
+
+  // ManagePedagogues
+  'mpd.title': { sq: 'Pedagogët', sr: 'Pedagozi', tr: 'Pedagoglar', bs: 'Pedagozi', en: 'Pedagogues' },
+  'mpd.subtitle': { sq: 'Menaxhoni pedagogët, psikologët dhe logopedët e shkollës', sr: 'Upravljajte pedagozima, psiholozima i logopedima škole', tr: 'Okulun pedagoglarını, psikologlarını ve dil terapistlerini yönetin', bs: 'Upravljajte pedagozima, psiholozima i logopedima škole', en: 'Manage school pedagogues, psychologists and speech therapists' },
+  'mpd.add': { sq: 'Shto Pedagog', sr: 'Dodaj pedagoga', tr: 'Pedagog Ekle', bs: 'Dodaj pedagoga', en: 'Add Pedagogue' },
+  'mpd.no_pedagogues': { sq: 'Nuk ka pedagogë të regjistruar', sr: 'Nema registrovanih pedagoga', tr: 'Kayıtlı pedagog yok', bs: 'Nema registrovanih pedagoga', en: 'No pedagogues registered' },
+
+  // Activities
+  'act.title': { sq: 'Aktivitetet', sr: 'Aktivnosti', tr: 'Etkinlikler', bs: 'Aktivnosti', en: 'Activities' },
+  'act.subtitle': { sq: 'Aktivitetet jashtëshkollore dhe ekskursionet', sr: 'Vannastavne aktivnosti i ekskurzije', tr: 'Okul dışı etkinlikler ve geziler', bs: 'Vannastavne aktivnosti i ekskurzije', en: 'Extracurricular activities and field trips' },
+  'act.new': { sq: 'Aktivitet i Ri', sr: 'Nova aktivnost', tr: 'Yeni Etkinlik', bs: 'Nova aktivnost', en: 'New Activity' },
+  'act.no_activities': { sq: 'Asnjë aktivitet i regjistruar', sr: 'Nema registrovanih aktivnosti', tr: 'Kayıtlı etkinlik yok', bs: 'Nema registrovanih aktivnosti', en: 'No activities recorded' },
+
+  // ManageParents
+  'mp.title': { sq: 'Prindërit', sr: 'Roditelji', tr: 'Veliler', bs: 'Roditelji', en: 'Parents' },
+  'mp.subtitle': { sq: 'Menaxhoni llogarinë e prindërve dhe lidhjet me fëmijët', sr: 'Upravljajte nalozima roditelja i vezama sa decom', tr: 'Veli hesaplarını ve çocuklarla bağlantıları yönetin', bs: 'Upravljajte nalozima roditelja i vezama sa djecom', en: 'Manage parent accounts and links to children' },
+  'mp.add': { sq: 'Shto Prind', sr: 'Dodaj roditelja', tr: 'Veli Ekle', bs: 'Dodaj roditelja', en: 'Add Parent' },
+  'mp.no_parents': { sq: 'Nuk ka prindër të regjistruar', sr: 'Nema registrovanih roditelja', tr: 'Kayıtlı veli yok', bs: 'Nema registrovanih roditelja', en: 'No parents registered' },
+
+  // NationalTests
+  'nt.title': { sq: 'Testet Kombëtare', sr: 'Nacionalni testovi', tr: 'Ulusal Testler', bs: 'Nacionalni testovi', en: 'National Tests' },
+  'nt.subtitle': { sq: 'Testet e Arritshmërisë për klasat V dhe IX', sr: 'Testovi postignuća za V i IX razred', tr: 'V ve IX. sınıflar için Yeterlilik Testleri', bs: 'Testovi postignuća za V i IX razred', en: 'Achievement Tests for grades 5 and 9' },
+  'nt.new_test': { sq: 'Test i Ri', sr: 'Novi test', tr: 'Yeni Test', bs: 'Novi test', en: 'New Test' },
+  'nt.no_tests': { sq: 'Asnjë test i regjistruar', sr: 'Nema registrovanih testova', tr: 'Kayıtlı test yok', bs: 'Nema registrovanih testova', en: 'No tests recorded' },
+
+  // ReportCardView
+  'rcv.title': { sq: 'Pamja e Dëftesës', sr: 'Pregled svedočanstva', tr: 'Karne Görünümü', bs: 'Pregled svjedočanstva', en: 'Report Card View' },
+  'rcv.print': { sq: 'Printo', sr: 'Štampaj', tr: 'Yazdır', bs: 'Štampaj', en: 'Print' },
+  'rcv.back': { sq: 'Kthehu te lista', sr: 'Nazad na listu', tr: 'Listeye dön', bs: 'Nazad na listu', en: 'Back to list' },
+
+  // ManageClasses
+  'mc_d.title': { sq: 'Klasat', sr: 'Razredi', tr: 'Sınıflar', bs: 'Razredi', en: 'Classes' },
+  'mc_d.subtitle': { sq: 'Menaxhoni klasat dhe caktoni mësues kujdestarë', sr: 'Upravljajte razredima i dodelite razredne starešine', tr: 'Sınıfları yönetin ve sınıf öğretmeni atayın', bs: 'Upravljajte razredima i dodijelite razredne starešine', en: 'Manage classes and assign homeroom teachers' },
+  'mc_d.create_class': { sq: 'Krijo Klasë', sr: 'Kreiraj razred', tr: 'Sınıf Oluştur', bs: 'Kreiraj razred', en: 'Create Class' },
+  'mc_d.no_classes': { sq: 'Asnjë klasë e krijuar', sr: 'Nema kreiranih razreda', tr: 'Oluşturulmuş sınıf yok', bs: 'Nema kreiranih razreda', en: 'No classes created' },
+
+  // Library
+  'lib.title': { sq: 'Biblioteka Shkollore', sr: 'Školska biblioteka', tr: 'Okul Kütüphanesi', bs: 'Školska biblioteka', en: 'School Library' },
+  'lib.subtitle': { sq: 'Menaxhoni librat dhe huazimet', sr: 'Upravljajte knjigama i pozajmicama', tr: 'Kitapları ve ödünç almaları yönetin', bs: 'Upravljajte knjigama i pozajmicama', en: 'Manage books and loans' },
+  'lib.add_book': { sq: 'Shto Libër', sr: 'Dodaj knjigu', tr: 'Kitap Ekle', bs: 'Dodaj knjigu', en: 'Add Book' },
+  'lib.no_books': { sq: 'Asnjë libër në bibliotekë', sr: 'Nema knjiga u biblioteci', tr: 'Kütüphanede kitap yok', bs: 'Nema knjiga u biblioteci', en: 'No books in the library' },
+  'lib.loans': { sq: 'Huazimet', sr: 'Pozajmice', tr: 'Ödünç almalar', bs: 'Pozajmice', en: 'Loans' },
+
+  // AnnualPlan
+  'ap.title': { sq: 'Plani Vjetor i Shkollës', sr: 'Godišnji plan škole', tr: 'Okul Yıllık Planı', bs: 'Godišnji plan škole', en: 'Annual School Plan' },
+  'ap.subtitle': { sq: 'Planifikimi vjetor sipas UA 19/2018', sr: 'Godišnje planiranje prema UA 19/2018', tr: 'UA 19/2018\'e göre yıllık planlama', bs: 'Godišnje planiranje prema UA 19/2018', en: 'Annual planning per UA 19/2018' },
+  'ap.no_plan': { sq: 'Nuk ka plan vjetor të krijuar', sr: 'Nije kreiran godišnji plan', tr: 'Yıllık plan oluşturulmamış', bs: 'Nije kreiran godišnji plan', en: 'No annual plan created' },
+  'ap.create_plan': { sq: 'Krijo Plan', sr: 'Kreiraj plan', tr: 'Plan Oluştur', bs: 'Kreiraj plan', en: 'Create Plan' },
+
+  // SpecialNeedsManagement
+  'snm.title': { sq: 'Menaxhimi i NVA & PIA', sr: 'Upravljanje PIO i IOP', tr: 'Özel Eğitim ve BEP Yönetimi', bs: 'Upravljanje PIO i IOP', en: 'SEN & IEP Management' },
+  'snm.subtitle': { sq: 'Nxënësit me nevoja të veçanta arsimore dhe Planet Individuale (Ligji 04/L-032)', sr: 'Učenici sa posebnim obrazovnim potrebama i Individualni planovi (Zakon 04/L-032)', tr: 'Özel eğitim ihtiyaçları olan öğrenciler ve Bireysel Planlar (Kanun 04/L-032)', bs: 'Učenici sa posebnim obrazovnim potrebama i Individualni planovi (Zakon 04/L-032)', en: 'Students with special educational needs and Individual Plans (Law 04/L-032)' },
+  'snm.no_records': { sq: 'Asnjë regjistrim', sr: 'Nema zapisa', tr: 'Kayıt yok', bs: 'Nema zapisa', en: 'No records' },
+
+  // SchoolCouncils
+  'scc.title': { sq: 'Këshillat e Shkollës', sr: 'Školska veća', tr: 'Okul Konseyleri', bs: 'Školska vijeća', en: 'School Councils' },
+  'scc.subtitle': { sq: 'Këshilli Drejtues, Prindëror, Nxënësish, Pedagogjik', sr: 'Upravno, Roditeljsko, Učeničko, Pedagoško veće', tr: 'Yönetim, Veli, Öğrenci, Pedagojik Konsey', bs: 'Upravno, Roditeljsko, Učeničko, Pedagoško vijeće', en: 'Management, Parent, Student, Pedagogical Councils' },
+  'scc.create': { sq: 'Krijo Këshill', sr: 'Kreiraj veće', tr: 'Konsey Oluştur', bs: 'Kreiraj vijeće', en: 'Create Council' },
+  'scc.no_councils': { sq: 'Asnjë këshill i krijuar', sr: 'Nema kreiranih veća', tr: 'Oluşturulmuş konsey yok', bs: 'Nema kreiranih vijeća', en: 'No councils created' },
+
+  // Inspector pages
+  'im.title': { sq: 'Menaxhimi i Inspektimeve', sr: 'Upravljanje inspekcijama', tr: 'Denetim Yönetimi', bs: 'Upravljanje inspekcijama', en: 'Inspections Management' },
+  'im.subtitle': { sq: 'Të gjitha inspektimet shkollore (Ligji 06/L-046)', sr: 'Sve školske inspekcije (Zakon 06/L-046)', tr: 'Tüm okul denetimleri (Kanun 06/L-046)', bs: 'Sve školske inspekcije (Zakon 06/L-046)', en: 'All school inspections (Law 06/L-046)' },
+  'im.new_inspection': { sq: 'Inspektim i Ri', sr: 'Nova inspekcija', tr: 'Yeni Denetim', bs: 'Nova inspekcija', en: 'New Inspection' },
+  'im.no_inspections': { sq: 'Asnjë inspektim', sr: 'Nema inspekcija', tr: 'Denetim yok', bs: 'Nema inspekcija', en: 'No inspections' },
+  'id.title': { sq: 'Detajet e Inspektimit', sr: 'Detalji inspekcije', tr: 'Denetim Detayları', bs: 'Detalji inspekcije', en: 'Inspection Details' },
+  'id.findings': { sq: 'Gjetjet', sr: 'Nalazi', tr: 'Bulgular', bs: 'Nalazi', en: 'Findings' },
+  'id.recommendations': { sq: 'Rekomandimet', sr: 'Preporuke', tr: 'Öneriler', bs: 'Preporuke', en: 'Recommendations' },
+  'id.back': { sq: 'Kthehu', sr: 'Nazad', tr: 'Geri', bs: 'Nazad', en: 'Back' },
+
+  // Ministri pages
+  'sam.title': { sq: 'Menaxhimi i Llogarive të Stafit', sr: 'Upravljanje nalozima osoblja', tr: 'Personel Hesapları Yönetimi', bs: 'Upravljanje nalozima osoblja', en: 'Staff Accounts Management' },
+  'sam.subtitle': { sq: 'Krijo dhe menaxho llogaritë e DKA, drejtorëve, inspektorëve', sr: 'Kreiraj i upravljaj nalozima DKA, direktora, inspektora', tr: 'DKA, müdür, müfettiş hesaplarını oluştur ve yönet', bs: 'Kreiraj i upravljaj nalozima DKA, direktora, inspektora', en: 'Create and manage MED, principal, inspector accounts' },
+  'sam.create_account': { sq: 'Krijo Llogari', sr: 'Kreiraj nalog', tr: 'Hesap Oluştur', bs: 'Kreiraj nalog', en: 'Create Account' },
+  'sam.no_staff': { sq: 'Asnjë staf i regjistruar', sr: 'Nema registrovanog osoblja', tr: 'Kayıtlı personel yok', bs: 'Nema registrovanog osoblja', en: 'No staff registered' },
 } as const;
 
 export type TranslationKey = keyof typeof translations;
