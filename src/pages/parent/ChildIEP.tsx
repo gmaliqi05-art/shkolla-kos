@@ -15,6 +15,7 @@ import {
   type SpecialNeed,
 } from '../../types/database';
 import { Loader2, Heart, Check, Target, Sparkles, FileText, AlertCircle } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface ChildOption {
   id: string;
@@ -28,6 +29,7 @@ interface IEPWithDetails extends IndividualEducationPlan {
 
 export default function ChildIEP() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const [children, setChildren] = useState<ChildOption[]>([]);
   const [selectedChild, setSelectedChild] = useState('');
   const [needs, setNeeds] = useState<SpecialNeed[]>([]);
@@ -110,7 +112,7 @@ export default function ChildIEP() {
       })
       .eq('id', iep.id);
     if (error) {
-      setMessage('Gabim: ' + error.message);
+      setMessage(`${t('parent.iep.error_prefix')} ${error.message}`);
     } else {
       await logAudit({
         actorId: profile.id,
@@ -120,7 +122,7 @@ export default function ChildIEP() {
         resourceId: iep.id,
         targetUserId: iep.student_id,
       });
-      setMessage('Pëlqimi u regjistrua. Faleminderit!');
+      setMessage(t('parent.iep.consent_recorded'));
       loadChildData();
     }
     setConsentingId(null);
@@ -137,7 +139,7 @@ export default function ChildIEP() {
   if (children.length === 0) {
     return (
       <div className="text-center py-12 text-slate-400 text-sm">
-        Nuk keni asnjë fëmijë të lidhur me llogarinë tuaj.
+        {t('parent.privacy.no_children')}
       </div>
     );
   }
@@ -149,14 +151,14 @@ export default function ChildIEP() {
           <Heart className="w-5 h-5 text-pink-600" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Plani Individual i Arsimimit</h1>
-          <p className="text-slate-500 text-sm">Arsimi gjithëpërfshirës për fëmijën tuaj (Ligji 04/L-032)</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('parent.iep.title')}</h1>
+          <p className="text-slate-500 text-sm">{t('parent.iep.subtitle')}</p>
         </div>
       </div>
 
       {children.length > 1 && (
         <div className="bg-white rounded-2xl border border-slate-100 p-4">
-          <label className="block text-xs font-medium text-slate-500 mb-1">Fëmija</label>
+          <label className="block text-xs font-medium text-slate-500 mb-1">{t('parent.child_label')}</label>
           <select
             value={selectedChild}
             onChange={(e) => setSelectedChild(e.target.value)}
@@ -179,7 +181,7 @@ export default function ChildIEP() {
         <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
           <div className="px-5 py-3 border-b border-slate-100 flex items-center gap-2">
             <FileText className="w-5 h-5 text-blue-600" />
-            <h2 className="font-semibold text-slate-900">Nevojat e Veçanta Arsimore</h2>
+            <h2 className="font-semibold text-slate-900">{t('parent.iep.special_needs_section')}</h2>
           </div>
           <div className="divide-y divide-slate-100">
             {needs.map((n) => (
@@ -191,7 +193,7 @@ export default function ChildIEP() {
                   )}
                 </div>
                 {n.diagnosis && <p className="text-sm text-slate-600 mt-1">{n.diagnosis}</p>}
-                {n.diagnosed_by && <p className="text-xs text-slate-500 mt-0.5">Diagnostikuar nga: {n.diagnosed_by}</p>}
+                {n.diagnosed_by && <p className="text-xs text-slate-500 mt-0.5">{t('parent.iep.diagnosed_by')} {n.diagnosed_by}</p>}
               </div>
             ))}
           </div>
@@ -201,7 +203,7 @@ export default function ChildIEP() {
       <div className="space-y-3">
         {ieps.length === 0 ? (
           <div className="bg-white rounded-2xl border border-slate-100 px-6 py-12 text-center text-slate-400 text-sm">
-            Nuk ka asnjë Plan Individual të Arsimimit për fëmijën tuaj.
+            {t('parent.iep.no_ieps')}
           </div>
         ) : (
           ieps.map((iep) => (
@@ -217,12 +219,12 @@ export default function ChildIEP() {
                   {iep.parent_consent ? (
                     <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium bg-emerald-100 text-emerald-700">
                       <Check className="w-3 h-3" />
-                      Pëlqimi i dhënë
+                      {t('parent.iep.consent_given')}
                     </span>
                   ) : (
                     <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium bg-amber-100 text-amber-700">
                       <AlertCircle className="w-3 h-3" />
-                      Pa pëlqim
+                      {t('parent.iep.no_consent')}
                     </span>
                   )}
                 </div>
@@ -232,7 +234,7 @@ export default function ChildIEP() {
                   <div className="mt-4">
                     <h4 className="text-sm font-semibold text-slate-900 flex items-center gap-2 mb-2">
                       <Target className="w-4 h-4 text-blue-600" />
-                      Objektivat
+                      {t('parent.iep.goals_section')}
                     </h4>
                     <ul className="space-y-1 text-sm">
                       {iep.goals.map((g) => (
@@ -252,7 +254,7 @@ export default function ChildIEP() {
                   <div className="mt-4">
                     <h4 className="text-sm font-semibold text-slate-900 flex items-center gap-2 mb-2">
                       <Sparkles className="w-4 h-4 text-purple-600" />
-                      Akomodimet
+                      {t('parent.iep.accommodations_section')}
                     </h4>
                     <ul className="space-y-1 text-sm">
                       {iep.accommodations.map((a) => (
@@ -270,7 +272,7 @@ export default function ChildIEP() {
                 {!iep.parent_consent && iep.status === 'aktiv' && (
                   <div className="mt-5 border-t border-slate-100 pt-4">
                     <p className="text-sm text-slate-600 mb-3">
-                      Ky plan kërkon pëlqimin tuaj si prind/kujdestar ligjor sipas Ligjit 04/L-032 për Arsimin Parauniversitar.
+                      {t('parent.iep.consent_required_msg')}
                     </p>
                     <button
                       onClick={() => giveConsent(iep)}
@@ -278,14 +280,14 @@ export default function ChildIEP() {
                       className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-medium disabled:opacity-50"
                     >
                       {consentingId === iep.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-                      Jap Pëlqimin për Planin
+                      {t('parent.iep.give_consent_btn')}
                     </button>
                   </div>
                 )}
 
                 {iep.parent_consent && iep.parent_consent_at && (
                   <p className="text-xs text-slate-500 mt-3">
-                    Pëlqimi dhënë më: {new Date(iep.parent_consent_at).toLocaleDateString('sq-AL')}
+                    {t('parent.iep.consent_given_on')} {new Date(iep.parent_consent_at).toLocaleDateString('sq-AL')}
                   </p>
                 )}
               </div>

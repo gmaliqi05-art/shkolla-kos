@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import { BookOpen, TrendingUp, Award, AlertCircle, Users, Loader2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 import type { Grade, Profile } from '../../types/database';
+import type { TranslationKey } from '../../lib/i18n/translations';
 
 interface SubjectGrades {
   subject_id: string;
@@ -30,6 +32,7 @@ const DEMO_GRADES: SubjectGrades[] = [
 
 export default function ChildGrades() {
   const { profile, isDemo } = useAuth();
+  const { t } = useI18n();
   const [children, setChildren] = useState<Profile[]>([]);
   const [selectedChild, setSelectedChild] = useState<string>('');
   const [semester, setSemester] = useState<number>(1);
@@ -78,7 +81,7 @@ export default function ChildGrades() {
         setSelectedChild(childrenData[0].id);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Gabim');
+      setError(err instanceof Error ? err.message : t('common.error'));
     } finally {
       setLoading(false);
     }
@@ -107,7 +110,7 @@ export default function ChildGrades() {
 
       if (enrollError) throw enrollError;
       if (!enrollment) {
-        setError('Femija nuk eshte i regjistruar ne asnje klase.');
+        setError(t('parent.child_not_enrolled'));
         setSubjectGrades([]);
         setLoading(false);
         return;
@@ -171,7 +174,7 @@ export default function ChildGrades() {
       setSubjectGrades(subjectData);
       setOverallAverage(Number(overall.toFixed(2)));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Gabim');
+      setError(err instanceof Error ? err.message : t('common.error'));
     } finally {
       setLoading(false);
     }
@@ -186,13 +189,15 @@ export default function ChildGrades() {
     return 'bg-rose-100 text-rose-700';
   };
 
-  const getGradeLabel = (grade: number | null) => {
+  const getGradeLabel = (grade: number | null): string => {
     if (grade === null) return '-';
-    if (grade >= 4.5) return 'Shkelqyeshem';
-    if (grade >= 3.5) return 'Shume Mire';
-    if (grade >= 2.5) return 'Mire';
-    if (grade >= 1.5) return 'Mjaftueshem';
-    return 'Pamjaftueshem';
+    const key: TranslationKey =
+      grade >= 4.5 ? 'grade.5' :
+      grade >= 3.5 ? 'grade.4' :
+      grade >= 2.5 ? 'grade.3' :
+      grade >= 1.5 ? 'grade.2' :
+      'grade.1';
+    return t(key);
   };
 
   const getAverageColor = (avg: number) => {
@@ -217,8 +222,8 @@ export default function ChildGrades() {
     return (
       <div className="text-center py-12">
         <Users className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-        <h3 className="text-lg font-semibold text-slate-900 mb-2">Nuk ka femije te lidhur</h3>
-        <p className="text-slate-500">Kontaktoni drejtorine per te lidhur llogarine me femijen tuaj.</p>
+        <h3 className="text-lg font-semibold text-slate-900 mb-2">{t('parent.no_children')}</h3>
+        <p className="text-slate-500">{t('parent.no_children_help')}</p>
       </div>
     );
   }
@@ -228,14 +233,14 @@ export default function ChildGrades() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">
-            Notat e {selectedChildData?.full_name || 'Femijes'}
+            {t('parent.grades_of')} {selectedChildData?.full_name || t('parent.child_fallback')}
           </h1>
-          <p className="text-slate-500 mt-1">Shikoni te gjitha vleresimet e femijes suaj</p>
+          <p className="text-slate-500 mt-1">{t('parent.child_grades_view_all')}</p>
         </div>
         <div className="flex items-center gap-3">
           <Award className="w-8 h-8 text-slate-500" />
           <div>
-            <p className="text-xs text-slate-500">Mesatarja Pergjithshme</p>
+            <p className="text-xs text-slate-500">{t('student.grades.overall_avg')}</p>
             <p className={`text-2xl font-bold ${overallAverage > 0 ? getAverageColor(overallAverage) : 'text-slate-400'}`}>
               {overallAverage > 0 ? overallAverage.toFixed(2) : '-'}
             </p>
@@ -247,7 +252,7 @@ export default function ChildGrades() {
         <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-rose-600 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
-            <p className="text-sm font-medium text-rose-900">Gabim</p>
+            <p className="text-sm font-medium text-rose-900">{t('common.error')}</p>
             <p className="text-sm text-rose-700 mt-1">{error}</p>
           </div>
         </div>
@@ -257,7 +262,7 @@ export default function ChildGrades() {
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
           {children.length > 1 && (
             <div className="flex-1">
-              <label className="block text-sm font-medium text-slate-700 mb-2">Femija</label>
+              <label className="block text-sm font-medium text-slate-700 mb-2">{t('parent.child_label')}</label>
               <select
                 value={selectedChild}
                 onChange={(e) => setSelectedChild(e.target.value)}
@@ -272,15 +277,15 @@ export default function ChildGrades() {
             </div>
           )}
           <div className="flex-1">
-            <label className="block text-sm font-medium text-slate-700 mb-2">Periudha</label>
+            <label className="block text-sm font-medium text-slate-700 mb-2">{t('student.grades.period_label')}</label>
             <select
               value={semester}
               onChange={(e) => setSemester(Number(e.target.value))}
               className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-500 outline-none text-sm"
             >
-              <option value={1}>Periudha e Pare</option>
-              <option value={2}>Periudha e Dyte</option>
-              <option value={3}>Periudha e Trete</option>
+              <option value={1}>{t('period.1')}</option>
+              <option value={2}>{t('period.2')}</option>
+              <option value={3}>{t('period.3')}</option>
             </select>
           </div>
         </div>
@@ -289,13 +294,13 @@ export default function ChildGrades() {
           <table className="w-full">
             <thead>
               <tr className="border-b-2 border-slate-200">
-                <th className="text-left px-4 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider min-w-[150px]">Lenda</th>
+                <th className="text-left px-4 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider min-w-[150px]">{t('student.grades.subject_col')}</th>
                 <th className="text-center px-3 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">V1</th>
                 <th className="text-center px-3 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">V2</th>
                 <th className="text-center px-3 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">V3</th>
                 <th className="text-center px-3 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">V4</th>
-                <th className="text-center px-3 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider bg-slate-50">Perfundimtare</th>
-                <th className="text-center px-3 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">Mesatarja</th>
+                <th className="text-center px-3 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider bg-slate-50">{t('student.grades.final_col')}</th>
+                <th className="text-center px-3 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">{t('student.grades.average_col')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -338,7 +343,7 @@ export default function ChildGrades() {
           </table>
           {subjectGrades.length === 0 && !loading && (
             <div className="text-center py-12">
-              <p className="text-slate-500">Nuk ka nota te disponueshme per kete gjysmevjetor.</p>
+              <p className="text-slate-500">{t('student.grades.no_grades_period')}</p>
             </div>
           )}
         </div>
@@ -347,7 +352,7 @@ export default function ChildGrades() {
       <div className="bg-white rounded-2xl border border-slate-100 p-6">
         <div className="flex items-center gap-2 mb-4">
           <TrendingUp className="w-5 h-5 text-slate-500" />
-          <h3 className="font-semibold text-slate-900">Permbledhje sipas Lendes</h3>
+          <h3 className="font-semibold text-slate-900">{t('student.grades.summary_by_subject')}</h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {subjectGrades
@@ -373,7 +378,7 @@ export default function ChildGrades() {
             })}
         </div>
         {subjectGrades.filter(s => s.perfundimtare !== null || s.average !== null).length === 0 && (
-          <p className="text-center text-slate-500 py-8">Nuk ka nota te disponueshme.</p>
+          <p className="text-center text-slate-500 py-8">{t('student.grades.no_grades_avail')}</p>
         )}
       </div>
     </div>
