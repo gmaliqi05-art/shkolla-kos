@@ -9,10 +9,20 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>
 );
 
-// Regjistro Service Worker për PWA / offline support
 if ('serviceWorker' in navigator && import.meta.env.PROD) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch((err) => {
+    navigator.serviceWorker.register('/sw.js').then((reg) => {
+      reg.addEventListener('updatefound', () => {
+        const newSW = reg.installing;
+        if (newSW) {
+          newSW.addEventListener('statechange', () => {
+            if (newSW.state === 'activated' && navigator.serviceWorker.controller) {
+              window.location.reload();
+            }
+          });
+        }
+      });
+    }).catch((err) => {
       console.warn('SW registration failed:', err);
     });
   });

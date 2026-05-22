@@ -8,76 +8,88 @@ import DashboardLayout from './components/layout/DashboardLayout';
 import ErrorBoundary from './components/ErrorBoundary';
 import type { NavItem } from './components/layout/Sidebar';
 
-const DirectorDashboard = lazy(() => import('./pages/director/DirectorDashboard'));
-const ManageTeachers = lazy(() => import('./pages/director/ManageTeachers'));
-const ManageClasses = lazy(() => import('./pages/director/ManageClasses'));
-const ManageStudents = lazy(() => import('./pages/director/ManageStudents'));
-const ManageParents = lazy(() => import('./pages/director/ManageParents'));
-const ManagePedagogues = lazy(() => import('./pages/director/ManagePedagogues'));
-const Reports = lazy(() => import('./pages/director/Reports'));
-const Announcements = lazy(() => import('./pages/director/Announcements'));
-const AuditLogs = lazy(() => import('./pages/director/AuditLogs'));
-const DeletionRequests = lazy(() => import('./pages/director/DeletionRequests'));
-const SpecialNeedsManagement = lazy(() => import('./pages/director/SpecialNeedsManagement'));
-const SchoolCouncils = lazy(() => import('./pages/director/SchoolCouncils'));
-const SchoolSettings = lazy(() => import('./pages/director/SchoolSettings'));
-const ReportCards = lazy(() => import('./pages/director/ReportCards'));
-const ReportCardView = lazy(() => import('./pages/director/ReportCardView'));
-const TeacherLicensing = lazy(() => import('./pages/director/TeacherLicensing'));
-const Activities = lazy(() => import('./pages/director/Activities'));
-const NationalTests = lazy(() => import('./pages/director/NationalTests'));
-const Municipalities = lazy(() => import('./pages/director/Municipalities'));
-const SchoolCalendar = lazy(() => import('./pages/director/SchoolCalendar'));
-const AnnualPlan = lazy(() => import('./pages/director/AnnualPlan'));
-const LibraryPage = lazy(() => import('./pages/director/Library'));
-const TwoFactorSettings = lazy(() => import('./pages/TwoFactorSettings'));
-const LegalDocuments = lazy(() => import('./pages/shared/LegalDocuments'));
-const RoleGuide = lazy(() => import('./pages/shared/RoleGuide'));
-const MinistriDashboard = lazy(() => import('./pages/ministri/MinistriDashboard'));
-const StaffAccountsManagement = lazy(() => import('./pages/ministri/StaffAccountsManagement'));
-const DkaDashboard = lazy(() => import('./pages/dka/DkaDashboard'));
-const SchoolsManagement = lazy(() => import('./pages/shared/SchoolsManagement'));
-const LocalitiesManagement = lazy(() => import('./pages/shared/LocalitiesManagement'));
-const InspectionsManagement = lazy(() => import('./pages/inspektor/InspectionsManagement'));
-const InspectionDetail = lazy(() => import('./pages/inspektor/InspectionDetail'));
-const InspectorDashboard = lazy(() => import('./pages/inspektor/InspectorDashboard'));
-const PedagogDashboard = lazy(() => import('./pages/pedagog/PedagogDashboard'));
-const SuperAdminDashboard = lazy(() => import('./pages/admin/SuperAdminDashboard'));
-const UserManual = lazy(() => import('./pages/admin/UserManual'));
+function lazyRetry(factory: () => Promise<{ default: React.ComponentType }>) {
+  return lazy(() =>
+    factory().catch(() => {
+      if ('caches' in window) {
+        caches.keys().then((names) => Promise.all(names.map((n) => caches.delete(n))));
+      }
+      window.location.reload();
+      return new Promise(() => {});
+    })
+  );
+}
 
-const TeacherDashboard = lazy(() => import('./pages/teacher/TeacherDashboard'));
-const MyClasses = lazy(() => import('./pages/teacher/MyClasses'));
-const GradeEntry = lazy(() => import('./pages/teacher/GradeEntry'));
-const AttendancePage = lazy(() => import('./pages/teacher/AttendancePage'));
-const TeacherSchedule = lazy(() => import('./pages/teacher/TeacherSchedule'));
-const SubjectsPage = lazy(() => import('./pages/teacher/SubjectsPage'));
-const BehaviorPage = lazy(() => import('./pages/teacher/BehaviorPage'));
-const DisciplinePage = lazy(() => import('./pages/teacher/DisciplinePage'));
-const StudentAccommodations = lazy(() => import('./pages/teacher/StudentAccommodations'));
-const MyLicense = lazy(() => import('./pages/teacher/MyLicense'));
-const ParentMeetings = lazy(() => import('./pages/teacher/ParentMeetings'));
-const ClassDiary = lazy(() => import('./pages/teacher/ClassDiary'));
-const HomeworkPage = lazy(() => import('./pages/teacher/HomeworkPage'));
-const DiagnosticAssessments = lazy(() => import('./pages/teacher/DiagnosticAssessments'));
+const DirectorDashboard = lazyRetry(() => import('./pages/director/DirectorDashboard'));
+const ManageTeachers = lazyRetry(() => import('./pages/director/ManageTeachers'));
+const ManageClasses = lazyRetry(() => import('./pages/director/ManageClasses'));
+const ManageStudents = lazyRetry(() => import('./pages/director/ManageStudents'));
+const ManageParents = lazyRetry(() => import('./pages/director/ManageParents'));
+const ManagePedagogues = lazyRetry(() => import('./pages/director/ManagePedagogues'));
+const Reports = lazyRetry(() => import('./pages/director/Reports'));
+const Announcements = lazyRetry(() => import('./pages/director/Announcements'));
+const AuditLogs = lazyRetry(() => import('./pages/director/AuditLogs'));
+const DeletionRequests = lazyRetry(() => import('./pages/director/DeletionRequests'));
+const SpecialNeedsManagement = lazyRetry(() => import('./pages/director/SpecialNeedsManagement'));
+const SchoolCouncils = lazyRetry(() => import('./pages/director/SchoolCouncils'));
+const SchoolSettings = lazyRetry(() => import('./pages/director/SchoolSettings'));
+const ReportCards = lazyRetry(() => import('./pages/director/ReportCards'));
+const ReportCardView = lazyRetry(() => import('./pages/director/ReportCardView'));
+const TeacherLicensing = lazyRetry(() => import('./pages/director/TeacherLicensing'));
+const Activities = lazyRetry(() => import('./pages/director/Activities'));
+const NationalTests = lazyRetry(() => import('./pages/director/NationalTests'));
+const Municipalities = lazyRetry(() => import('./pages/director/Municipalities'));
+const SchoolCalendar = lazyRetry(() => import('./pages/director/SchoolCalendar'));
+const AnnualPlan = lazyRetry(() => import('./pages/director/AnnualPlan'));
+const LibraryPage = lazyRetry(() => import('./pages/director/Library'));
+const TwoFactorSettings = lazyRetry(() => import('./pages/TwoFactorSettings'));
+const LegalDocuments = lazyRetry(() => import('./pages/shared/LegalDocuments'));
+const RoleGuide = lazyRetry(() => import('./pages/shared/RoleGuide'));
+const MinistriDashboard = lazyRetry(() => import('./pages/ministri/MinistriDashboard'));
+const StaffAccountsManagement = lazyRetry(() => import('./pages/ministri/StaffAccountsManagement'));
+const DkaDashboard = lazyRetry(() => import('./pages/dka/DkaDashboard'));
+const SchoolsManagement = lazyRetry(() => import('./pages/shared/SchoolsManagement'));
+const LocalitiesManagement = lazyRetry(() => import('./pages/shared/LocalitiesManagement'));
+const InspectionsManagement = lazyRetry(() => import('./pages/inspektor/InspectionsManagement'));
+const InspectionDetail = lazyRetry(() => import('./pages/inspektor/InspectionDetail'));
+const InspectorDashboard = lazyRetry(() => import('./pages/inspektor/InspectorDashboard'));
+const PedagogDashboard = lazyRetry(() => import('./pages/pedagog/PedagogDashboard'));
+const SuperAdminDashboard = lazyRetry(() => import('./pages/admin/SuperAdminDashboard'));
+const UserManual = lazyRetry(() => import('./pages/admin/UserManual'));
 
-const StudentDashboard = lazy(() => import('./pages/student/StudentDashboard'));
-const MyGrades = lazy(() => import('./pages/student/MyGrades'));
-const MySchedule = lazy(() => import('./pages/student/MySchedule'));
-const MyAttendance = lazy(() => import('./pages/student/MyAttendance'));
+const TeacherDashboard = lazyRetry(() => import('./pages/teacher/TeacherDashboard'));
+const MyClasses = lazyRetry(() => import('./pages/teacher/MyClasses'));
+const GradeEntry = lazyRetry(() => import('./pages/teacher/GradeEntry'));
+const AttendancePage = lazyRetry(() => import('./pages/teacher/AttendancePage'));
+const TeacherSchedule = lazyRetry(() => import('./pages/teacher/TeacherSchedule'));
+const SubjectsPage = lazyRetry(() => import('./pages/teacher/SubjectsPage'));
+const BehaviorPage = lazyRetry(() => import('./pages/teacher/BehaviorPage'));
+const DisciplinePage = lazyRetry(() => import('./pages/teacher/DisciplinePage'));
+const StudentAccommodations = lazyRetry(() => import('./pages/teacher/StudentAccommodations'));
+const MyLicense = lazyRetry(() => import('./pages/teacher/MyLicense'));
+const ParentMeetings = lazyRetry(() => import('./pages/teacher/ParentMeetings'));
+const ClassDiary = lazyRetry(() => import('./pages/teacher/ClassDiary'));
+const HomeworkPage = lazyRetry(() => import('./pages/teacher/HomeworkPage'));
+const DiagnosticAssessments = lazyRetry(() => import('./pages/teacher/DiagnosticAssessments'));
 
-const ParentDashboard = lazy(() => import('./pages/parent/ParentDashboard'));
-const ChildGrades = lazy(() => import('./pages/parent/ChildGrades'));
-const ChildAttendance = lazy(() => import('./pages/parent/ChildAttendance'));
-const PrivacySettings = lazy(() => import('./pages/parent/PrivacySettings'));
-const ChildIEP = lazy(() => import('./pages/parent/ChildIEP'));
+const StudentDashboard = lazyRetry(() => import('./pages/student/StudentDashboard'));
+const MyGrades = lazyRetry(() => import('./pages/student/MyGrades'));
+const MySchedule = lazyRetry(() => import('./pages/student/MySchedule'));
+const MyAttendance = lazyRetry(() => import('./pages/student/MyAttendance'));
 
-const MessagesPage = lazy(() => import('./pages/shared/MessagesPage'));
-const PrivacyPolicy = lazy(() => import('./pages/shared/PrivacyPolicy'));
-const MyCouncils = lazy(() => import('./pages/shared/MyCouncils'));
-const MyTestResults = lazy(() => import('./pages/shared/MyTestResults'));
-const ProfileSettings = lazy(() => import('./pages/shared/ProfileSettings'));
-const Portfolio = lazy(() => import('./pages/shared/Portfolio'));
-const SelfAssessmentPage = lazy(() => import('./pages/student/SelfAssessment'));
+const ParentDashboard = lazyRetry(() => import('./pages/parent/ParentDashboard'));
+const ChildGrades = lazyRetry(() => import('./pages/parent/ChildGrades'));
+const ChildAttendance = lazyRetry(() => import('./pages/parent/ChildAttendance'));
+const PrivacySettings = lazyRetry(() => import('./pages/parent/PrivacySettings'));
+const ChildIEP = lazyRetry(() => import('./pages/parent/ChildIEP'));
+
+const MessagesPage = lazyRetry(() => import('./pages/shared/MessagesPage'));
+const PrivacyPolicy = lazyRetry(() => import('./pages/shared/PrivacyPolicy'));
+const MyCouncils = lazyRetry(() => import('./pages/shared/MyCouncils'));
+const MyTestResults = lazyRetry(() => import('./pages/shared/MyTestResults'));
+const ProfileSettings = lazyRetry(() => import('./pages/shared/ProfileSettings'));
+const Portfolio = lazyRetry(() => import('./pages/shared/Portfolio'));
+const SelfAssessmentPage = lazyRetry(() => import('./pages/student/SelfAssessment'));
 
 import {
   LayoutDashboard, Users, GraduationCap, Layers, BarChart3,
