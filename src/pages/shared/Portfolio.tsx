@@ -10,12 +10,14 @@ import {
 } from '../../types/database';
 import { Loader2, FolderOpen, Plus, X, Trash2, FileText } from 'lucide-react';
 import FileUpload from '../../components/FileUpload';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface StudentOption { id: string; full_name: string }
 interface SubjectOption { id: string; name: string }
 
 export default function Portfolio() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const isStudent = profile?.role === 'nxenes';
   const isParent = profile?.role === 'prind';
   const isTeacher = profile?.role === 'mesues';
@@ -127,7 +129,7 @@ export default function Portfolio() {
       if (canCreate) {
         const { data: created } = await supabase
           .from('student_portfolios')
-          .insert({ student_id: selectedStudent, title: 'Portofoli i Vitit' })
+          .insert({ student_id: selectedStudent, title: t('port.default_title') })
           .select()
           .single();
         p = created;
@@ -181,7 +183,7 @@ export default function Portfolio() {
   };
 
   const remove = async (id: string) => {
-    if (!confirm('Hiq këtë element nga portofoli?')) return;
+    if (!confirm(t('port.remove_confirm'))) return;
     await supabase.from('portfolio_items').delete().eq('id', id);
     loadPortfolio();
   };
@@ -200,7 +202,7 @@ export default function Portfolio() {
   if (accessible.length === 0) {
     return (
       <div className="text-center py-12 text-slate-400 text-sm">
-        Nuk keni qasje në asnjë portofol.
+        {t('port.no_access')}
       </div>
     );
   }
@@ -215,21 +217,21 @@ export default function Portfolio() {
             <FolderOpen className="w-5 h-5 text-amber-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Portofoli i Nxënësit</h1>
-            <p className="text-slate-500 text-sm">UA 06/2022 — koleksion punimesh dhe reflektimesh</p>
+            <h1 className="text-2xl font-bold text-slate-900">{t('port.title')}</h1>
+            <p className="text-slate-500 text-sm">{t('port.subtitle')}</p>
           </div>
         </div>
         {canAdd && (
           <button onClick={openNew} className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-medium">
             <Plus className="w-4 h-4" />
-            Shto Element
+            {t('port.add_item')}
           </button>
         )}
       </div>
 
       {accessible.length > 1 && (
         <div className="bg-white rounded-2xl border border-slate-100 p-4">
-          <label className="block text-xs font-medium text-slate-500 mb-1">Nxënësi</label>
+          <label className="block text-xs font-medium text-slate-500 mb-1">{t('port.student_label')}</label>
           <select value={selectedStudent} onChange={(e) => setSelectedStudent(e.target.value)} className="px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500">
             {accessible.map((s) => <option key={s.id} value={s.id}>{s.full_name}</option>)}
           </select>
@@ -242,7 +244,7 @@ export default function Portfolio() {
             onClick={() => setFilterType('')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${filterType === '' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
           >
-            Të gjitha ({items.length})
+            {t('port.all_items')} ({items.length})
           </button>
           {(Object.keys(PORTFOLIO_ITEM_TYPE_LABELS) as PortfolioItemType[]).map((t) => {
             const count = items.filter((i) => i.item_type === t).length;
@@ -263,7 +265,7 @@ export default function Portfolio() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {filtered.length === 0 ? (
           <div className="md:col-span-2 bg-white rounded-2xl border border-slate-100 px-6 py-12 text-center text-slate-400 text-sm">
-            Portofoli është bosh. {canAdd && 'Klik "Shto Element" për të filluar.'}
+            {t('port.empty')} {canAdd && t('port.empty_hint')}
           </div>
         ) : (
           filtered.map((it) => (
@@ -275,7 +277,7 @@ export default function Portfolio() {
                   </span>
                   {it.subject_id && (
                     <span className="px-2 py-0.5 rounded text-xs bg-slate-100 text-slate-700">
-                      {subjectMap.get(it.subject_id) || 'Lënda'}
+                      {subjectMap.get(it.subject_id) || t('port.subject_label')}
                     </span>
                   )}
                 </div>
@@ -293,11 +295,11 @@ export default function Portfolio() {
               {it.attachment_url && (
                 <a href={it.attachment_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 mt-2 text-xs text-blue-600 hover:text-blue-800">
                   <FileText className="w-3 h-3" />
-                  Shiko bashkëngjitjen
+                  {t('port.view_attachment')}
                 </a>
               )}
               <p className="text-xs text-slate-400 mt-2">
-                Shtuar më: {new Date(it.added_at).toLocaleDateString('sq-AL')}
+                {t('port.added_on')} {new Date(it.added_at).toLocaleDateString('sq-AL')}
               </p>
             </div>
           ))
@@ -308,58 +310,58 @@ export default function Portfolio() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-slate-900">Shto Element në Portofol</h2>
-              <button onClick={() => setShowModal(false)} aria-label="Mbyll"><X className="w-5 h-5 text-slate-400" /></button>
+              <h2 className="text-lg font-bold text-slate-900">{t('port.modal_title')}</h2>
+              <button onClick={() => setShowModal(false)} aria-label={t('common.close')}><X className="w-5 h-5 text-slate-400" /></button>
             </div>
             {error && <div className="mb-3 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl px-3 py-2">{error}</div>}
             <form onSubmit={submit} className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Lloji *</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('port.type_label')}</label>
                   <select required value={form.item_type} onChange={(e) => setForm({ ...form, item_type: e.target.value as PortfolioItemType })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500">
-                    {(Object.keys(PORTFOLIO_ITEM_TYPE_LABELS) as PortfolioItemType[]).map((t) => (
-                      <option key={t} value={t}>{PORTFOLIO_ITEM_TYPE_LABELS[t]}</option>
+                    {(Object.keys(PORTFOLIO_ITEM_TYPE_LABELS) as PortfolioItemType[]).map((typ) => (
+                      <option key={typ} value={typ}>{PORTFOLIO_ITEM_TYPE_LABELS[typ]}</option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Lënda</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('port.subject_label')}</label>
                   <select value={form.subject_id} onChange={(e) => setForm({ ...form, subject_id: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500">
-                    <option value="">— Pa specifikim —</option>
+                    <option value="">{t('port.no_subject')}</option>
                     {subjects.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
                   </select>
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Titulli *</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('port.title_label')}</label>
                 <input required type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Përshkrimi i shkurtër</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('port.desc_label')}</label>
                 <input type="text" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Përmbajtja / Reflektimi</label>
-                <textarea rows={4} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500 resize-none" placeholder="Përshkruani këtë punim, çfarë mësuat, etj." />
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('port.content_label')}</label>
+                <textarea rows={4} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500 resize-none" placeholder={t('port.content_placeholder')} />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Bashkëngjitja (foto, video, PDF)</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('port.attachment_label')}</label>
                 <FileUpload
                   bucket="portfolio"
                   folder={profile?.id}
                   accept="image/*,video/*,application/pdf"
                   maxSizeMB={10}
                   currentUrl={form.attachment_url || null}
-                  label="Ngarko bashkëngjitje"
+                  label={t('port.upload_attachment')}
                   onUploaded={(url) => setForm({ ...form, attachment_url: url })}
                   onRemoved={() => setForm({ ...form, attachment_url: '' })}
                 />
               </div>
               <div className="flex gap-3 pt-3">
-                <button type="button" onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium">Anulo</button>
+                <button type="button" onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium">{t('common.cancel')}</button>
                 <button type="submit" disabled={submitting} className="flex-1 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-medium disabled:opacity-50 flex items-center justify-center gap-2">
                   {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
-                  Shto
+                  {t('port.add_btn')}
                 </button>
               </div>
             </form>

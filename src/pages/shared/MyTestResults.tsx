@@ -9,6 +9,7 @@ import {
   type NationalTestResult,
 } from '../../types/database';
 import { Loader2, GraduationCap, Trophy, Printer } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface ChildOption {
   id: string;
@@ -22,6 +23,7 @@ interface TestWithResults {
 
 export default function MyTestResults() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const isParent = profile?.role === 'prind';
 
   const [children, setChildren] = useState<ChildOption[]>([]);
@@ -105,14 +107,14 @@ export default function MyTestResults() {
         </tr>`).join('');
       return `
         <h2>${test.name}</h2>
-        <p class="meta">Klasa ${test.grade_level}-të • ${test.test_date} • ${NATIONAL_TEST_STATUS_LABELS[test.status]}</p>
+        <p class="meta">${t('mtr.grade_label')} ${test.grade_level} • ${test.test_date} • ${NATIONAL_TEST_STATUS_LABELS[test.status]}</p>
         <table>
-          <thead><tr><th>Lënda</th><th style="text-align:center">Pikët</th><th style="text-align:center">Përqindja</th><th>Niveli</th></tr></thead>
+          <thead><tr><th>${t('mtr.col_subject')}</th><th style="text-align:center">${t('mtr.col_points')}</th><th style="text-align:center">${t('mtr.col_percentage')}</th><th>${t('mtr.col_level')}</th></tr></thead>
           <tbody>${rows}</tbody>
         </table>`;
     }).join('');
 
-    w.document.write(`<!DOCTYPE html><html><head><title>Rezultatet e Testeve - ${studentName}</title><style>
+    w.document.write(`<!DOCTYPE html><html><head><title>${t('mtr.title')} - ${studentName}</title><style>
       body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:40px;color:#1e293b;max-width:900px;margin:0 auto}
       h1{font-size:22px;margin-bottom:4px}
       h2{font-size:16px;margin-top:24px;padding-bottom:6px;border-bottom:2px solid #e2e8f0}
@@ -124,10 +126,10 @@ export default function MyTestResults() {
       .footer{margin-top:40px;padding-top:16px;border-top:1px solid #e2e8f0;font-size:11px;color:#94a3b8;text-align:center}
       @media print{body{padding:20px}}
     </style></head><body>
-      <h1>Rezultatet e Testeve Kombëtare</h1>
-      <p class="subtitle">${studentName} • Gjeneruar: ${today}</p>
-      ${sections || '<p>Asnjë rezultat i regjistruar.</p>'}
-      <div class="footer">Sistemi i Menaxhimit Shkollor — Shkolla-Kos</div>
+      <h1>${t('mtr.title')}</h1>
+      <p class="subtitle">${studentName} • ${t('mtr.generated_on')} ${today}</p>
+      ${sections || `<p>${t('mtr.no_record_pdf')}</p>`}
+      <div class="footer">${t('mtr.pdf_footer')}</div>
     </body></html>`);
     w.document.close();
     w.focus();
@@ -145,7 +147,7 @@ export default function MyTestResults() {
   if (isParent && children.length === 0) {
     return (
       <div className="text-center py-12 text-slate-400 text-sm">
-        Nuk keni asnjë fëmijë të lidhur me llogarinë tuaj.
+        {t('parent.privacy.no_children')}
       </div>
     );
   }
@@ -158,8 +160,8 @@ export default function MyTestResults() {
             <GraduationCap className="w-5 h-5 text-purple-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Rezultatet e Testeve Kombëtare</h1>
-            <p className="text-slate-500 text-sm">Testi i Arritshmërisë Klasa V-të dhe IX-të</p>
+            <h1 className="text-2xl font-bold text-slate-900">{t('mtr.title')}</h1>
+            <p className="text-slate-500 text-sm">{t('mtr.subtitle')}</p>
           </div>
         </div>
         {data.length > 0 && (
@@ -168,14 +170,14 @@ export default function MyTestResults() {
             className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-xl hover:bg-purple-700"
           >
             <Printer className="w-4 h-4" />
-            Printo / PDF
+            {t('mtr.print_pdf')}
           </button>
         )}
       </div>
 
       {isParent && children.length > 1 && (
         <div className="bg-white rounded-2xl border border-slate-100 p-4">
-          <label className="block text-xs font-medium text-slate-500 mb-1">Fëmija</label>
+          <label className="block text-xs font-medium text-slate-500 mb-1">{t('parent.child_label')}</label>
           <select
             value={selectedStudent}
             onChange={(e) => setSelectedStudent(e.target.value)}
@@ -191,10 +193,8 @@ export default function MyTestResults() {
       {data.length === 0 ? (
         <div className="bg-white rounded-2xl border border-slate-100 px-6 py-12 text-center">
           <GraduationCap className="w-12 h-12 text-slate-200 mx-auto mb-3" />
-          <p className="text-slate-700 font-medium mb-1">Asnjë rezultat i regjistruar për teste kombëtare</p>
-          <p className="text-slate-400 text-sm">
-            Rezultatet e Testit të Arritshmërisë (Klasa V dhe IX) shfaqen këtu pasi të publikohen nga shkolla.
-          </p>
+          <p className="text-slate-700 font-medium mb-1">{t('mtr.no_results_title')}</p>
+          <p className="text-slate-400 text-sm">{t('mtr.no_results_help')}</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -203,7 +203,7 @@ export default function MyTestResults() {
               <div className="px-5 py-4 border-b border-slate-100 bg-gradient-to-r from-purple-50 to-blue-50">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-700">
-                    Klasa {test.grade_level}-të
+                    {t('mtr.grade_label')} {test.grade_level}
                   </span>
                   <span className="px-2 py-0.5 rounded text-xs bg-slate-100 text-slate-600">
                     {NATIONAL_TEST_STATUS_LABELS[test.status]}
@@ -216,10 +216,10 @@ export default function MyTestResults() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="bg-slate-50 text-left text-xs font-semibold text-slate-500 uppercase">
-                    <th className="px-4 py-2">Lënda</th>
-                    <th className="px-4 py-2 text-center">Pikët</th>
-                    <th className="px-4 py-2 text-center">Përqindja</th>
-                    <th className="px-4 py-2">Niveli</th>
+                    <th className="px-4 py-2">{t('mtr.col_subject')}</th>
+                    <th className="px-4 py-2 text-center">{t('mtr.col_points')}</th>
+                    <th className="px-4 py-2 text-center">{t('mtr.col_percentage')}</th>
+                    <th className="px-4 py-2">{t('mtr.col_level')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">

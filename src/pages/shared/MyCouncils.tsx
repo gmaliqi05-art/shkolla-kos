@@ -14,6 +14,7 @@ import {
   type MeetingMinutes,
 } from '../../types/database';
 import { Loader2, Briefcase, Calendar, FileText, Users } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 const COUNCIL_TYPE_COLORS: Record<CouncilType, string> = {
   drejtues: 'bg-blue-100 text-blue-700 border-blue-200',
@@ -30,6 +31,7 @@ interface MyCouncilEntry {
 
 export default function MyCouncils() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const [entries, setEntries] = useState<MyCouncilEntry[]>([]);
   const [minutes, setMinutes] = useState<Map<string, MeetingMinutes>>(new Map());
   const [loading, setLoading] = useState(true);
@@ -116,16 +118,16 @@ export default function MyCouncils() {
           <Briefcase className="w-5 h-5 text-blue-600" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Këshillat e Mi</h1>
-          <p className="text-slate-500 text-sm">Mbledhjet dhe procesverbalet e këshillave ku jeni anëtar</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('mc.title')}</h1>
+          <p className="text-slate-500 text-sm">{t('mc.subtitle')}</p>
         </div>
       </div>
 
       {entries.length === 0 ? (
         <div className="bg-white rounded-2xl border border-slate-100 px-6 py-12 text-center">
           <Briefcase className="w-12 h-12 text-slate-200 mx-auto mb-3" />
-          <p className="text-slate-700 font-medium mb-1">Nuk jeni anëtar i ndonjë këshilli aktiv</p>
-          <p className="text-slate-400 text-sm">Drejtori i shkollës ju shton si anëtar në këshillin përkatës.</p>
+          <p className="text-slate-700 font-medium mb-1">{t('mc.not_member_title')}</p>
+          <p className="text-slate-400 text-sm">{t('mc.not_member_help')}</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -143,12 +145,12 @@ export default function MyCouncils() {
                 </div>
                 <h3 className="font-semibold text-slate-900 mt-1">{e.council.name}</h3>
                 {e.membership.represents && (
-                  <p className="text-xs text-slate-500 mt-0.5">Përfaqësues: {e.membership.represents}</p>
+                  <p className="text-xs text-slate-500 mt-0.5">{t('mc.representative')} {e.membership.represents}</p>
                 )}
               </div>
               <div className="divide-y divide-slate-100">
                 {e.meetings.length === 0 ? (
-                  <div className="px-5 py-4 text-sm text-slate-400 italic">Asnjë mbledhje e regjistruar.</div>
+                  <div className="px-5 py-4 text-sm text-slate-400 italic">{t('mc.no_meetings')}</div>
                 ) : (
                   e.meetings.map((m) => {
                     const mn = minutes.get(m.id);
@@ -178,12 +180,12 @@ export default function MyCouncils() {
                               <div className="mt-2 ml-6 bg-slate-50 rounded-lg px-3 py-2">
                                 <div className="flex items-center gap-1.5 mb-1">
                                   <FileText className="w-3.5 h-3.5 text-slate-500" />
-                                  <p className="text-xs font-semibold text-slate-700">Procesverbali</p>
+                                  <p className="text-xs font-semibold text-slate-700">{t('mc.minutes')}</p>
                                 </div>
                                 <p className="text-sm text-slate-700 whitespace-pre-wrap">{mn.content}</p>
                                 {mn.decisions && (
                                   <div className="mt-2 pt-2 border-t border-slate-200">
-                                    <p className="text-xs font-semibold text-blue-700 mb-0.5">Vendimet:</p>
+                                    <p className="text-xs font-semibold text-blue-700 mb-0.5">{t('mc.decisions')}</p>
                                     <p className="text-sm text-slate-700 whitespace-pre-wrap">{mn.decisions}</p>
                                   </div>
                                 )}

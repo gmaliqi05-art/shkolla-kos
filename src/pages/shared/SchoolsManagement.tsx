@@ -11,6 +11,7 @@ import {
 } from '../../types/database';
 import { Loader2, Plus, X, School, Edit2, Trash2, MapPin, Phone, Mail, Building, Copy, Check as CheckIcon, UserCheck } from 'lucide-react';
 import SearchableSelect from '../../components/SearchableSelect';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface SchoolRow extends SchoolInfo {
   municipality_name?: string;
@@ -20,6 +21,7 @@ interface SchoolRow extends SchoolInfo {
 export default function SchoolsManagement() {
   const { profile } = useAuth();
   const toast = useToast();
+  const { t } = useI18n();
   const isMinister = profile?.role === 'ministri';
   const isDka = profile?.role === 'drejtor_komunal';
   const canManage = isMinister || isDka;
@@ -214,10 +216,10 @@ export default function SchoolsManagement() {
   };
 
   const remove = async (s: SchoolInfo) => {
-    if (!confirm(`Fshij shkollën "${s.name}"? Të gjitha të dhënat e lidhura me të do të humbasin.`)) return;
+    if (!confirm(`${t('sm.delete_confirm')} "${s.name}"${t('sm.delete_warning')}`)) return;
     const { error } = await supabase.from('school_info').delete().eq('id', s.id);
-    if (error) toast.error('Gabim: ' + error.message);
-    else { toast.success('Shkolla u fshi.'); load(); }
+    if (error) toast.error(`${t('sm.delete_error')} ${error.message}`);
+    else { toast.success(t('sm.deleted_ok')); load(); }
   };
 
   const filtered = filterMunicipality
@@ -236,29 +238,29 @@ export default function SchoolsManagement() {
             <School className="w-5 h-5 text-blue-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Menaxhimi i Shkollave</h1>
+            <h1 className="text-2xl font-bold text-slate-900">{t('sm.title')}</h1>
             <p className="text-slate-500 text-sm">
-              {isMinister ? 'Të gjitha shkollat e Kosovës' : isDka ? 'Shkollat e komunës suaj' : 'Shkollat'}
+              {isMinister ? t('sm.subtitle_minister') : isDka ? t('sm.subtitle_dka') : t('sm.subtitle_default')}
             </p>
           </div>
         </div>
         {canManage && (
           <button onClick={openNew} className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium">
             <Plus className="w-4 h-4" />
-            Shto Shkollë
+            {t('sm.add_school')}
           </button>
         )}
       </div>
 
       {isMinister && (
         <div className="bg-white rounded-2xl border border-slate-100 p-4">
-          <label className="block text-xs font-medium text-slate-500 mb-1">Filtro sipas komunës</label>
+          <label className="block text-xs font-medium text-slate-500 mb-1">{t('sm.filter_by_mun')}</label>
           <SearchableSelect
             value={filterMunicipality}
             onChange={setFilterMunicipality}
-            placeholder="Të gjitha komunat"
+            placeholder={t('sm.all_municipalities')}
             groupBy
-            options={municipalities.map((m) => ({ value: m.id, label: m.name, group: m.region || 'Pa rajon' }))}
+            options={municipalities.map((m) => ({ value: m.id, label: m.name, group: m.region || t('sm.no_region') }))}
           />
         </div>
       )}
@@ -268,19 +270,19 @@ export default function SchoolsManagement() {
           <div className="px-6 py-12 text-center">
             <School className="w-12 h-12 text-slate-200 mx-auto mb-3" />
             <p className="text-slate-700 font-medium mb-1">
-              {schools.length === 0 ? 'Asnjë shkollë e regjistruar' : 'Asnjë shkollë me filtrin e zgjedhur'}
+              {schools.length === 0 ? t('sm.no_schools') : t('sm.no_filtered')}
             </p>
             <p className="text-slate-400 text-sm mb-4">
               {schools.length === 0
-                ? canManage ? 'Shto shkollën e parë për të filluar.' : 'Lista është bosh aktualisht.'
-                : 'Provoni të hiqni filtrin.'}
+                ? canManage ? t('sm.add_first') : t('sm.empty_list')
+                : t('sm.try_clear')}
             </p>
             {schools.length > 0 && filterMunicipality ? (
               <button
                 onClick={() => setFilterMunicipality('')}
                 className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-medium"
               >
-                Pastro filtrin
+                {t('sm.clear_filter')}
               </button>
             ) : schools.length === 0 && canManage && (
               <button
@@ -288,7 +290,7 @@ export default function SchoolsManagement() {
                 className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium"
               >
                 <Plus className="w-4 h-4" />
-                Shto Shkollë
+                {t('sm.add_school')}
               </button>
             )}
           </div>
@@ -297,11 +299,11 @@ export default function SchoolsManagement() {
           <table className="w-full text-sm">
             <thead className="bg-slate-50">
               <tr className="text-left text-xs font-semibold text-slate-500 uppercase">
-                <th className="px-4 py-3">Shkolla</th>
-                <th className="px-4 py-3">Lloji</th>
-                <th className="px-4 py-3">Komuna / Fshati</th>
-                <th className="px-4 py-3">Drejtori</th>
-                <th className="px-4 py-3">Kontakt</th>
+                <th className="px-4 py-3">{t('sm.col_school')}</th>
+                <th className="px-4 py-3">{t('sm.col_type')}</th>
+                <th className="px-4 py-3">{t('sm.col_municipality_locality')}</th>
+                <th className="px-4 py-3">{t('sm.col_director')}</th>
+                <th className="px-4 py-3">{t('sm.col_contact')}</th>
                 {canManage && <th className="px-4 py-3"></th>}
               </tr>
             </thead>
@@ -311,7 +313,7 @@ export default function SchoolsManagement() {
                   <td className="px-4 py-3">
                     <p className="font-medium text-slate-900">{s.name}</p>
                     {s.full_name && <p className="text-xs text-slate-500">{s.full_name}</p>}
-                    {s.registration_number && <p className="text-xs text-slate-400 font-mono">Nr: {s.registration_number}</p>}
+                    {s.registration_number && <p className="text-xs text-slate-400 font-mono">{t('sm.reg_nr')} {s.registration_number}</p>}
                   </td>
                   <td className="px-4 py-3 text-slate-700">
                     {s.school_type ? SCHOOL_TYPE_LABELS[s.school_type] : '—'}
@@ -326,7 +328,7 @@ export default function SchoolsManagement() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-slate-700">{s.director_name || <span className="text-slate-400 italic">pa caktuar</span>}</td>
+                  <td className="px-4 py-3 text-slate-700">{s.director_name || <span className="text-slate-400 italic">{t('sm.no_director_assigned')}</span>}</td>
                   <td className="px-4 py-3 text-xs text-slate-600">
                     {s.phone && <div className="flex items-center gap-1"><Phone className="w-3 h-3" />{s.phone}</div>}
                     {s.email && <div className="flex items-center gap-1"><Mail className="w-3 h-3" />{s.email}</div>}
@@ -358,22 +360,21 @@ export default function SchoolsManagement() {
           <div className="bg-white rounded-2xl max-w-md w-full p-6">
             <div className="flex items-center gap-2 mb-4">
               <UserCheck className="w-6 h-6 text-emerald-600" />
-              <h2 className="text-lg font-bold text-slate-900">Llogaria e Drejtorit u Krijua!</h2>
+              <h2 className="text-lg font-bold text-slate-900">{t('sm.cred_modal_title')}</h2>
             </div>
             <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4">
-              <p className="text-sm text-amber-900 font-medium mb-1">Ruajeni këto kredenciale tani!</p>
+              <p className="text-sm text-amber-900 font-medium mb-1">{t('sm.save_creds_now')}</p>
               <p className="text-xs text-amber-700">
-                Kjo është hera e vetme që mund të shihet fjalëkalimi. Ndajeni me drejtorin në mënyrë të sigurt
-                (email i sigurt ose person-më-person).
+                {t('sm.creds_one_time')}
               </p>
             </div>
             <div className="space-y-3">
               <div>
-                <p className="text-xs font-medium text-slate-500 mb-1">Email</p>
+                <p className="text-xs font-medium text-slate-500 mb-1">{t('common.email')}</p>
                 <p className="text-sm font-mono bg-slate-50 px-3 py-2 rounded-lg border border-slate-200">{newCredentials.email}</p>
               </div>
               <div>
-                <p className="text-xs font-medium text-slate-500 mb-1">Fjalëkalimi i përkohshëm</p>
+                <p className="text-xs font-medium text-slate-500 mb-1">{t('sm.temp_password')}</p>
                 <p className="text-sm font-mono bg-slate-50 px-3 py-2 rounded-lg border border-slate-200 tracking-widest">{newCredentials.password}</p>
               </div>
             </div>
@@ -384,13 +385,13 @@ export default function SchoolsManagement() {
               }`}
             >
               {credentialsCopied ? <CheckIcon className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-              {credentialsCopied ? 'U kopjua!' : 'Kopjo Kredencialet'}
+              {credentialsCopied ? t('sm.copied') : t('sm.copy_creds')}
             </button>
             <button
               onClick={() => { setNewCredentials(null); setShowModal(false); }}
               className="mt-2 w-full py-2.5 text-sm text-slate-600 hover:text-slate-900"
             >
-              Mbyll
+              {t('sm.close_btn')}
             </button>
           </div>
         </div>
@@ -402,91 +403,91 @@ export default function SchoolsManagement() {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Building className="w-5 h-5 text-blue-600" />
-                <h2 className="text-lg font-bold text-slate-900">{editing ? 'Edito Shkollën' : 'Krijo Shkollë të Re'}</h2>
+                <h2 className="text-lg font-bold text-slate-900">{editing ? t('sm.edit_school') : t('sm.create_new_school')}</h2>
               </div>
-              <button onClick={() => setShowModal(false)} aria-label="Mbyll"><X className="w-5 h-5 text-slate-400" /></button>
+              <button onClick={() => setShowModal(false)} aria-label={t('sm.close_btn')}><X className="w-5 h-5 text-slate-400" /></button>
             </div>
             {error && <div className="mb-3 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl px-3 py-2">{error}</div>}
             <form onSubmit={submit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Emri i shkollës *</label>
-                  <input required type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder='P.sh. "Naim Frashëri"' />
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('sm.school_name')}</label>
+                  <input required type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder={t('sm.school_name_placeholder')} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Lloji i shkollës *</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('sm.school_type_required')}</label>
                   <select required value={form.school_type} onChange={(e) => setForm({ ...form, school_type: e.target.value as SchoolType })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-                    {(Object.keys(SCHOOL_TYPE_LABELS) as SchoolType[]).map((t) => (
-                      <option key={t} value={t}>{SCHOOL_TYPE_LABELS[t]}</option>
+                    {(Object.keys(SCHOOL_TYPE_LABELS) as SchoolType[]).map((stype) => (
+                      <option key={stype} value={stype}>{SCHOOL_TYPE_LABELS[stype]}</option>
                     ))}
                   </select>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Emri i plotë zyrtar</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('sm.official_name')}</label>
                 <input type="text" value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Komuna *</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('sm.municipality_required')}</label>
                   <SearchableSelect
                     required
                     disabled={isDka}
                     value={form.municipality_id}
                     onChange={(v) => setForm({ ...form, municipality_id: v, locality_id: '' })}
-                    placeholder="Kërko ose zgjidh komunën"
+                    placeholder={t('sm.search_municipality')}
                     groupBy
                     options={municipalities.map((m) => ({
                       value: m.id,
                       label: m.name,
-                      group: m.region || 'Pa rajon',
+                      group: m.region || t('sm.no_region'),
                     }))}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Fshati / Qyteti</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('sm.locality')}</label>
                   <SearchableSelect
                     disabled={!form.municipality_id}
                     value={form.locality_id}
                     onChange={(v) => setForm({ ...form, locality_id: v })}
-                    placeholder="Kërko ose zgjidh vendin"
+                    placeholder={t('sm.search_locality')}
                     options={localities
                       .filter((l) => l.municipality_id === form.municipality_id)
                       .map((l) => ({
                         value: l.id,
                         label: l.name,
-                        description: l.is_city_center ? 'Qendër e komunës' : l.type,
+                        description: l.is_city_center ? t('sm.city_center') : l.type,
                       }))}
-                    emptyText={form.municipality_id ? 'Asnjë vendbanim' : 'Zgjidh komunën fillimisht'}
+                    emptyText={form.municipality_id ? t('sm.no_locality') : t('sm.select_mun_first')}
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Adresa</label>
-                <input type="text" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder="Rruga, numri" />
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('sm.address')}</label>
+                <input type="text" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder={t('sm.address_placeholder')} />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Drejtori (emri)</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('sm.director_name')}</label>
                   <input type="text" value={form.director_name} onChange={(e) => setForm({ ...form, director_name: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Nr. regjistrimit MAShTI</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('sm.registration_number')}</label>
                   <input type="text" value={form.registration_number} onChange={(e) => setForm({ ...form, registration_number: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Telefon</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('sm.phone')}</label>
                   <input type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('common.email')}</label>
                   <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
               </div>
@@ -501,28 +502,28 @@ export default function SchoolsManagement() {
                       className="rounded"
                     />
                     <span className="text-sm font-medium text-emerald-900">
-                      Krijo gjithashtu llogarinë e drejtorit të shkollës
+                      {t('sm.create_director_account')}
                     </span>
                   </label>
                   {createDirectorAccount && (
                     <div className="space-y-3 mt-3 pt-3 border-t border-emerald-200">
                       <p className="text-xs text-emerald-700">
-                        Drejtori do të marrë një email me kredencialet. Do t'i duhet të ndryshojë fjalëkalimin në hyrjen e parë.
+                        {t('sm.director_email_help')}
                       </p>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
-                          <label className="block text-sm font-medium text-slate-700 mb-1">Emri i drejtorit *</label>
+                          <label className="block text-sm font-medium text-slate-700 mb-1">{t('sm.director_name_req')}</label>
                           <input
                             required={createDirectorAccount}
                             type="text"
                             value={directorForm.full_name}
                             onChange={(e) => setDirectorForm({ ...directorForm, full_name: e.target.value })}
-                            placeholder="Emër Mbiemër"
+                            placeholder={t('sm.director_name_placeholder')}
                             className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-slate-700 mb-1">Email i drejtorit *</label>
+                          <label className="block text-sm font-medium text-slate-700 mb-1">{t('sm.director_email_req')}</label>
                           <input
                             required={createDirectorAccount}
                             type="email"
@@ -534,7 +535,7 @@ export default function SchoolsManagement() {
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">Telefon i drejtorit</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">{t('sm.director_phone')}</label>
                         <input
                           type="tel"
                           value={directorForm.phone}
@@ -548,10 +549,10 @@ export default function SchoolsManagement() {
               )}
 
               <div className="flex gap-3 pt-3 border-t border-slate-100">
-                <button type="button" onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium">Anulo</button>
+                <button type="button" onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium">{t('common.cancel')}</button>
                 <button type="submit" disabled={submitting} className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium disabled:opacity-50 flex items-center justify-center gap-2">
                   {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
-                  {editing ? 'Ruaj' : 'Krijo'}
+                  {editing ? t('sm.save_btn') : t('sm.create_btn')}
                 </button>
               </div>
             </form>
