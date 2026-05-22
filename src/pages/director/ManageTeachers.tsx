@@ -530,8 +530,15 @@ export default function ManageTeachers() {
               </button>
             </div>
             <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4">
-              <p className="text-sm text-amber-800 font-medium mb-1">Ruajeni kete fjalekalim tani!</p>
-              <p className="text-xs text-amber-700">Ky fjalekalim nuk do te shfaqet perseri. Ndajeni me msuesi ne menyre te sigurte.</p>
+              <p className="text-sm text-amber-800 font-medium mb-1">Ruajeni këtë fjalëkalim tani!</p>
+              <p className="text-xs text-amber-700">Ky fjalëkalim nuk do të shfaqet përsëri. Ndajeni me mësuesin në mënyrë të sigurt.</p>
+            </div>
+            <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 mb-4">
+              <p className="text-sm text-rose-800 font-medium mb-1">⚠ Konfirmimi i emailit</p>
+              <p className="text-xs text-rose-700">
+                Nëse mësuesi nuk mund të identifikohet me këto kredenciale, kontrolloni te <strong>Supabase Dashboard → Authentication → Email</strong>:
+                çaktivizoni "Confirm email" për login të menjëhershëm. Përndryshe mësuesi duhet të klikojë linkun në email për ta konfirmuar llogarinë.
+              </p>
             </div>
             <div className="space-y-3">
               <div>

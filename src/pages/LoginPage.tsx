@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { useI18n } from '../lib/i18n/I18nProvider';
 import type { UserRole } from '../types/database';
-import { GraduationCap, Eye, EyeOff, BookOpen, Users, BarChart3, Shield, Loader2, CircleUser as UserCircle, School, User, UserCheck, ArrowLeft, CheckCircle, Crown, Building, Heart, ClipboardCheck } from 'lucide-react';
+import { GraduationCap, Eye, EyeOff, BookOpen, Users, BarChart3, Shield, Loader2, CircleUser as UserCircle, School, User, UserCheck, ArrowLeft, CheckCircle, Crown, Building, Heart, ClipboardCheck, ShieldCheck } from 'lucide-react';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 // Shield is used both in landing image and MFA challenge screen
 
@@ -25,6 +25,7 @@ const DEMO_USERS: { role: UserRole; nameKey: TranslationKey; icon: typeof UserCi
   { role: 'mesues', nameKey: 'role.mesues', icon: UserCheck, color: 'from-teal-500 to-teal-600' },
   { role: 'nxenes', nameKey: 'role.nxenes', icon: User, color: 'from-cyan-500 to-cyan-600' },
   { role: 'prind', nameKey: 'role.prind', icon: Users, color: 'from-slate-600 to-slate-700' },
+  { role: 'super_admin', nameKey: 'role.super_admin', icon: ShieldCheck, color: 'from-zinc-700 to-slate-800' },
 ];
 
 export default function LoginPage() {

@@ -306,6 +306,13 @@ export default function StaffAccountsManagement() {
               <p className="text-sm text-amber-900 font-medium mb-1">Kjo është hera e vetme që mund të shihet fjalëkalimi!</p>
               <p className="text-xs text-amber-700">Ndajeni me përdoruesin në mënyrë të sigurt.</p>
             </div>
+            <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 mb-4">
+              <p className="text-sm text-rose-800 font-medium mb-1">⚠ Konfirmimi i emailit</p>
+              <p className="text-xs text-rose-700">
+                Nëse përdoruesi i ri nuk mund të identifikohet, kontrolloni te <strong>Supabase Dashboard → Authentication → Email</strong>:
+                çaktivizoni "Confirm email" për login të menjëhershëm. Përndryshe përdoruesi duhet të klikojë linkun në email.
+              </p>
+            </div>
             <div className="space-y-3">
               <div>
                 <p className="text-xs font-medium text-slate-500 mb-1">Email</p>
