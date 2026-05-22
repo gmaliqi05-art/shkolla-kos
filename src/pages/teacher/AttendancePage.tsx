@@ -3,6 +3,15 @@ import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { Check, X, Clock, AlertCircle, Save, Loader2 } from 'lucide-react';
 import { useToast } from '../../components/ToastProvider';
+import { useI18n } from '../../lib/i18n/I18nProvider';
+import type { TranslationKey } from '../../lib/i18n/translations';
+
+const STATUS_LABEL_KEYS: Record<'prezent' | 'mungon' | 'vonese' | 'arsyeshme', TranslationKey> = {
+  prezent: 'attendance.prezent',
+  mungon: 'attendance.mungon',
+  vonese: 'attendance.vonese',
+  arsyeshme: 'attendance.arsyeshme',
+};
 
 type AttendanceStatus = 'prezent' | 'mungon' | 'vonese' | 'arsyeshme';
 
@@ -37,6 +46,7 @@ function extractName(rel: { name: string } | { name: string }[] | null): string 
 export default function AttendancePage() {
   const { profile, isDemo } = useAuth();
   const toast = useToast();
+  const { t } = useI18n();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -208,7 +218,7 @@ export default function AttendancePage() {
       setTimeout(() => setSaved(false), 3000);
     } catch (error) {
       console.error('Error saving attendance:', error);
-      toast.error('Gabim gjatë ruajtjes: ' + (error as Error).message);
+      toast.error(`${t('att.save_error')} ${(error as Error).message}`);
     } finally {
       setSaving(false);
     }
@@ -240,8 +250,8 @@ export default function AttendancePage() {
     return (
       <div className="text-center py-12">
         <AlertCircle className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-        <h3 className="text-lg font-semibold text-slate-900 mb-2">Nuk ka klasa</h3>
-        <p className="text-slate-500">Drejtori duhet t'ju caktoje në klasa dhe lëndë.</p>
+        <h3 className="text-lg font-semibold text-slate-900 mb-2">{t('att.no_classes_title')}</h3>
+        <p className="text-slate-500">{t('att.no_classes_help')}</p>
       </div>
     );
   }
@@ -252,8 +262,8 @@ export default function AttendancePage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Frekuentimi</h1>
-          <p className="text-slate-500 mt-1">Regjistro prezencen e nxenesve</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('att.attendance_short')}</h1>
+          <p className="text-slate-500 mt-1">{t('att.register_presence')}</p>
         </div>
         <button
           onClick={handleSave}
@@ -271,33 +281,33 @@ export default function AttendancePage() {
           ) : (
             <Save className="w-4 h-4" />
           )}
-          {saving ? 'Duke ruajtur...' : saved ? 'U Ruajt' : 'Ruaj'}
+          {saving ? t('att.saving') : saved ? t('att.saved_ok') : t('att.save_short')}
         </button>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 text-center">
           <p className="text-2xl font-bold text-emerald-700">{statusCounts.prezent}</p>
-          <p className="text-xs text-emerald-600 font-medium mt-1">Prezent</p>
+          <p className="text-xs text-emerald-600 font-medium mt-1">{t('attendance.prezent')}</p>
         </div>
         <div className="bg-rose-50 border border-rose-100 rounded-xl p-4 text-center">
           <p className="text-2xl font-bold text-rose-700">{statusCounts.mungon}</p>
-          <p className="text-xs text-rose-600 font-medium mt-1">Mungon</p>
+          <p className="text-xs text-rose-600 font-medium mt-1">{t('attendance.mungon')}</p>
         </div>
         <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 text-center">
           <p className="text-2xl font-bold text-amber-700">{statusCounts.vonese}</p>
-          <p className="text-xs text-amber-600 font-medium mt-1">Vonese</p>
+          <p className="text-xs text-amber-600 font-medium mt-1">{t('attendance.vonese')}</p>
         </div>
         <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 text-center">
           <p className="text-2xl font-bold text-blue-700">{statusCounts.arsyeshme}</p>
-          <p className="text-xs text-blue-600 font-medium mt-1">Arsyeshme</p>
+          <p className="text-xs text-blue-600 font-medium mt-1">{t('attendance.arsyeshme')}</p>
         </div>
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-100 p-6">
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
           <div className="flex-1">
-            <label className="block text-sm font-medium text-slate-700 mb-1">Klasa dhe Lënda</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">{t('att.class_and_subject')}</label>
             <select
               value={selectedClassSubject}
               onChange={(e) => setSelectedClassSubject(e.target.value)}
@@ -311,7 +321,7 @@ export default function AttendancePage() {
             </select>
           </div>
           <div className="flex-1">
-            <label className="block text-sm font-medium text-slate-700 mb-1">Data</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">{t('att.date_label')}</label>
             <input
               type="date"
               value={date}
@@ -322,11 +332,11 @@ export default function AttendancePage() {
         </div>
 
         <div className="flex items-center gap-4 mb-4 pb-4 border-b border-slate-100">
-          <span className="text-xs text-slate-500 font-medium">Legjenda:</span>
+          <span className="text-xs text-slate-500 font-medium">{t('att.legend')}</span>
           {(Object.entries(statusConfig) as [AttendanceStatus, typeof statusConfig[AttendanceStatus]][]).map(([key, cfg]) => (
             <div key={key} className="flex items-center gap-1.5">
               <cfg.icon className={`w-3.5 h-3.5 ${cfg.color}`} />
-              <span className="text-xs text-slate-600 capitalize">{key}</span>
+              <span className="text-xs text-slate-600 capitalize">{t(STATUS_LABEL_KEYS[key])}</span>
             </div>
           ))}
         </div>
@@ -335,7 +345,7 @@ export default function AttendancePage() {
           <div className="text-center py-8">
             <AlertCircle className="w-10 h-10 text-slate-300 mx-auto mb-3" />
             <p className="text-slate-500 text-sm">
-              Nuk ka nxënës të regjistruar në {currentClassSubject?.className}
+              {t('att.no_students_in_class')} {currentClassSubject?.className}
             </p>
           </div>
         ) : (
@@ -365,7 +375,7 @@ export default function AttendancePage() {
                           ? cfg.bg + ' ' + cfg.color
                           : 'border-slate-200 text-slate-300 hover:border-slate-300'
                       }`}
-                      title={key}
+                      title={t(STATUS_LABEL_KEYS[key])}
                     >
                       <cfg.icon className="w-4 h-4" />
                     </button>

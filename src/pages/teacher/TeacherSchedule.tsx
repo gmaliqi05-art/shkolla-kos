@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { useToast } from '../../components/ToastProvider';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 import {
   Plus,
   Trash2,
@@ -205,6 +206,7 @@ const EMPTY_FORM: ScheduleForm = {
 export default function TeacherSchedule() {
   const { profile, isDemo } = useAuth();
   const toast = useToast();
+  const { t } = useI18n();
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -511,8 +513,8 @@ export default function TeacherSchedule() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Orari Mësimor</h1>
-          <p className="text-slate-500 mt-1">Menaxho orarin sipas klasës</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('ts.title')}</h1>
+          <p className="text-slate-500 mt-1">{t('ts.subtitle')}</p>
         </div>
         {selectedClassId && (
           <button

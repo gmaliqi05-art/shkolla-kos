@@ -3,6 +3,7 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import { Loader2, Plus, BookOpen, Edit2, Save, X } from 'lucide-react';
 import type { ClassJournalEntry } from '../../types/database';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface ClassOption { id: string; name: string }
 interface SubjectOption { id: string; name: string }
@@ -12,6 +13,7 @@ interface JournalEntryRow extends ClassJournalEntry {
 
 export default function ClassDiary() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const [classes, setClasses] = useState<ClassOption[]>([]);
   const [subjects, setSubjects] = useState<SubjectOption[]>([]);
   const [entries, setEntries] = useState<JournalEntryRow[]>([]);
@@ -159,7 +161,7 @@ export default function ClassDiary() {
   if (classes.length === 0) {
     return (
       <div className="text-center py-12 text-slate-400 text-sm">
-        Nuk keni asnjë klasë. Drejtori duhet t'ju caktojë te një klasë.
+        {t('diary.no_classes')}
       </div>
     );
   }
@@ -172,25 +174,25 @@ export default function ClassDiary() {
             <BookOpen className="w-5 h-5 text-indigo-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Ditari i Klasës</h1>
-            <p className="text-slate-500 text-sm">UA 19/2018 — regjistër ditor i orëve të mbajtura</p>
+            <h1 className="text-2xl font-bold text-slate-900">{t('diary.title')}</h1>
+            <p className="text-slate-500 text-sm">{t('diary.subtitle')}</p>
           </div>
         </div>
         <button onClick={openNew} className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-medium">
           <Plus className="w-4 h-4" />
-          Shto Orë
+          {t('diary.add_lesson')}
         </button>
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-100 p-4 flex flex-wrap gap-3">
         <div>
-          <label className="block text-xs font-medium text-slate-500 mb-1">Klasa</label>
+          <label className="block text-xs font-medium text-slate-500 mb-1">{t('teacher.tbl_class')}</label>
           <select value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)} className="px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500">
             {classes.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
         <div>
-          <label className="block text-xs font-medium text-slate-500 mb-1">Data</label>
+          <label className="block text-xs font-medium text-slate-500 mb-1">{t('att.date_label')}</label>
           <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500" />
         </div>
       </div>
@@ -198,17 +200,17 @@ export default function ClassDiary() {
       <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
         {entries.length === 0 ? (
           <div className="px-6 py-12 text-center text-slate-400 text-sm">
-            Asnjë orë e regjistruar për këtë datë. Klik "Shto Orë" për të filluar.
+            {t('diary.no_lessons_for_date')}
           </div>
         ) : (
           <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-100 text-left text-xs font-semibold text-slate-500 uppercase">
-                <th className="px-4 py-2 w-16">Ora</th>
-                <th className="px-4 py-2">Lënda</th>
-                <th className="px-4 py-2">Tema</th>
-                <th className="px-4 py-2">Detyrë shtëpie</th>
+                <th className="px-4 py-2 w-16">{t('diary.col_hour')}</th>
+                <th className="px-4 py-2">{t('diary.col_subject')}</th>
+                <th className="px-4 py-2">{t('diary.col_topic')}</th>
+                <th className="px-4 py-2">{t('diary.col_homework')}</th>
                 <th className="px-4 py-2"></th>
               </tr>
             </thead>
@@ -218,7 +220,7 @@ export default function ClassDiary() {
                   <td className="px-4 py-2 font-mono text-slate-700">{e.lesson_number || '—'}</td>
                   <td className="px-4 py-2 font-medium text-slate-900">{e.subject_name}</td>
                   <td className="px-4 py-2 text-slate-700">{e.topic}</td>
-                  <td className="px-4 py-2 text-slate-600">{e.homework || <span className="text-slate-400 italic">pa detyrë</span>}</td>
+                  <td className="px-4 py-2 text-slate-600">{e.homework || <span className="text-slate-400 italic">{t('diary.no_homework')}</span>}</td>
                   <td className="px-4 py-2 text-right">
                     <button onClick={() => openEdit(e)} className="p-1 text-slate-400 hover:text-slate-700">
                       <Edit2 className="w-4 h-4" />
@@ -236,45 +238,45 @@ export default function ClassDiary() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-slate-900">{editing ? 'Edito Orën' : 'Regjistro Orë'}</h2>
-              <button onClick={() => setShowModal(false)} aria-label="Mbyll"><X className="w-5 h-5 text-slate-400" /></button>
+              <h2 className="text-lg font-bold text-slate-900">{editing ? t('diary.modal_edit') : t('diary.modal_new_lesson')}</h2>
+              <button onClick={() => setShowModal(false)} aria-label={t('common.close')}><X className="w-5 h-5 text-slate-400" /></button>
             </div>
             {error && <div className="mb-3 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl px-3 py-2">{error}</div>}
             <form onSubmit={submit} className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Data *</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('diary.field_date')}</label>
                   <input required type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Ora (numri)</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('diary.field_lesson_nr')}</label>
                   <input type="number" min="1" max="8" value={form.lesson_number} onChange={(e) => setForm({ ...form, lesson_number: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500" />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Lënda *</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('diary.field_subject')}</label>
                 <select required value={form.subject_id} onChange={(e) => setForm({ ...form, subject_id: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500">
-                  <option value="">— Zgjidh —</option>
+                  <option value="">{t('diary.choose')}</option>
                   {subjects.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Tema *</label>
-                <input required type="text" value={form.topic} onChange={(e) => setForm({ ...form, topic: e.target.value })} placeholder="Çfarë u trajtua në mësim" className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500" />
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('diary.field_topic')}</label>
+                <input required type="text" value={form.topic} onChange={(e) => setForm({ ...form, topic: e.target.value })} placeholder={t('diary.topic_placeholder')} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Detyrë shtëpie</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('diary.field_homework')}</label>
                 <textarea rows={2} value={form.homework} onChange={(e) => setForm({ ...form, homework: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 resize-none" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Shënime</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('diary.field_notes')}</label>
                 <textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 resize-none" />
               </div>
               <div className="flex gap-3 pt-3">
-                <button type="button" onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium">Anulo</button>
+                <button type="button" onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium">{t('common.cancel')}</button>
                 <button type="submit" disabled={submitting} className="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-medium disabled:opacity-50 flex items-center justify-center gap-2">
                   {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                  Ruaj
+                  {t('common.save')}
                 </button>
               </div>
             </form>

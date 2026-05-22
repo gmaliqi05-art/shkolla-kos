@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import { Loader2, Stethoscope, Edit2, X, Save } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 import {
   STARTING_LEVEL_LABELS,
   STARTING_LEVEL_COLORS,
@@ -19,6 +20,7 @@ interface StudentRow {
 
 export default function DiagnosticAssessments() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const [classes, setClasses] = useState<ClassOption[]>([]);
   const [subjects, setSubjects] = useState<SubjectOption[]>([]);
   const [selectedClass, setSelectedClass] = useState('');
@@ -157,20 +159,20 @@ export default function DiagnosticAssessments() {
           <Stethoscope className="w-5 h-5 text-purple-600" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Vlerësimi Diagnostikues</h1>
-          <p className="text-slate-500 text-sm">Sipas UA 06/2022 — gjendja fillestare e nxënësit në fillim të vitit</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('diag.title')}</h1>
+          <p className="text-slate-500 text-sm">{t('diag.subtitle_starting')}</p>
         </div>
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-100 p-4 flex flex-wrap gap-3">
         <div>
-          <label className="block text-xs font-medium text-slate-500 mb-1">Klasa</label>
+          <label className="block text-xs font-medium text-slate-500 mb-1">{t('teacher.tbl_class')}</label>
           <select value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)} className="px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-500">
             {classes.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
         <div>
-          <label className="block text-xs font-medium text-slate-500 mb-1">Lënda</label>
+          <label className="block text-xs font-medium text-slate-500 mb-1">{t('teacher.tbl_subject')}</label>
           <select value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)} className="px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-500">
             {subjects.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
           </select>
@@ -179,15 +181,15 @@ export default function DiagnosticAssessments() {
 
       <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
         {students.length === 0 ? (
-          <div className="px-6 py-12 text-center text-slate-400 text-sm">Asnjë nxënës në këtë klasë.</div>
+          <div className="px-6 py-12 text-center text-slate-400 text-sm">{t('diag.no_students')}</div>
         ) : (
           <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-100 text-left text-xs font-semibold text-slate-500 uppercase">
-                <th className="px-4 py-2">Nxënësi</th>
-                <th className="px-4 py-2">Niveli fillestar</th>
-                <th className="px-4 py-2">Data e vlerësimit</th>
+                <th className="px-4 py-2">{t('teacher.tbl_student')}</th>
+                <th className="px-4 py-2">{t('diag.col_starting_level')}</th>
+                <th className="px-4 py-2">{t('diag.col_assessment_date')}</th>
                 <th className="px-4 py-2"></th>
               </tr>
             </thead>
@@ -201,14 +203,14 @@ export default function DiagnosticAssessments() {
                         {STARTING_LEVEL_LABELS[s.diagnostic.starting_level]}
                       </span>
                     ) : (
-                      <span className="text-slate-400 text-xs">Pa vlerësuar</span>
+                      <span className="text-slate-400 text-xs">{t('diag.unassessed')}</span>
                     )}
                   </td>
                   <td className="px-4 py-2 text-slate-600">{s.diagnostic?.assessment_date || '—'}</td>
                   <td className="px-4 py-2 text-right">
                     <button onClick={() => openEdit(s)} className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs text-purple-700 hover:bg-purple-100 rounded-lg">
                       <Edit2 className="w-3.5 h-3.5" />
-                      {s.diagnostic ? 'Edito' : 'Shto'}
+                      {s.diagnostic ? t('diag.edit_short') : t('diag.add_short')}
                     </button>
                   </td>
                 </tr>
@@ -223,43 +225,43 @@ export default function DiagnosticAssessments() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-slate-900">Vlerësimi për {editing.student.full_name}</h2>
-              <button onClick={() => setEditing(null)} aria-label="Mbyll"><X className="w-5 h-5 text-slate-400" /></button>
+              <h2 className="text-lg font-bold text-slate-900">{t('diag.modal_for')} {editing.student.full_name}</h2>
+              <button onClick={() => setEditing(null)} aria-label={t('common.close')}><X className="w-5 h-5 text-slate-400" /></button>
             </div>
             {error && <div className="mb-3 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl px-3 py-2">{error}</div>}
             <form onSubmit={submit} className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Niveli fillestar *</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('diag.field_starting_level')}</label>
                   <select required value={form.starting_level} onChange={(e) => setForm({ ...form, starting_level: e.target.value as StartingLevel | '' })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-500">
-                    <option value="">— Zgjidh —</option>
+                    <option value="">{t('diary.choose')}</option>
                     {(Object.keys(STARTING_LEVEL_LABELS) as StartingLevel[]).map((l) => (
                       <option key={l} value={l}>{STARTING_LEVEL_LABELS[l]}</option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Data</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t('diag.field_date')}</label>
                   <input type="date" value={form.assessment_date} onChange={(e) => setForm({ ...form, assessment_date: e.target.value })} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-500" />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Pikat e forta</label>
-                <textarea rows={2} value={form.strengths} onChange={(e) => setForm({ ...form, strengths: e.target.value })} placeholder="Çfarë e bën nxënësin/en të suksesshëm/me?" className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-500 resize-none" />
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('diag.strengths')}</label>
+                <textarea rows={2} value={form.strengths} onChange={(e) => setForm({ ...form, strengths: e.target.value })} placeholder={t('diag.strengths_placeholder')} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-500 resize-none" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Pikat e dobëta</label>
-                <textarea rows={2} value={form.weaknesses} onChange={(e) => setForm({ ...form, weaknesses: e.target.value })} placeholder="Ku ka vështirësi?" className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-500 resize-none" />
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('diag.weaknesses')}</label>
+                <textarea rows={2} value={form.weaknesses} onChange={(e) => setForm({ ...form, weaknesses: e.target.value })} placeholder={t('diag.weaknesses_placeholder')} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-500 resize-none" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Veprimet e rekomanduara</label>
-                <textarea rows={3} value={form.recommended_actions} onChange={(e) => setForm({ ...form, recommended_actions: e.target.value })} placeholder="Çfarë do bëhet për të mbështetur progresin?" className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-500 resize-none" />
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('diag.recommended_actions')}</label>
+                <textarea rows={3} value={form.recommended_actions} onChange={(e) => setForm({ ...form, recommended_actions: e.target.value })} placeholder={t('diag.recommended_placeholder')} className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-500 resize-none" />
               </div>
               <div className="flex gap-3 pt-3">
-                <button type="button" onClick={() => setEditing(null)} className="flex-1 px-4 py-2 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium">Anulo</button>
+                <button type="button" onClick={() => setEditing(null)} className="flex-1 px-4 py-2 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium">{t('common.cancel')}</button>
                 <button type="submit" disabled={submitting} className="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-medium disabled:opacity-50 flex items-center justify-center gap-2">
                   {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                  Ruaj
+                  {t('common.save')}
                 </button>
               </div>
             </form>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import { Loader2, Plus, X, AlertTriangle, Shield } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 import {
   DISCIPLINARY_ACTION_LABELS,
   DISCIPLINARY_STATUS_LABELS,
@@ -28,6 +29,7 @@ const TEACHER_ALLOWED_TYPES: DisciplinaryActionType[] = ['verejtje_goje', 'verej
 
 export default function DisciplinePage() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const isDirector = profile?.role === 'drejtor';
   const allowedTypes = isDirector
     ? (Object.keys(DISCIPLINARY_ACTION_LABELS) as DisciplinaryActionType[])
@@ -162,7 +164,7 @@ export default function DisciplinePage() {
     if (!profile) return;
     setError('');
     if (!form.student_id || !form.description.trim()) {
-      setError('Nxënësi dhe përshkrimi janë të detyrueshëm.');
+      setError(t('disc.required_fields_error'));
       return;
     }
     setSubmitting(true);
@@ -191,11 +193,9 @@ export default function DisciplinePage() {
             <Shield className="w-5 h-5 text-rose-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Masat Disiplinore</h1>
+            <h1 className="text-2xl font-bold text-slate-900">{t('disc.title_disc')}</h1>
             <p className="text-slate-500 text-sm">
-              {isDirector
-                ? 'Menaxhim i plotë i masave disiplinore'
-                : 'Vërejtje me gojë dhe me shkrim (masat e rënda vendosen nga drejtori)'}
+              {isDirector ? t('disc.subtitle_director') : t('disc.subtitle_teacher')}
             </p>
           </div>
         </div>
@@ -204,7 +204,7 @@ export default function DisciplinePage() {
           className="inline-flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-medium transition-colors"
         >
           <Plus className="w-4 h-4" />
-          Shto Masë
+          {t('disc.add_measure')}
         </button>
       </div>
 
@@ -215,19 +215,19 @@ export default function DisciplinePage() {
           </div>
         ) : actions.length === 0 ? (
           <div className="px-6 py-12 text-center text-slate-400 text-sm">
-            Asnjë masë disiplinore e regjistruar.
+            {t('disc.none_registered')}
           </div>
         ) : (
           <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-100 text-left text-xs font-semibold text-slate-500 uppercase">
-                <th className="px-6 py-3">Data</th>
-                <th className="px-6 py-3">Nxënësi</th>
-                <th className="px-6 py-3">Klasa</th>
-                <th className="px-6 py-3">Masa</th>
-                <th className="px-6 py-3">Përshkrimi</th>
-                <th className="px-6 py-3">Statusi</th>
+                <th className="px-6 py-3">{t('disc.col_date')}</th>
+                <th className="px-6 py-3">{t('teacher.tbl_student')}</th>
+                <th className="px-6 py-3">{t('teacher.tbl_class')}</th>
+                <th className="px-6 py-3">{t('disc.col_measure')}</th>
+                <th className="px-6 py-3">{t('disc.col_description')}</th>
+                <th className="px-6 py-3">{t('disc.col_status')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
@@ -256,15 +256,15 @@ export default function DisciplinePage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-slate-900">Shto Masë Disiplinore</h2>
-              <button onClick={() => setShowModal(false)} aria-label="Mbyll" className="p-1 text-slate-400 hover:text-slate-600 rounded">
+              <h2 className="text-lg font-bold text-slate-900">{t('disc.modal_add')}</h2>
+              <button onClick={() => setShowModal(false)} aria-label={t('common.close')} className="p-1 text-slate-400 hover:text-slate-600 rounded">
                 <X className="w-5 h-5" />
               </button>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && <div className="bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl px-3 py-2">{error}</div>}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Klasa</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('teacher.tbl_class')}</label>
                 <select
                   required
                   value={form.class_id}
@@ -274,14 +274,14 @@ export default function DisciplinePage() {
                   }}
                   className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-rose-500"
                 >
-                  <option value="">— Zgjidh klasën —</option>
+                  <option value="">{t('disc.choose_class')}</option>
                   {classes.map((c) => (
                     <option key={c.id} value={c.id}>{c.name}</option>
                   ))}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Nxënësi *</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('disc.student_required')}</label>
                 <select
                   required
                   value={form.student_id}
@@ -289,27 +289,27 @@ export default function DisciplinePage() {
                   disabled={!form.class_id}
                   className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-rose-500 disabled:bg-slate-50"
                 >
-                  <option value="">— Zgjidh nxënësin —</option>
+                  <option value="">{t('disc.choose_student')}</option>
                   {students.map((s) => (
                     <option key={s.id} value={s.id}>{s.full_name}</option>
                   ))}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Lloji i masës *</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('disc.measure_type_required')}</label>
                 <select
                   required
                   value={form.action_type}
                   onChange={(e) => setForm({ ...form, action_type: e.target.value as DisciplinaryActionType })}
                   className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-rose-500"
                 >
-                  {allowedTypes.map((t) => (
-                    <option key={t} value={t}>{DISCIPLINARY_ACTION_LABELS[t]}</option>
+                  {allowedTypes.map((at) => (
+                    <option key={at} value={at}>{DISCIPLINARY_ACTION_LABELS[at]}</option>
                   ))}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Data *</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('disc.date_required')}</label>
                 <input
                   type="date"
                   required
@@ -319,14 +319,14 @@ export default function DisciplinePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Përshkrimi *</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('disc.description_required')}</label>
                 <textarea
                   required
                   rows={3}
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
                   className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-rose-500 resize-none"
-                  placeholder="Përshkruani arsyen e masës disiplinore..."
+                  placeholder={t('disc.description_placeholder')}
                 />
               </div>
               <div className="flex gap-3 pt-2">
@@ -335,7 +335,7 @@ export default function DisciplinePage() {
                   onClick={() => setShowModal(false)}
                   className="flex-1 px-4 py-2 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium"
                 >
-                  Anulo
+                  {t('common.cancel')}
                 </button>
                 <button
                   type="submit"
@@ -343,7 +343,7 @@ export default function DisciplinePage() {
                   className="flex-1 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-medium disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
-                  Ruaj
+                  {t('common.save')}
                 </button>
               </div>
             </form>
