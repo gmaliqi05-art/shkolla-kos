@@ -1345,6 +1345,24 @@ export const translations = {
   'sam.subtitle': { sq: 'Krijo dhe menaxho llogaritë e DKA, drejtorëve, inspektorëve', sr: 'Kreiraj i upravljaj nalozima DKA, direktora, inspektora', tr: 'DKA, müdür, müfettiş hesaplarını oluştur ve yönet', bs: 'Kreiraj i upravljaj nalozima DKA, direktora, inspektora', en: 'Create and manage MED, principal, inspector accounts' },
   'sam.create_account': { sq: 'Krijo Llogari', sr: 'Kreiraj nalog', tr: 'Hesap Oluştur', bs: 'Kreiraj nalog', en: 'Create Account' },
   'sam.no_staff': { sq: 'Asnjë staf i regjistruar', sr: 'Nema registrovanog osoblja', tr: 'Kayıtlı personel yok', bs: 'Nema registrovanog osoblja', en: 'No staff registered' },
+
+  // === USER MANUAL ===
+  'manual.title': { sq: 'Manual i Përdorimit', sr: 'Korisničko uputstvo', tr: 'Kullanım Kılavuzu', bs: 'Korisničko uputstvo', en: 'User Manual' },
+  'manual.subtitle': { sq: 'Udhëzime për çdo rol në platformën Shkolla-Kos', sr: 'Uputstva za svaku ulogu na platformi Shkolla-Kos', tr: 'Shkolla-Kos platformundaki her rol için talimatlar', bs: 'Uputstva za svaku ulogu na platformi Shkolla-Kos', en: 'Instructions for every role on the Shkolla-Kos platform' },
+  'manual.intro': { sq: 'Ky manual përshkruan çfarë mund të bëjë çdo rol, rrjedhat tipike të punës, dhe bazat ligjore. Përdoreni si referencë gjatë trajnimeve ose kur ka pyetje për funksionalitetet.', sr: 'Ovaj priručnik opisuje šta svaka uloga može da uradi, tipične tokove rada i pravne osnove.', tr: 'Bu kılavuz, her rolün ne yapabileceğini, tipik iş akışlarını ve yasal dayanakları açıklar.', bs: 'Ovaj priručnik opisuje šta svaka uloga može uraditi, tipične tokove rada i pravne osnove.', en: 'This manual describes what each role can do, typical workflows, and legal foundations. Use it as a reference during training.' },
+  'manual.download_html': { sq: 'Shkarko HTML', sr: 'Preuzmi HTML', tr: 'HTML İndir', bs: 'Preuzmi HTML', en: 'Download HTML' },
+  'manual.print_pdf': { sq: 'Printo / PDF', sr: 'Štampaj / PDF', tr: 'Yazdır / PDF', bs: 'Štampaj / PDF', en: 'Print / PDF' },
+  'manual.tip_label': { sq: 'Këshillë', sr: 'Savet', tr: 'İpucu', bs: 'Savjet', en: 'Tip' },
+  'manual.tip_help': { sq: 'Për të ruajtur si PDF, klik "Printo / PDF" dhe zgjidh "Save as PDF" në dialogun e shfletuesit.', sr: 'Da sačuvate kao PDF, kliknite "Štampaj / PDF" i izaberite "Save as PDF".', tr: 'PDF olarak kaydetmek için "Yazdır / PDF" tıklayın ve "Save as PDF" seçin.', bs: 'Da sačuvate kao PDF, kliknite "Štampaj / PDF" i izaberite "Save as PDF".', en: 'To save as PDF, click "Print / PDF" and choose "Save as PDF" in the browser dialog.' },
+  'manual.updated_label': { sq: 'Përditësuar', sr: 'Ažurirano', tr: 'Güncellendi', bs: 'Ažurirano', en: 'Updated' },
+  'manual.permissions': { sq: 'Lejet dhe veprimet', sr: 'Dozvole i akcije', tr: 'İzinler ve eylemler', bs: 'Dozvole i akcije', en: 'Permissions and actions' },
+  'manual.workflows': { sq: 'Rrjedhat tipike të punës', sr: 'Tipični tokovi rada', tr: 'Tipik iş akışları', bs: 'Tipični tokovi rada', en: 'Typical workflows' },
+  'manual.legal_basis': { sq: 'Baza ligjore', sr: 'Pravni osnov', tr: 'Yasal dayanak', bs: 'Pravni osnov', en: 'Legal basis' },
+
+  // === ROLE GUIDE PAGES ===
+  'rmd.role_docs_title': { sq: 'Udhëzuesit sipas Rolit', sr: 'Vodiči po ulogama', tr: 'Role Göre Kılavuzlar', bs: 'Vodiči po ulogama', en: 'Role-Based Guides' },
+  'rmd.role_docs_subtitle': { sq: 'Klik mbi rolin tuaj për të hapur udhëzuesin përkatës', sr: 'Kliknite na vašu ulogu da otvorite odgovarajući vodič', tr: 'İlgili kılavuzu açmak için rolünüze tıklayın', bs: 'Kliknite na vašu ulogu da otvorite odgovarajući vodič', en: 'Click on your role to open the corresponding guide' },
+  'rmd.back_to_docs': { sq: '← Kthehu te dokumentet', sr: '← Nazad na dokumente', tr: '← Belgelere dön', bs: '← Nazad na dokumente', en: '← Back to documents' },
 } as const;
 
 export type TranslationKey = keyof typeof translations;

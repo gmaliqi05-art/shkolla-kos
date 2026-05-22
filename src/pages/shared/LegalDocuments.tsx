@@ -1,8 +1,58 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Scale, Shield, FileText, Heart, AlertTriangle, Cookie, ArrowLeft, Mail } from 'lucide-react';
+import { Scale, Shield, FileText, Heart, AlertTriangle, Cookie, ArrowLeft, Mail, BookOpen, Users, GraduationCap, User, Building, Crown, ClipboardCheck, ShieldCheck, School, ChevronRight } from 'lucide-react';
 import { useI18n } from '../../lib/i18n/I18nProvider';
 import type { TranslationKey } from '../../lib/i18n/translations';
+
+const ROLE_GUIDE_LINKS: { role: string; nameKey: TranslationKey; icon: typeof Users; color: string; bg: string }[] = [
+  { role: 'drejtor', nameKey: 'role.school_principal', icon: School, color: 'text-blue-700', bg: 'bg-blue-100' },
+  { role: 'mesues', nameKey: 'role.mesues', icon: GraduationCap, color: 'text-teal-700', bg: 'bg-teal-100' },
+  { role: 'nxenes', nameKey: 'role.nxenes', icon: User, color: 'text-cyan-700', bg: 'bg-cyan-100' },
+  { role: 'prind', nameKey: 'role.prind', icon: Users, color: 'text-slate-700', bg: 'bg-slate-100' },
+  { role: 'pedagog', nameKey: 'role.pedagog', icon: Heart, color: 'text-pink-700', bg: 'bg-pink-100' },
+  { role: 'drejtor_komunal', nameKey: 'role.drejtor_komunal', icon: Building, color: 'text-amber-700', bg: 'bg-amber-100' },
+  { role: 'ministri', nameKey: 'role.ministri', icon: Crown, color: 'text-purple-700', bg: 'bg-purple-100' },
+  { role: 'inspektor', nameKey: 'role.inspektor', icon: ClipboardCheck, color: 'text-orange-700', bg: 'bg-orange-100' },
+  { role: 'super_admin', nameKey: 'role.super_admin', icon: ShieldCheck, color: 'text-zinc-700', bg: 'bg-zinc-100' },
+];
+
+function RoleGuidesSection() {
+  const { t } = useI18n();
+  return (
+    <div className="mt-8 bg-white rounded-2xl border border-slate-200 p-6 md:p-8">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+          <BookOpen className="w-5 h-5 text-blue-600" />
+        </div>
+        <div>
+          <h2 className="text-xl font-bold text-slate-900">{t('rmd.role_docs_title')}</h2>
+          <p className="text-sm text-slate-500">{t('rmd.role_docs_subtitle')}</p>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {ROLE_GUIDE_LINKS.map((r) => {
+          const Icon = r.icon;
+          return (
+            <Link
+              key={r.role}
+              to={`/udhezues/${r.role}`}
+              className="flex items-center gap-3 p-4 rounded-xl border border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 transition-all group"
+            >
+              <div className={`w-10 h-10 ${r.bg} rounded-xl flex items-center justify-center shrink-0`}>
+                <Icon className={`w-5 h-5 ${r.color}`} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-slate-900">{t(r.nameKey)}</p>
+                <p className="text-xs text-slate-500">{t('rmd.role_docs_subtitle').split(' ').slice(0, 3).join(' ')}...</p>
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600 transition-colors" />
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 type DocId = 'privacy' | 'terms' | 'child_protection' | 'code_of_conduct' | 'cookies';
 
@@ -134,6 +184,8 @@ export default function LegalDocuments() {
             </div>
           </main>
         </div>
+
+        <RoleGuidesSection />
       </div>
     </div>
   );

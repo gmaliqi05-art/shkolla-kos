@@ -32,6 +32,7 @@ const AnnualPlan = lazy(() => import('./pages/director/AnnualPlan'));
 const LibraryPage = lazy(() => import('./pages/director/Library'));
 const TwoFactorSettings = lazy(() => import('./pages/TwoFactorSettings'));
 const LegalDocuments = lazy(() => import('./pages/shared/LegalDocuments'));
+const RoleGuide = lazy(() => import('./pages/shared/RoleGuide'));
 const MinistriDashboard = lazy(() => import('./pages/ministri/MinistriDashboard'));
 const StaffAccountsManagement = lazy(() => import('./pages/ministri/StaffAccountsManagement'));
 const DkaDashboard = lazy(() => import('./pages/dka/DkaDashboard'));
@@ -42,6 +43,7 @@ const InspectionDetail = lazy(() => import('./pages/inspektor/InspectionDetail')
 const InspectorDashboard = lazy(() => import('./pages/inspektor/InspectorDashboard'));
 const PedagogDashboard = lazy(() => import('./pages/pedagog/PedagogDashboard'));
 const SuperAdminDashboard = lazy(() => import('./pages/admin/SuperAdminDashboard'));
+const UserManual = lazy(() => import('./pages/admin/UserManual'));
 
 const TeacherDashboard = lazy(() => import('./pages/teacher/TeacherDashboard'));
 const MyClasses = lazy(() => import('./pages/teacher/MyClasses'));
@@ -213,6 +215,7 @@ const pedagogNav: NavItem[] = [
 
 const adminNav: NavItem[] = [
   { label: 'Paneli Kryesor', path: '/admin', icon: Shield },
+  { label: 'Manual i Përdorimit', labelKey: 'manual.title', path: '/admin/manual', icon: BookOpen },
   { label: 'Përmbajtja Homepage', path: '/admin/content', icon: FileText },
   { label: 'Politikat', path: '/admin/policies', icon: Scale },
   { label: 'Logs & Monitorim', path: '/admin/logs', icon: Activity },
@@ -249,6 +252,7 @@ function AppRoutes() {
         <Routes>
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/dokumentet-ligjore" element={<LegalDocuments />} />
+          <Route path="/udhezues/:role" element={<RoleGuide />} />
           <Route path="*" element={<LoginPage />} />
         </Routes>
       </Suspense>
@@ -478,6 +482,7 @@ function AppRoutes() {
           <Route path="/" element={<Navigate to="/admin" replace />} />
           <Route element={<DashboardLayout navItems={adminNav} role="super_admin" />}>
             <Route path="/admin" element={<SuperAdminDashboard />} />
+            <Route path="/admin/manual" element={<UserManual />} />
             <Route path="/admin/content" element={<SuperAdminDashboard />} />
             <Route path="/admin/policies" element={<SuperAdminDashboard />} />
             <Route path="/admin/logs" element={<SuperAdminDashboard />} />
