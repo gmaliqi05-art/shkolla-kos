@@ -15,8 +15,7 @@ export default defineConfig({
             if (id.includes('recharts') || id.includes('d3-')) return 'vendor-charts';
             if (id.includes('@supabase')) return 'vendor-supabase';
             if (id.includes('react-router')) return 'vendor-router';
-            if (id.includes('react-dom') || id.includes('react/') || id.includes('/react/')) return 'vendor-react';
-            return 'vendor';
+            if (id.includes('node_modules/react-dom/') || id.includes('node_modules/react/')) return 'vendor-react';
           }
         },
       },
