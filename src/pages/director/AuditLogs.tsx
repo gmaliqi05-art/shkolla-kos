@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Loader2, Activity, Search, Filter } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 import { ROLE_LABELS, type AuditLog, type AuditActionType, type UserRole } from '../../types/database';
 
 interface LogRow extends AuditLog {
@@ -31,6 +32,7 @@ const ACTION_COLORS: Record<AuditActionType, string> = {
 };
 
 export default function AuditLogs() {
+  const { t } = useI18n();
   const [logs, setLogs] = useState<LogRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterAction, setFilterAction] = useState<AuditActionType | ''>('');
@@ -92,8 +94,8 @@ export default function AuditLogs() {
           <Activity className="w-5 h-5 text-purple-600" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Audit Log</h1>
-          <p className="text-slate-500 text-sm">Regjistri i qasjes në të dhënat e ndjeshme (Ligji 06/L-082)</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('al.title')}</h1>
+          <p className="text-slate-500 text-sm">{t('al.subtitle')}</p>
         </div>
       </div>
 

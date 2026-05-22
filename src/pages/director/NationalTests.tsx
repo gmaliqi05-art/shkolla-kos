@@ -11,6 +11,7 @@ import {
   type TestResultLevel,
 } from '../../types/database';
 import { Loader2, Plus, X, GraduationCap, ChevronDown, ChevronRight, Edit2, Save } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface TestWithCounts extends NationalTest {
   result_count?: number;
@@ -34,6 +35,7 @@ const DEFAULT_SUBJECTS_9 = ['Gjuhë Shqipe', 'Matematikë', 'Shkencat e Natyrës
 
 export default function NationalTests() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const [tests, setTests] = useState<TestWithCounts[]>([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -234,8 +236,8 @@ export default function NationalTests() {
             <GraduationCap className="w-5 h-5 text-purple-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Testet Kombëtare</h1>
-            <p className="text-slate-500 text-sm">Testi i Arritshmërisë Klasa V-të dhe IX-të (MAShTI/MASA)</p>
+            <h1 className="text-2xl font-bold text-slate-900">{t('nt.title')}</h1>
+            <p className="text-slate-500 text-sm">{t('nt.subtitle')}</p>
           </div>
         </div>
         <button onClick={openNew} className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-medium">

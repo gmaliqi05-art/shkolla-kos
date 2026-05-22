@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { logAudit } from '../../lib/audit';
 import type { Profile, Municipality, UserRole } from '../../types/database';
 import { Loader2, Plus, X, Building, Edit2, Trash2, Search, Mail, Phone, Copy, Check as CheckIcon, UserCheck, Crown } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 import SearchableSelect from '../../components/SearchableSelect';
 
 interface DkaRow extends Profile {
@@ -21,6 +22,7 @@ function generateSecurePassword() {
 
 export default function StaffAccountsManagement() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const [staff, setStaff] = useState<DkaRow[]>([]);
   const [municipalities, setMunicipalities] = useState<Municipality[]>([]);
   const [loading, setLoading] = useState(true);
@@ -190,8 +192,8 @@ export default function StaffAccountsManagement() {
             <Crown className="w-5 h-5 text-purple-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Stafi i Lartë Administrativ</h1>
-            <p className="text-slate-500 text-sm">Menaxhimi i DKA-ve, Inspektorëve dhe Ministrave</p>
+            <h1 className="text-2xl font-bold text-slate-900">{t('sam.title')}</h1>
+            <p className="text-slate-500 text-sm">{t('sam.subtitle')}</p>
           </div>
         </div>
         <button onClick={openNew} className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-medium">

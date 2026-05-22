@@ -3,6 +3,7 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import { logAudit } from '../../lib/audit';
 import { Loader2, Trash2, Check, X, AlertTriangle } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 import { useToast } from '../../components/ToastProvider';
 import {
   DELETION_REQUEST_STATUS_LABELS,
@@ -25,6 +26,7 @@ const STATUS_COLORS: Record<DeletionRequestStatus, string> = {
 export default function DeletionRequests() {
   const { profile } = useAuth();
   const toast = useToast();
+  const { t } = useI18n();
   const [requests, setRequests] = useState<RequestRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [reviewing, setReviewing] = useState<RequestRow | null>(null);
@@ -110,8 +112,8 @@ export default function DeletionRequests() {
           <Trash2 className="w-5 h-5 text-rose-600" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Kërkesat për Fshirje</h1>
-          <p className="text-slate-500 text-sm">E drejta e harresës — duhet të përgjigjeni brenda 30 ditësh</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('dr.title')}</h1>
+          <p className="text-slate-500 text-sm">{t('dr.subtitle')}</p>
         </div>
       </div>
 

@@ -18,6 +18,7 @@ import {
   type DescriptiveLevel,
 } from '../../types/database';
 import { Loader2, Printer, ArrowLeft, FileCheck } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface GradeRow {
   subject_id: string;
@@ -41,6 +42,7 @@ export default function ReportCardView() {
   const { studentId, classId, period: periodStr, type: typeStr } = useParams();
   const navigate = useNavigate();
   const { profile } = useAuth();
+  const { t } = useI18n();
   const toast = useToast();
 
   const period = periodStr ? Number(periodStr) : null;
@@ -241,7 +243,7 @@ export default function ReportCardView() {
           className="inline-flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 rounded-xl"
         >
           <ArrowLeft className="w-4 h-4" />
-          Kthehu
+          {t('rcv.back')}
         </button>
         <div className="flex gap-2">
           {!issued && (
@@ -265,7 +267,7 @@ export default function ReportCardView() {
             className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium"
           >
             <Printer className="w-4 h-4" />
-            Printo / PDF
+            {t('rcv.print')} / PDF
           </button>
         </div>
       </div>

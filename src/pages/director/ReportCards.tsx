@@ -7,6 +7,7 @@ import {
   type ReportCardType,
 } from '../../types/database';
 import { Loader2, FileText, FileCheck, ChevronRight, Building2 } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface ClassOption {
   id: string;
@@ -22,6 +23,7 @@ interface StudentRow {
 }
 
 export default function ReportCards() {
+  const { t } = useI18n();
   const navigate = useNavigate();
   const [classes, setClasses] = useState<ClassOption[]>([]);
   const [selectedClass, setSelectedClass] = useState('');
@@ -113,8 +115,8 @@ export default function ReportCards() {
             <FileCheck className="w-5 h-5 text-emerald-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Dëftesat Zyrtare</h1>
-            <p className="text-slate-500 text-sm">UA 19/2018 — gjenerimi dhe lëshimi i dëftesave</p>
+            <h1 className="text-2xl font-bold text-slate-900">{t('rc.title')}</h1>
+            <p className="text-slate-500 text-sm">{t('rc.subtitle')}</p>
           </div>
         </div>
         <button

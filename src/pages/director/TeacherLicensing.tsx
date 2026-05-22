@@ -10,6 +10,7 @@ import {
   type Profile,
 } from '../../types/database';
 import { Loader2, Award, AlertTriangle, CheckCircle, Edit2, X, FileCheck, GraduationCap } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface TeacherRow extends Profile {
   zhpm_hours: number;
@@ -17,6 +18,7 @@ interface TeacherRow extends Profile {
 
 export default function TeacherLicensing() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const [teachers, setTeachers] = useState<TeacherRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<TeacherRow | null>(null);
@@ -168,8 +170,8 @@ export default function TeacherLicensing() {
           <Award className="w-5 h-5 text-indigo-600" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Licencimi i Mësimdhënësve</h1>
-          <p className="text-slate-500 text-sm">UA 05/2017 — licencat dhe orët e ZHPM (100 orë / 5 vjet)</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('tl.title')}</h1>
+          <p className="text-slate-500 text-sm">{t('tl.subtitle')}</p>
         </div>
       </div>
 

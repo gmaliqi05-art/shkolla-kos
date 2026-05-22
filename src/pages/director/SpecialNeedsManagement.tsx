@@ -21,6 +21,7 @@ import {
   type IEPAccommodationType,
 } from '../../types/database';
 import { Loader2, Plus, X, Heart, Target, Sparkles, ChevronDown, ChevronUp, Edit2 } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface StudentOption {
   id: string;
@@ -41,6 +42,7 @@ interface IEPWithDetails extends IndividualEducationPlan {
 
 export default function SpecialNeedsManagement() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const [needs, setNeeds] = useState<NeedRow[]>([]);
   const [ieps, setIeps] = useState<IEPWithDetails[]>([]);
   const [students, setStudents] = useState<StudentOption[]>([]);
@@ -347,8 +349,8 @@ export default function SpecialNeedsManagement() {
           <Heart className="w-5 h-5 text-pink-600" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">NVA & PIA</h1>
-          <p className="text-slate-500 text-sm">Arsimi Gjithëpërfshirës — Ligji 04/L-032, Neni 40</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('snm.title')}</h1>
+          <p className="text-slate-500 text-sm">{t('snm.subtitle')}</p>
         </div>
       </div>
 

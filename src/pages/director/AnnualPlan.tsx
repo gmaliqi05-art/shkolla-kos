@@ -13,11 +13,13 @@ import {
   type PlanObjectiveStatus,
 } from '../../types/database';
 import { Loader2, FileSpreadsheet, Plus, X, Edit2, Save, Trash2, Target, CheckCircle, Printer } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface AcademicYear { id: string; name: string }
 
 export default function AnnualPlan() {
   const { profile } = useAuth();
+  const { t } = useI18n();
   const [years, setYears] = useState<AcademicYear[]>([]);
   const [plans, setPlans] = useState<AnnualSchoolPlan[]>([]);
   const [selectedPlan, setSelectedPlan] = useState<AnnualSchoolPlan | null>(null);
@@ -283,8 +285,8 @@ export default function AnnualPlan() {
             <FileSpreadsheet className="w-5 h-5 text-purple-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Plani Vjetor i Shkollës</h1>
-            <p className="text-slate-500 text-sm">Dokument zyrtar — detyrim ligjor i drejtorit</p>
+            <h1 className="text-2xl font-bold text-slate-900">{t('ap.title')}</h1>
+            <p className="text-slate-500 text-sm">{t('ap.subtitle')}</p>
           </div>
         </div>
         <div className="flex gap-2">

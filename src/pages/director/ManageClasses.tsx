@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import type { Class } from '../../types/database';
 import { Search, Users, BookOpen, Plus, CreditCard as Edit2, Trash2, X, FolderPlus, MoreVertical } from 'lucide-react';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 import { useToast } from '../../components/ToastProvider';
 
 interface ClassFormData {
@@ -13,6 +14,7 @@ interface ClassFormData {
 
 export default function ManageClasses() {
   const toast = useToast();
+  const { t } = useI18n();
   const [classes, setClasses] = useState<Class[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
@@ -163,8 +165,8 @@ export default function ManageClasses() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Klasat</h1>
-          <p className="text-slate-500 mt-1">Menaxhoni klasat e shkolles</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('mc_d.title')}</h1>
+          <p className="text-slate-500 mt-1">{t('mc_d.subtitle')}</p>
         </div>
         <button
           onClick={() => setShowAddModal(true)}

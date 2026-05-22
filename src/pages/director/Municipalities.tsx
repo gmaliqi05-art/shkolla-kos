@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Loader2, MapPin, Building2 } from 'lucide-react';
 import type { Municipality } from '../../types/database';
+import { useI18n } from '../../lib/i18n/I18nProvider';
 
 const REGION_COLORS: Record<string, string> = {
   'Qendër': 'bg-blue-100 text-blue-700',
@@ -12,6 +13,7 @@ const REGION_COLORS: Record<string, string> = {
 };
 
 export default function Municipalities() {
+  const { t } = useI18n();
   const [municipalities, setMunicipalities] = useState<Municipality[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -48,8 +50,8 @@ export default function Municipalities() {
           <MapPin className="w-5 h-5 text-blue-600" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Komunat e Kosovës</h1>
-          <p className="text-slate-500 text-sm">38 komunat — Ligji 03/L-068 për Arsimin në Komunat</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('mun.title')}</h1>
+          <p className="text-slate-500 text-sm">{t('mun.subtitle')}</p>
         </div>
       </div>
 
@@ -66,7 +68,7 @@ export default function Municipalities() {
             <div className="px-5 py-3 border-b border-slate-100 bg-slate-50">
               <h3 className="font-semibold text-slate-900 flex items-center gap-2">
                 <span className={`px-2 py-0.5 rounded text-xs font-medium ${REGION_COLORS[region] || 'bg-slate-100 text-slate-700'}`}>
-                  Rajoni
+                  {t('mun.region')}
                 </span>
                 {region}
                 <span className="text-xs text-slate-500 ml-auto">{mun.length} komuna</span>
