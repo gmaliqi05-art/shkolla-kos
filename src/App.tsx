@@ -10,12 +10,21 @@ import type { NavItem } from './components/layout/Sidebar';
 
 function lazyRetry(factory: () => Promise<{ default: React.ComponentType }>) {
   return lazy(() =>
-    factory().catch(() => {
-      if ('caches' in window) {
-        caches.keys().then((names) => Promise.all(names.map((n) => caches.delete(n))));
+    factory().catch((err) => {
+      // Nje chunk i vjeter mund te mungoje pas nje deploy-i te ri. Provojme nje
+      // pastrim + reload, por vetem nje here ne nje dritare kohore qe te mos
+      // krijohet loop i pafund (dridhje) nese chunk-u mungon vertet.
+      const KEY = 'chunk-reload-ts';
+      const last = Number(sessionStorage.getItem(KEY) || 0);
+      if (Date.now() - last > 30000) {
+        sessionStorage.setItem(KEY, String(Date.now()));
+        if ('caches' in window) {
+          caches.keys().then((names) => Promise.all(names.map((n) => caches.delete(n))));
+        }
+        window.location.reload();
+        return new Promise<{ default: React.ComponentType }>(() => {});
       }
-      window.location.reload();
-      return new Promise(() => {});
+      throw err;
     })
   );
 }
