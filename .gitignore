@@ -21,3 +21,9 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Vite gjeneron keto gjate dev-it; nuk duhen komituar
+vite.config.ts.timestamp-*.mjs
+
+# Artefakte te TypeScript build mode (tsc -b)
+*.tsbuildinfo

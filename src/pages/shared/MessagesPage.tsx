@@ -51,6 +51,7 @@ const ROLE_CAN_MESSAGE: Record<UserRole, UserRole[]> = {
   drejtor_komunal: ['drejtor', 'ministri', 'inspektor'],
   ministri: ['drejtor_komunal', 'drejtor', 'inspektor'],
   inspektor: ['drejtor', 'drejtor_komunal', 'ministri'],
+  super_admin: ['drejtor', 'mesues', 'nxenes', 'prind', 'pedagog', 'drejtor_komunal', 'ministri', 'inspektor'],
 };
 
 const DEMO_MESSAGES: MessageItem[] = [
@@ -170,9 +171,9 @@ export default function MessagesPage() {
           is_read: m.is_read,
           created_at: m.created_at,
           sender_name: sender?.full_name || '',
-          sender_role: sender?.role || 'nxenes',
+          sender_role: (sender?.role as UserRole) || 'nxenes',
           receiver_name: receiver?.full_name || '',
-          receiver_role: receiver?.role || 'nxenes',
+          receiver_role: (receiver?.role as UserRole) || 'nxenes',
         };
       }));
     } catch (err) {
@@ -324,6 +325,7 @@ export default function MessagesPage() {
       drejtor_komunal: 'bg-amber-100 text-amber-700',
       ministri: 'bg-purple-100 text-purple-700',
       inspektor: 'bg-orange-100 text-orange-700',
+      super_admin: 'bg-zinc-200 text-zinc-800',
     };
     return colors[role];
   };
@@ -338,6 +340,7 @@ export default function MessagesPage() {
       drejtor_komunal: 'from-amber-500 to-amber-600',
       ministri: 'from-purple-500 to-purple-600',
       inspektor: 'from-orange-500 to-orange-600',
+      super_admin: 'from-zinc-700 to-slate-800',
     };
     return colors[role];
   };

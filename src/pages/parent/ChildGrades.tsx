@@ -3,8 +3,15 @@ import { BookOpen, TrendingUp, Award, AlertCircle, Users, Loader2 } from 'lucide
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import { useI18n } from '../../lib/i18n/I18nProvider';
-import type { Grade, Profile } from '../../types/database';
+import type { Grade } from '../../types/database';
 import type { TranslationKey } from '../../lib/i18n/translations';
+
+// Prinderi sheh vetem fushat minimale te femijes per perzgjedhesin.
+interface ChildOption {
+  id: string;
+  full_name: string;
+  email: string;
+}
 
 interface SubjectGrades {
   subject_id: string;
@@ -17,8 +24,8 @@ interface SubjectGrades {
   average: number | null;
 }
 
-const DEMO_CHILDREN: Profile[] = [
-  { id: 'demo-child-1', full_name: 'Ardi Malaj', email: 'ardi@shkolla.ks', role: 'nxenes', created_at: '' } as Profile,
+const DEMO_CHILDREN: ChildOption[] = [
+  { id: 'demo-child-1', full_name: 'Ardi Malaj', email: 'ardi@shkolla.ks' },
 ];
 
 const DEMO_GRADES: SubjectGrades[] = [
@@ -33,7 +40,7 @@ const DEMO_GRADES: SubjectGrades[] = [
 export default function ChildGrades() {
   const { profile, isDemo } = useAuth();
   const { t } = useI18n();
-  const [children, setChildren] = useState<Profile[]>([]);
+  const [children, setChildren] = useState<ChildOption[]>([]);
   const [selectedChild, setSelectedChild] = useState<string>('');
   const [semester, setSemester] = useState<number>(1);
   const [subjectGrades, setSubjectGrades] = useState<SubjectGrades[]>([]);
@@ -70,8 +77,7 @@ export default function ChildGrades() {
 
       if (psError) throw psError;
 
-      type ChildProfile = { id: string; full_name: string; email: string };
-      type ParentStudentRow = { student_id: string; profiles: ChildProfile | ChildProfile[] | null };
+      type ParentStudentRow = { student_id: string; profiles: ChildOption | ChildOption[] | null };
       const childrenData = (parentStudents as ParentStudentRow[] | null)?.flatMap((ps) => {
         if (!ps.profiles) return [];
         return Array.isArray(ps.profiles) ? ps.profiles : [ps.profiles];
