@@ -27,17 +27,6 @@
   <body>
     <div id="root"></div>
     <script>
-      // Fshi SW te vjeter MENJEHERE para se te ngarkohet app
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(regs) {
-          regs.forEach(function(r) { r.unregister(); });
-        });
-        if ('caches' in window) {
-          caches.keys().then(function(names) {
-            names.forEach(function(n) { caches.delete(n); });
-          });
-        }
-      }
       // Shfaq gabimet ne ekran
       var _errors = [];
       window.onerror = function(msg, src, line, col, err) {
