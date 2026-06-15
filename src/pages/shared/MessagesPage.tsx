@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
+import { useToast } from '../../components/ToastProvider';
 import type { UserRole } from '../../types/database';
 import { useI18n } from '../../lib/i18n/I18nProvider';
 import type { TranslationKey } from '../../lib/i18n/translations';
@@ -73,6 +74,7 @@ const DEMO_CONTACTS: ContactItem[] = [
 export default function MessagesPage() {
   const { profile, isDemo } = useAuth();
   const { t } = useI18n();
+  const toast = useToast();
   const [tab, setTab] = useState<'inbox' | 'sent'>('inbox');
   const [messages, setMessages] = useState<MessageItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -178,6 +180,7 @@ export default function MessagesPage() {
       }));
     } catch (err) {
       console.error('Error loading messages:', err);
+      toast.error(t('msg.something_wrong'));
     } finally {
       setLoading(false);
     }
@@ -214,6 +217,7 @@ export default function MessagesPage() {
       setContacts(data || []);
     } catch (err) {
       console.error('Error loading contacts:', err);
+      toast.error(t('msg.something_wrong'));
     }
   };
 
@@ -225,8 +229,13 @@ export default function MessagesPage() {
       return;
     }
 
-    await supabase.from('messages').update({ is_read: true }).eq('id', msg.id);
-    setMessages(prev => prev.map(m => m.id === msg.id ? { ...m, is_read: true } : m));
+    try {
+      const { error } = await supabase.from('messages').update({ is_read: true }).eq('id', msg.id);
+      if (error) throw error;
+      setMessages(prev => prev.map(m => m.id === msg.id ? { ...m, is_read: true } : m));
+    } catch (err) {
+      console.error('Error marking message as read:', err);
+    }
   };
 
   const openMessage = (msg: MessageItem) => {
@@ -271,10 +280,12 @@ export default function MessagesPage() {
 
       if (error) throw error;
       closeCompose();
+      toast.success(t('msg.sent_success'));
       if (tab === 'sent') loadMessages();
       else setTab('sent');
     } catch (err) {
       console.error('Error sending message:', err);
+      toast.error(t('msg.something_wrong'));
     } finally {
       setSending(false);
     }
@@ -290,9 +301,16 @@ export default function MessagesPage() {
       return;
     }
 
-    await supabase.from('messages').delete().eq('id', msgId);
-    setMessages(prev => prev.filter(m => m.id !== msgId));
-    setSelectedMessage(null);
+    try {
+      const { error } = await supabase.from('messages').delete().eq('id', msgId);
+      if (error) throw error;
+      setMessages(prev => prev.filter(m => m.id !== msgId));
+      setSelectedMessage(null);
+      toast.success(t('msg.deleted_successfully'));
+    } catch (err) {
+      console.error('Error deleting message:', err);
+      toast.error(t('msg.something_wrong'));
+    }
   };
 
   const closeCompose = () => {
