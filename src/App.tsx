@@ -235,14 +235,14 @@ const pedagogNav: NavItem[] = [
 ];
 
 const adminNav: NavItem[] = [
-  { label: 'Paneli Kryesor', path: '/admin', icon: Shield },
+  { label: 'Paneli Kryesor', labelKey: 'nav.dashboard', path: '/admin', icon: Shield },
   { label: 'Manual i Përdorimit', labelKey: 'manual.title', path: '/admin/manual', icon: BookOpen },
-  { label: 'Përmbajtja Homepage', path: '/admin/content', icon: FileText },
-  { label: 'Politikat', path: '/admin/policies', icon: Scale },
-  { label: 'Logs & Monitorim', path: '/admin/logs', icon: Activity },
-  { label: 'Backup', path: '/admin/backups', icon: HardDrive },
-  { label: 'Migrations DB', path: '/admin/migrations', icon: Building2 },
-  { label: 'Cilësimet', path: '/admin/settings', icon: SettingsIcon },
+  { label: 'Përmbajtja Homepage', labelKey: 'nav.admin_content', path: '/admin/content', icon: FileText },
+  { label: 'Politikat', labelKey: 'nav.admin_policies', path: '/admin/policies', icon: Scale },
+  { label: 'Logs & Monitorim', labelKey: 'nav.admin_logs', path: '/admin/logs', icon: Activity },
+  { label: 'Backup', labelKey: 'nav.admin_backups', path: '/admin/backups', icon: HardDrive },
+  { label: 'Migrations DB', labelKey: 'nav.admin_migrations', path: '/admin/migrations', icon: Building2 },
+  { label: 'Cilësimet', labelKey: 'nav.settings', path: '/admin/settings', icon: SettingsIcon },
 ];
 
 function PageLoader() {

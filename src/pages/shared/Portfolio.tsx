@@ -10,6 +10,7 @@ import {
 } from '../../types/database';
 import { Loader2, FolderOpen, Plus, X, Trash2, FileText } from 'lucide-react';
 import FileUpload from '../../components/FileUpload';
+import { useToast } from '../../components/ToastProvider';
 import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface StudentOption { id: string; full_name: string }
@@ -18,6 +19,7 @@ interface SubjectOption { id: string; name: string }
 export default function Portfolio() {
   const { profile } = useAuth();
   const { t } = useI18n();
+  const toast = useToast();
   const isStudent = profile?.role === 'nxenes';
   const isParent = profile?.role === 'prind';
   const isTeacher = profile?.role === 'mesues';
@@ -114,41 +116,47 @@ export default function Portfolio() {
 
   const loadPortfolio = async () => {
     setLoading(true);
-    // Find or create portfolio
-    let { data: p } = await supabase
-      .from('student_portfolios')
-      .select('*')
-      .eq('student_id', selectedStudent)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    if (!p) {
-      // Auto-create for self or eligible
-      const canCreate = isStudent || isTeacher || isDirector;
-      if (canCreate) {
-        const { data: created } = await supabase
-          .from('student_portfolios')
-          .insert({ student_id: selectedStudent, title: t('port.default_title') })
-          .select()
-          .single();
-        p = created;
-      }
-    }
-
-    if (p) {
-      setPortfolio(p);
-      const { data: itemsData } = await supabase
-        .from('portfolio_items')
+    try {
+      // Find or create portfolio
+      let { data: p } = await supabase
+        .from('student_portfolios')
         .select('*')
-        .eq('portfolio_id', p.id)
-        .order('added_at', { ascending: false });
-      setItems(itemsData || []);
-    } else {
-      setPortfolio(null);
-      setItems([]);
+        .eq('student_id', selectedStudent)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (!p) {
+        // Auto-create for self or eligible
+        const canCreate = isStudent || isTeacher || isDirector;
+        if (canCreate) {
+          const { data: created } = await supabase
+            .from('student_portfolios')
+            .insert({ student_id: selectedStudent, title: t('port.default_title') })
+            .select()
+            .single();
+          p = created;
+        }
+      }
+
+      if (p) {
+        setPortfolio(p);
+        const { data: itemsData } = await supabase
+          .from('portfolio_items')
+          .select('*')
+          .eq('portfolio_id', p.id)
+          .order('added_at', { ascending: false });
+        setItems(itemsData || []);
+      } else {
+        setPortfolio(null);
+        setItems([]);
+      }
+    } catch (err) {
+      console.error('Error loading portfolio:', err);
+      toast.error(t('msg.something_wrong'));
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const openNew = () => {
@@ -177,6 +185,7 @@ export default function Portfolio() {
       setError(err.message);
     } else {
       setShowModal(false);
+      toast.success(t('msg.saved_successfully'));
       loadPortfolio();
     }
     setSubmitting(false);
@@ -184,8 +193,15 @@ export default function Portfolio() {
 
   const remove = async (id: string) => {
     if (!confirm(t('port.remove_confirm'))) return;
-    await supabase.from('portfolio_items').delete().eq('id', id);
-    loadPortfolio();
+    try {
+      const { error: err } = await supabase.from('portfolio_items').delete().eq('id', id);
+      if (err) throw err;
+      toast.success(t('msg.deleted_successfully'));
+      loadPortfolio();
+    } catch (err) {
+      console.error('Error removing portfolio item:', err);
+      toast.error(t('msg.something_wrong'));
+    }
   };
 
   const filtered = filterType ? items.filter((i) => i.item_type === filterType) : items;
