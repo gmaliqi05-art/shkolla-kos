@@ -54,6 +54,61 @@ export interface StudentHealthRecord {
   created_at?: string;
 }
 
+// Raportimi i incidenteve / dhunës / bullizmit (UA 13/2018)
+export type IncidentType =
+  | 'bullizem' | 'dhune_fizike' | 'dhune_verbale' | 'ngacmim' | 'ngacmim_seksual'
+  | 'vjedhje' | 'demtim_prone' | 'substanca' | 'kercenim' | 'tjeter';
+export type IncidentSeverity = 'lehte' | 'mesatare' | 'rende';
+export type IncidentStatus = 'i_hapur' | 'ne_proces' | 'mbyllur';
+
+export interface IncidentReport {
+  id: string;
+  school_id: string | null;
+  incident_date: string;
+  incident_type: IncidentType;
+  severity: IncidentSeverity;
+  location: string;
+  description: string;
+  involved_students: string[];
+  witnesses: string;
+  reported_by: string;
+  status: IncidentStatus;
+  director_actions: string;
+  parent_notified_at: string | null;
+  police_notified: boolean;
+  police_report_number: string;
+  reviewed_by: string | null;
+  reviewed_at: string | null;
+  created_at: string;
+  updated_at: string;
+  reporter_name?: string;
+}
+
+export const INCIDENT_TYPE_LABELS: Record<IncidentType, string> = {
+  bullizem: 'Bullizëm',
+  dhune_fizike: 'Dhunë fizike',
+  dhune_verbale: 'Dhunë verbale',
+  ngacmim: 'Ngacmim',
+  ngacmim_seksual: 'Ngacmim seksual',
+  vjedhje: 'Vjedhje',
+  demtim_prone: 'Dëmtim prone',
+  substanca: 'Substanca',
+  kercenim: 'Kërcënim',
+  tjeter: 'Tjetër',
+};
+
+export const INCIDENT_SEVERITY_LABELS: Record<IncidentSeverity, string> = {
+  lehte: 'I lehtë',
+  mesatare: 'Mesatar',
+  rende: 'I rëndë',
+};
+
+export const INCIDENT_STATUS_LABELS: Record<IncidentStatus, string> = {
+  i_hapur: 'I hapur',
+  ne_proces: 'Në proces',
+  mbyllur: 'Mbyllur',
+};
+
 export type LicenseLevel = 'fillestar' | 'karriere' | 'keshillues';
 
 export const LICENSE_LEVEL_LABELS: Record<LicenseLevel, string> = {

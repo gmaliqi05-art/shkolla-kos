@@ -123,6 +123,7 @@ export const translations = {
   'nav.deletion_requests': { sq: 'Kërkesat Fshirje', sr: 'Zahtevi za brisanje', tr: 'Silme talepleri', bs: 'Zahtjevi za brisanje', en: 'Deletion Requests' },
   'nav.privacy': { sq: 'Privatësia', sr: 'Privatnost', tr: 'Gizlilik', bs: 'Privatnost', en: 'Privacy' },
   'nav.settings': { sq: 'Cilësimet', sr: 'Podešavanja', tr: 'Ayarlar', bs: 'Postavke', en: 'Settings' },
+  'nav.incidents': { sq: 'Incidentet', sr: 'Incidenti', tr: 'Olaylar', bs: 'Incidenti', en: 'Incidents' },
   'nav.admin_content': { sq: 'Përmbajtja Homepage', sr: 'Sadržaj početne', tr: 'Ana sayfa içeriği', bs: 'Sadržaj početne', en: 'Homepage Content' },
   'nav.admin_policies': { sq: 'Politikat', sr: 'Politike', tr: 'Politikalar', bs: 'Politike', en: 'Policies' },
   'nav.admin_logs': { sq: 'Logs & Monitorim', sr: 'Logovi i praćenje', tr: 'Günlükler ve İzleme', bs: 'Logovi i praćenje', en: 'Logs & Monitoring' },
