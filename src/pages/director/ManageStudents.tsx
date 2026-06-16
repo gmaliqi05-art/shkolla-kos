@@ -186,12 +186,19 @@ export default function ManageStudents() {
     mother_tongue: formData.mother_tongue || 'shqip',
     legal_guardian_name: formData.legal_guardian_name,
     legal_guardian_relation: formData.legal_guardian_relation,
+    enrollment_status: formData.enrollment_status,
+  });
+
+  // Të dhënat shëndetësore ruhen veçmas (tabelë me RLS rigoroze).
+  const buildHealthPayload = (studentId: string) => ({
+    student_id: studentId,
     emergency_contact_name: formData.emergency_contact_name,
     emergency_contact_phone: formData.emergency_contact_phone,
     emergency_contact_relation: formData.emergency_contact_relation,
     medical_conditions: formData.medical_conditions,
     family_doctor: formData.family_doctor,
-    enrollment_status: formData.enrollment_status,
+    updated_by: currentProfile?.id ?? null,
+    updated_at: new Date().toISOString(),
   });
 
   const handleAddStudent = async (e: React.FormEvent) => {
@@ -239,6 +246,10 @@ export default function ManageStudents() {
         return;
       }
 
+      await supabase
+        .from('student_health_records')
+        .upsert(buildHealthPayload(authData.user.id), { onConflict: 'student_id' });
+
       if (formData.class_id) {
         await supabase.from('student_classes').insert({
           student_id: authData.user.id,
@@ -278,6 +289,10 @@ export default function ManageStudents() {
       setSubmitting(false);
       return;
     }
+
+    await supabase
+      .from('student_health_records')
+      .upsert(buildHealthPayload(selectedStudent.id), { onConflict: 'student_id' });
 
     if (formData.class_id !== selectedStudent.class_id) {
       await supabase.from('student_classes').delete().eq('student_id', selectedStudent.id);
@@ -320,9 +335,18 @@ export default function ManageStudents() {
     setActiveDropdown(null);
   };
 
-  const openEditModal = (student: StudentWithClass) => {
+  const openEditModal = async (student: StudentWithClass) => {
     setSelectedStudent(student);
     setFormError('');
+    setActiveDropdown(null);
+
+    // Të dhënat shëndetësore ngarkohen veçmas nga tabela me RLS rigoroze.
+    const { data: health } = await supabase
+      .from('student_health_records')
+      .select('*')
+      .eq('student_id', student.id)
+      .maybeSingle();
+
     setFormData({
       full_name: student.full_name,
       email: student.email,
@@ -337,15 +361,14 @@ export default function ManageStudents() {
       mother_tongue: student.mother_tongue || 'shqip',
       legal_guardian_name: student.legal_guardian_name || '',
       legal_guardian_relation: student.legal_guardian_relation || 'prind',
-      emergency_contact_name: student.emergency_contact_name || '',
-      emergency_contact_phone: student.emergency_contact_phone || '',
-      emergency_contact_relation: student.emergency_contact_relation || '',
-      medical_conditions: student.medical_conditions || '',
-      family_doctor: student.family_doctor || '',
+      emergency_contact_name: health?.emergency_contact_name || '',
+      emergency_contact_phone: health?.emergency_contact_phone || '',
+      emergency_contact_relation: health?.emergency_contact_relation || '',
+      medical_conditions: health?.medical_conditions || '',
+      family_doctor: health?.family_doctor || '',
       enrollment_status: student.enrollment_status || 'regjistruar',
     });
     setShowEditModal(true);
-    setActiveDropdown(null);
   };
 
   const filtered = students.filter((s) => {
