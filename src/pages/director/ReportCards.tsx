@@ -6,7 +6,7 @@ import {
   REPORT_CARD_TYPE_LABELS,
   type ReportCardType,
 } from '../../types/database';
-import { Loader2, FileText, FileCheck, ChevronRight, Building2 } from 'lucide-react';
+import { Loader2, FileText, FileCheck, ChevronRight, Building2, Award } from 'lucide-react';
 import { useI18n } from '../../lib/i18n/I18nProvider';
 
 interface ClassOption {
@@ -95,6 +95,11 @@ export default function ReportCards() {
     const cardType = period === 'vjetore' ? 'vjetore' : 'periudhshme';
     const p = period === 'vjetore' ? 'annual' : String(period);
     navigate(`/drejtor/deftesat/${studentId}/${selectedClass}/${p}/${cardType}`);
+  };
+
+  const openCertificate = (studentId: string, gradeLevel: number) => {
+    const type = gradeLevel === 9 ? 'diplome_klases_9' : 'certifikate_klases_5';
+    navigate(`/drejtor/certifikata/${studentId}/${selectedClass}/${type}`);
   };
 
   if (loading) {
@@ -203,14 +208,25 @@ export default function ReportCards() {
                     )}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <button
-                      onClick={(e) => { e.stopPropagation(); openReportCard(s.id); }}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium"
-                    >
-                      <FileText className="w-4 h-4" />
-                      Hap dëftesën
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
+                    <div className="inline-flex items-center gap-2">
+                      {selectedClassObj && (selectedClassObj.grade_level === 5 || selectedClassObj.grade_level === 9) && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); openCertificate(s.id, selectedClassObj.grade_level); }}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-sm font-medium"
+                        >
+                          <Award className="w-4 h-4" />
+                          {selectedClassObj.grade_level === 9 ? 'Diplomë' : 'Certifikatë'}
+                        </button>
+                      )}
+                      <button
+                        onClick={(e) => { e.stopPropagation(); openReportCard(s.id); }}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium"
+                      >
+                        <FileText className="w-4 h-4" />
+                        Hap dëftesën
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

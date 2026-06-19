@@ -44,6 +44,7 @@ const SchoolCouncils = lazyRetry(() => import('./pages/director/SchoolCouncils')
 const SchoolSettings = lazyRetry(() => import('./pages/director/SchoolSettings'));
 const ReportCards = lazyRetry(() => import('./pages/director/ReportCards'));
 const ReportCardView = lazyRetry(() => import('./pages/director/ReportCardView'));
+const CertificateView = lazyRetry(() => import('./pages/director/CertificateView'));
 const TeacherLicensing = lazyRetry(() => import('./pages/director/TeacherLicensing'));
 const Activities = lazyRetry(() => import('./pages/director/Activities'));
 const NationalTests = lazyRetry(() => import('./pages/director/NationalTests'));
@@ -296,6 +297,7 @@ function AppRoutes() {
             <Route path="/drejtor/raporte" element={<Reports />} />
             <Route path="/drejtor/deftesat" element={<ReportCards />} />
             <Route path="/drejtor/deftesat/:studentId/:classId/:period/:type" element={<ReportCardView />} />
+            <Route path="/drejtor/certifikata/:studentId/:classId/:type" element={<CertificateView />} />
             <Route path="/drejtor/cilesime" element={<SchoolSettings />} />
             <Route path="/drejtor/komunat" element={<Municipalities />} />
             <Route path="/drejtor/kalendari" element={<SchoolCalendar />} />
