@@ -1187,6 +1187,7 @@ export interface DataDeletionRequest {
   reviewed_at: string | null;
   review_notes: string;
   completed_at: string | null;
+  deadline_at?: string | null;
   created_at: string;
 }
 
@@ -1513,6 +1514,8 @@ export interface SchoolInfo {
   logo_url: string | null;
   stamp_url: string | null;
   registration_number: string;
+  dpo_name?: string;
+  dpo_email?: string;
   municipality_id?: string | null;
   locality_id?: string | null;
   school_type?: SchoolType;
