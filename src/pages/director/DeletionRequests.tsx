@@ -33,6 +33,7 @@ export default function DeletionRequests() {
   const [reviewNotes, setReviewNotes] = useState('');
   const [reviewAction, setReviewAction] = useState<'approved' | 'rejected'>('approved');
   const [submitting, setSubmitting] = useState(false);
+  const [completing, setCompleting] = useState<string | null>(null);
   const [filter, setFilter] = useState<DeletionRequestStatus | 'all'>('pending');
 
   useEffect(() => {
@@ -101,6 +102,42 @@ export default function DeletionRequests() {
       loadRequests();
     }
     setSubmitting(false);
+  };
+
+  const completeRequest = async (req: RequestRow) => {
+    if (!profile) return;
+    if (!confirm(
+      `Anonimizo përfundimisht të dhënat personale të ${req.student_name}?\n\n` +
+      `Identiteti (emri, numri personal, datëlindja, kontaktet, të dhënat shëndetësore) fshihet.\n` +
+      `Notat dhe Amza ruhen sipas detyrimit ligjor. Ky veprim NUK mund të kthehet.`
+    )) return;
+    setCompleting(req.id);
+    const { error: rpcErr } = await supabase.rpc('anonymize_student', { p_student: req.student_id });
+    if (rpcErr) {
+      toast.error('Gabim: ' + rpcErr.message);
+      setCompleting(null);
+      return;
+    }
+    const { error } = await supabase
+      .from('data_deletion_requests')
+      .update({ status: 'completed', completed_at: new Date().toISOString() })
+      .eq('id', req.id);
+    if (error) {
+      toast.error('Gabim: ' + error.message);
+    } else {
+      await logAudit({
+        actorId: profile.id,
+        actorRole: profile.role,
+        action: 'delete',
+        resourceType: 'data_deletion_request',
+        resourceId: req.id,
+        targetUserId: req.student_id,
+        metadata: { action: 'anonymized' },
+      });
+      toast.success('Të dhënat personale u anonimizuan.');
+      loadRequests();
+    }
+    setCompleting(null);
   };
 
   const filtered = filter === 'all' ? requests : requests.filter((r) => r.status === filter);
@@ -187,6 +224,16 @@ export default function DeletionRequests() {
                         Refuzo
                       </button>
                     </div>
+                  )}
+                  {r.status === 'approved' && (
+                    <button
+                      onClick={() => completeRequest(r)}
+                      disabled={completing === r.id}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-sm font-medium disabled:opacity-50 shrink-0"
+                    >
+                      {completing === r.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                      Përfundo & anonimizo
+                    </button>
                   )}
                 </div>
               </div>

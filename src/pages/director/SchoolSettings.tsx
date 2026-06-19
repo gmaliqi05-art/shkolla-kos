@@ -31,6 +31,8 @@ export default function SchoolSettings() {
     website: '',
     director_name: '',
     registration_number: '',
+    dpo_name: '',
+    dpo_email: '',
     logo_url: '',
     stamp_url: '',
   });
@@ -63,6 +65,8 @@ export default function SchoolSettings() {
         website: data.website || '',
         director_name: data.director_name || '',
         registration_number: data.registration_number || '',
+        dpo_name: data.dpo_name || '',
+        dpo_email: data.dpo_email || '',
         logo_url: data.logo_url || '',
         stamp_url: data.stamp_url || '',
       });
@@ -267,6 +271,38 @@ export default function SchoolSettings() {
               />
             </div>
           </div>
+        </section>
+
+        <section>
+          <h2 className="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
+            <span className="w-1 h-4 bg-rose-500 rounded-full"></span>
+            Mbrojtja e të Dhënave (Ligji 06/L-082)
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Zyrtari për Mbrojtjen e të Dhënave (DPO)</label>
+              <input
+                type="text"
+                value={form.dpo_name}
+                onChange={(e) => setForm({ ...form, dpo_name: e.target.value })}
+                placeholder="Emër Mbiemër"
+                className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Email i DPO-së</label>
+              <input
+                type="email"
+                value={form.dpo_email}
+                onChange={(e) => setForm({ ...form, dpo_email: e.target.value })}
+                placeholder="dpo@shkolla.ks"
+                className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+          <p className="text-xs text-slate-500 mt-2">
+            Kontakti i DPO-së kërkohet nga Ligji 06/L-082; shfaqet te politika e privatësisë dhe për kërkesat e subjekteve të të dhënave.
+          </p>
         </section>
 
         <section>
