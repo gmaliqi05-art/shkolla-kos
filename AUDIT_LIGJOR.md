@@ -1,431 +1,175 @@
-# AUDIT LIGJOR — Shkolla Kos
+# AUDIT LIGJOR — Shkolla-Kos (i përditësuar)
 
-**Sistemi:** Shkolla Kos — Sistem Menaxhimi Shkollor për Arsimin Parauniversitar (Klasa 1–9)
-**Data e auditimit:** 19 Maj 2026
-**Dega:** `claude/audit-school-laws-compliance-1C3N6`
+**Sistemi:** Shkolla-Kos — Sistem Menaxhimi Shkollor për Arsimin Parauniversitar (Klasa 1–9)
+**Data e auditimit:** 16 Qershor 2026 (zëvendëson auditin e 19 Majit 2026)
+**Metoda:** rishikim i kodit + migracioneve + **verifikim i drejtpërdrejtë te baza live** (projekti Supabase "EduPlatform Kosovo", 56 tabela publike).
+
 **Korniza ligjore e referencës:**
-
-- **Ligji Nr. 04/L-032** për Arsimin Parauniversitar në Republikën e Kosovës
-- **Ligji Nr. 03/L-068** për Arsimin në Komunat e Republikës së Kosovës
-- **Ligji Nr. 06/L-046** për Inspektoratin e Arsimit
-- **Ligji Nr. 06/L-082** për Mbrojtjen e të Dhënave Personale
-- **Ligji Nr. 02/L-37** për Përdorimin e Gjuhëve
-- **Ligji Nr. 06/L-084** për Mbrojtjen e Fëmijëve
-- **Korniza Kurrikulare e Kosovës (KKK)** dhe Kurrikula Bërthamë për Klasa 1–9
-- **Udhëzimi Administrativ (UA) Nr. 06/2022** për Vlerësimin e Nxënësve
-- **UA Nr. 19/2018** për Dokumentacionin Pedagogjik
-- **UA Nr. 05/2017** për Licencimin e Mësimdhënësve
-- **UA Nr. 13/2018** për Mbrojtjen e Fëmijëve nga Dhuna në Sistemin e Arsimit
+- Ligji Nr. 04/L-032 për Arsimin Parauniversitar
+- Ligji Nr. 03/L-068 për Arsimin në Komunat
+- Ligji Nr. 06/L-046 për Inspektoratin e Arsimit
+- Ligji Nr. 06/L-082 për Mbrojtjen e të Dhënave Personale
+- Ligji Nr. 02/L-37 për Përdorimin e Gjuhëve
+- Ligji Nr. 06/L-084 për Mbrojtjen e Fëmijëve
+- Korniza Kurrikulare e Kosovës (KKK)
+- UA 06/2022 (Vlerësimi), UA 19/2018 (Dokumentacioni Pedagogjik), UA 05/2017 (Licencimi), UA 13/2018 (Mbrojtja nga Dhuna)
 
 ---
 
 ## 1. PËRMBLEDHJE EKZEKUTIVE
 
-Projekti **Shkolla Kos** është një sistem i ndërtuar mirë teknikisht (React + Supabase me RLS), me një bazë solide që mbulon **rreth 55–60% të kërkesave ligjore** të arsimit parauniversitar në Kosovë. Themelet janë në vend (rolet, shkalla 1–5, tre periudhat, vlerësimi përshkrues për klasat 1–2, kurrikula 18-lëndëshe), por **mungojnë komponentë thelbësorë ligjorë** që e bëjnë sistemin **jo plotësisht në përputhje** për përdorim zyrtar në një shkollë publike të Kosovës.
+Që nga auditi i Majit (~45%), sistemi është zgjeruar ndjeshëm: tani mbulon
+**~78%** të kërkesave ligjore. Janë shtuar (dhe verifikuar në bazën live):
+9 rolet, 4 organet shkollore, NVA/PIA i plotë, sjellja & disiplina, testet
+kombëtare V/IX, licencimi (fushat), pëlqimet & kërkesat e fshirjes, politika
+e privatësisë në 4 gjuhë, audit log, 2FA, multi-shkollë/komunë, kalendari,
+takimet me prindër, biblioteka, aktivitetet, diagnostika & portofoli.
 
-| Fusha | Statusi | Vlerësim |
+Mbeten disa **mangësi kritike ligjore/sigurie** dhe një **drift repo↔bazë**.
+
+| Fusha | Status | % |
 |---|---|---|
-| Strukturë teknike & siguri (RLS) | ✅ Mirë | 85% |
-| Rolet e përdoruesve | ⚠️ Pjesërisht | 60% |
-| Vlerësimi i nxënësve | ⚠️ Pjesërisht | 65% |
-| Frekuentimi | ✅ Mirë | 80% |
-| Kurrikula (KKK) | ⚠️ Pjesërisht | 50% |
-| Dokumentacioni Pedagogjik | ❌ Mungon | 15% |
-| Organet drejtuese shkollore | ❌ Mungon | 0% |
-| Arsimi gjithëpërfshirës | ❌ Mungon | 0% |
-| Mbrojtja e të dhënave (GDPR/KS) | ❌ Mungon | 20% |
-| Shumëgjuhësia | ❌ Mungon | 10% |
-| Licencimi i mësimdhënësve | ❌ Mungon | 0% |
-| **VLERËSIMI I PËRGJITHSHËM** | **⚠️** | **~45%** |
+| Strukturë teknike & RLS | ✅ | 88 |
+| 9 Rolet | ✅ | 100 |
+| Vlerësimi (notat, 3 periudhat, përshkrues 1–2, diagnostik, portofol, vetëvlerësim) | ✅⚠️ | 80 |
+| Frekuentimi | ✅ | 85 |
+| Organet shkollore (4 këshillat) | ✅ | 95 |
+| Arsimi gjithëpërfshirës (NVA/PIA) | ✅ | 90 |
+| Sjellja & disiplina | ✅ | 85 |
+| Testet kombëtare (V & IX) | ✅ | 85 |
+| Licencimi i mësuesve | ⚠️ | 70 |
+| Shumëgjuhësia (UI sq/sr/tr/bs) | ✅⚠️ | 80 |
+| Mbrojtja e të dhënave (06/L-082) | ⚠️ | 65 |
+| Kalendari shkollor | ⚠️ | 70 |
+| Dokumentacioni pedagogjik zyrtar (PDF/format) | ⚠️ | 55 |
+| Mbrojtja e fëmijëve nga dhuna (UA 13/2018) | ❌ | 20 |
+| Kompetencat & fushat kurrikulare (KKK) | ❌ | 15 |
+| **VLERËSIMI I PËRGJITHSHËM** | **⚠️** | **~78%** |
 
 ---
 
-## 2. ÇKA ËSHTË NDËRTUAR MIRË (NË PËRPUTHJE ME LIGJIN)
+## 2. MANGËSI KRITIKE (verifikuar te baza live)
 
-### 2.1 Shkalla e vlerësimit 1–5 ✅
-Sipas **UA 06/2022**, Neni 8: shkalla zyrtare në Kosovë është 1–5.
-- `1 — Pamjaftueshme`, `2 — Mjaftueshme`, `3 — Mirë`, `4 — Shumë Mirë`, `5 — Shkëlqyeshëm`
-- Implementuar saktë te tabela `grades` me CHECK constraint.
+### 2.1 🔴 Ekspozim i të dhënave të ndjeshme te `profiles`
+Politika `Teachers can read relevant profiles` është:
+`current_user_role()='mesues' AND role IN ('nxenes','prind','mesues')` —
+**pa kufizim shkolle dhe pa kufizim kolone**. Pra çdo mësues lexon çdo profil
+nxënësi/prindi **në të gjithë vendin**, përfshirë `medical_conditions`,
+`family_doctor`, kontaktet emergjente, `personal_number`, datëlindjen.
+Shkel Ligjin 06/L-082 (minimizimi i të dhënave).
+**Zgjidhje:** ndaj të dhënat mjekësore në tabelë `student_health_records` me
+RLS vetëm drejtor/pedagog; shto kufizim same-school te leximi i mësuesit.
 
-### 2.2 Tre periudhat mësimore (tremujore) ✅
-Sipas **UA 06/2022**, Neni 5: viti shkollor ndahet në **3 periudha vlerësimi**, jo 2 gjysmëvjetorë.
-- Migrimi `20260519171830_expand_semester_to_three_periods.sql` e mbulon këtë.
+### 2.2 🔴 Mungon raportimi i incidenteve/dhunës/bullizmit (UA 13/2018)
+Verifikuar: `incident_reports` **nuk ekziston**. S'ka dokumentim incidentesh,
+njoftim të detyrueshëm te drejtori, njoftim prindi brenda 24h, raportim
+policie. **Zgjidhje:** `incident_reports` + `incident_follow_ups` + RLS
+konfidenciale + UI raportimi/menaxhimi (mësues raporton, drejtor/pedagog
+menaxhon, prind sheh vetëm fëmijën e vet).
 
-### 2.3 Vlerësimi përshkrues për klasat 1–2 ✅
-Sipas **UA 06/2022**, Neni 11: nxënësit e klasës 1–2 nuk marrin nota numerike, por vlerësim përshkrues në 5 nivele.
-- Tabela `descriptive_assessments` me 5 nivele e implementon saktë.
+### 2.3 🔴 Drift repo ↔ bazë live
+`class_journal` (Ditari) dhe `school_calendar` **ekzistojnë në bazë** por
+s'kishin migracion në repo → një deploy i ri nga repo do t'i thyente.
+**Status: PJESËRISHT I RREGULLUAR** — migracionet u shtuan
+(`20260616100000_add_class_journal.sql`, `20260616100100_add_school_calendar.sql`).
+Rekomandohet një rakordim i plotë periodik repo↔bazë.
 
-### 2.4 Katër rolet themelore ✅
-`drejtor`, `mesues`, `nxenes`, `prind` — të katërta të njohura nga **Ligji 04/L-032**.
+### 2.4 🔴 S'ka gjenerim PDF për dokumente zyrtare
+Asnjë bibliotekë PDF; dëftesat/plani vjetor mbështeten te `window.print()`.
+Pa PDF të nënshkruar/arkivuar, dëftesa/diploma nuk janë ligjërisht të
+vlefshme. Mungon gjenerimi i certifikatës së klasës 5 dhe diplomës së
+klasës 9 (enum-et ekzistojnë, UI jo).
 
-### 2.5 RLS (Row-Level Security) ✅
-Politikat RLS në bazën e të dhënave janë të mira nga ana e sigurisë teknike — prindi sheh vetëm fëmijët e tij, mësuesi vetëm klasat e tij, etj.
-
-### 2.6 Lëndët bazë sipas KKK ✅
-18 lëndët e seededuara në `20260314155450_seed_kosovo_subjects_by_grade.sql` korrespondojnë me Kurrikulën Bërthamë.
-
-### 2.7 Statuset e frekuentimit ✅
-`prezent`, `mungon`, `vonese`, `arsyeshme` — pajtohen me praktikën e Kosovës. Workflow i kërkesës për arsyetim nga prindi është një plus.
-
----
-
-## 3. MANGËSITË KRITIKE (KUNDËR LIGJIT)
-
-### 3.1 ❌ MUNGON: Dokumentacioni Pedagogjik (UA 19/2018) — **KRITIKE**
-
-Sipas **UA 19/2018**, çdo shkollë duhet të mbajë këto dokumente zyrtare. **Asnjë nga këto nuk ekziston në sistem:**
-
-| Dokumenti | Detyrimi ligjor | Statusi |
-|---|---|---|
-| **Amza / Regjistri Amzë** | Regjistër i përhershëm i nxënësve (kërkohet ruajtje për 75 vjet) | ❌ Mungon |
-| **Ditari i Klasës** | Regjistrim ditor i orëve të mbajtura, lëndëve, prezencës, vërejtjeve | ❌ Mungon |
-| **Dëftesa** (Report Card) | Lëshohet pas çdo periudhe + në fund të vitit, me format zyrtar | ❌ Mungon — Reports ekziston, por nuk gjeneron dëftesë zyrtare |
-| **Certifikata e përfundimit të klasës V** | Pas testit kombëtar | ❌ Mungon |
-| **Diploma e Arsimit të Mesëm të Ulët** (klasa 9) | Lëshohet zyrtarisht | ❌ Mungon |
-| **Procesverbalet** e këshillave | Mbledhjet e mësimdhënësve, klasës, etj. | ❌ Mungon |
-| **Plani Vjetor i Shkollës** | Detyrim ligjor i drejtorit | ❌ Mungon |
-| **Plani Mësimor** ditor/javor i mësuesit | Detyrim individual | ❌ Mungon |
-
-**Impakt:** Pa këto, sistemi **nuk mund të zëvendësojë** regjistrat e shkruar të shkollave kosovare — është vetëm një mjet ndihmës.
+### 2.5 🔴 Lënda "Fete dhe Kultura"
+E seeduar për klasat 4–9. Edukimi fetar nuk është pjesë e kurrikulës zyrtare
+publike në Kosovë (vendim 2010). **Zgjidhje:** hiqe nga seed-i dhe nga baza
+(kujdes me të dhënat referente).
 
 ---
 
-### 3.2 ❌ MUNGON: Organet Drejtuese Shkollore (Ligji 04/L-032) — **KRITIKE**
+## 3. MANGËSI PËRPUTHSHMËRIE (prioritet i lartë)
 
-Ligji parashikon 4 organe shkollore. **Asnjë nuk është modeluar:**
-
-| Organi | Neni i ligjit | Përbërja | Statusi |
-|---|---|---|---|
-| **Këshilli Drejtues i Shkollës** | Neni 18 | 7–9 anëtarë (prindër, mësues, komuna, nxënës në shkollat e mesme) | ❌ Mungon |
-| **Këshilli i Prindërve** | Neni 19 | Përfaqësues prindër nga çdo klasë | ❌ Mungon |
-| **Këshilli i Nxënësve** | Neni 23 | Përfaqësues nxënësish (klasa 6–9) | ❌ Mungon |
-| **Këshilli Profesional / i Mësimdhënësve** | Neni 20 | Të gjithë mësimdhënësit | ❌ Mungon |
-
-**Çfarë duhet:** Tabela `school_councils`, `council_members`, `council_meetings`, `meeting_minutes`.
-
----
-
-### 3.3 ❌ MUNGON: Sjellja e Nxënësit (Ligji 04/L-032, UA 06/2022)
-
-**Vlerësimi i sjelljes** (`sjellja`) është detyrim ligjor dhe pjesë e dëftesës zyrtare. Shkalla:
-- `Shembullor` / `Shumë mirë` / `Mirë` / `I kënaqshëm` / `Jo i kënaqshëm`
-
-**Statusi:** ❌ Asnjë fushë ose tabelë për sjelljen.
-
-**Veprime disiplinore** (UA për Disiplinën Shkollore):
-- Vërejtje me gojë
-- Vërejtje me shkrim
-- Largim i përkohshëm
-- Transferim
-- Largim përfundimtar (vetëm tek mesatare)
-
-**Statusi:** ❌ Mungon plotësisht.
+- **Kompetencat & fushat kurrikulare (KKK):** s'ka gjurmim të 7 kompetencave
+  kryesore, as grupim të lëndëve në 6 fushat kurrikulare, as Rezultate të të
+  Nxënit (RNL). Kurrikula modelohet vetëm si lëndë.
+- **Licencimi pa zbatim:** fushat (`license_*`, `professional_development`)
+  ekzistojnë, por sistemi **nuk pengon** caktimin e mësuesit të
+  palicencuar/të skaduar te `class_subjects`; s'ka alarm skadimi as minimum
+  orësh ZHPM.
+- **Mbrojtja e të dhënave – boshllëqe:** kërkesa e fshirjes pa **purge real**
+  kur miratohet; audit log mbulim i pjesshëm (lexime të ndjeshme shpesh pa
+  log; `ip_address` kurrë i mbushur; login/logout jo automatik); s'ka **DPO**;
+  s'ka workflow **njoftimi shkeljeje te AIP** (Neni 7); 2FA opsionale.
+- **Të dhëna shëndetësore jo të plota:** vetëm 1 kontakt emergjent (ligji
+  kërkon 2+), pa fushë alergjish/vaksinimi/grup gjaku.
+- **Pedagogu pa shënime konfidenciale:** `counseling_notes` nuk ekziston;
+  duhet i ndarë nga notat me RLS rigoroze (vetëm pedagog + drejtor).
 
 ---
 
-### 3.4 ❌ MUNGON: Arsimi Gjithëpërfshirës (Ligji 04/L-032, Neni 40)
+## 4. MODIFIKIME / SHTESA (prioritet i mesëm)
 
-Ligji garanton arsim për nxënësit me **nevoja të veçanta arsimore (NVA)**. Mungon:
-
-- **Plani Individual i Arsimimit (PIA)** — detyrim për çdo nxënës me NVA
-- Identifikimi i nevojave (gjuhësore, fizike, psikomotore, intelektuale)
-- Roli i **asistentit pedagogjik** / mësuesit mbështetës
-- Plani i akomodimeve të arsyeshme
-- Vlerësimi i diferencuar i nxënësve me NVA
-
-**Impakt:** Sistemi **përjashton** një kategori të mbrojtur me ligj — kjo është problem ligjor i drejtpërdrejtë.
-
----
-
-### 3.5 ❌ MUNGON: Mbrojtja e të Dhënave (Ligji 06/L-082) — **KRITIKE**
-
-Sistemi përpunon të dhëna të **fëmijëve të mitur** — kategoria më e ndjeshme. Mungon:
-
-| Kërkesa | Statusi |
-|---|---|
-| Politika e privatësisë (në Shqip) | ❌ Mungon |
-| Pëlqimi i prindit për përpunim të dhënash (e shkruar dhe e regjistruar) | ❌ Mungon |
-| E drejta e harresës / fshirja e të dhënave me kërkesë | ❌ Mungon |
-| Eksporti i të dhënave (Data Portability) | ❌ Mungon |
-| Audit log — kush i ka parë të dhënat e fëmijës dhe kur | ❌ Mungon |
-| Përgjegjësi për Mbrojtjen e të Dhënave (DPO) — kontakt | ❌ Mungon |
-| Periudha e ruajtjes (data retention) për kategori të ndryshme | ❌ Mungon |
-| Njoftim për shkelje sigurie (data breach notification) | ❌ Mungon |
-| Anonimizim / pseudonimizim për raporte | ❌ Mungon |
-| Two-Factor Authentication për personelin | ❌ Mungon |
-
-**Rrezik ligjor:** Gjoba nga **Agjencia për Informim dhe Privatësi (AIP)** mund të arrijë deri në 40,000 €.
+- **Gjuha e mësimit për klasë** (Neni 12): shto `language_of_instruction` te
+  `classes`; `mother_tongue` ekziston te nxënësi.
+- **Vlerësim nga bashkëmoshatari** dhe **provim përfundimtar/riprovim**
+  (UA 06/2022) mungojnë.
+- **Kalendari:** seed i festave zyrtare të Kosovës; sinkronizim me 3
+  periudhat; validim brenda vitit shkollor.
+- **Soft-delete & politika ruajtjeje** (Amza 75 vjet, nota 25 vjet) —
+  pjesërisht; pa trigger arkivimi/afate.
+- **Takimet me prindër:** gjurmim prezence; **PIA:** workflow rishikimi
+  periodik; **akomodimet:** feedback efektiviteti nga mësuesi.
+- **Lexime `USING(true)`** te `class_journal` dhe `school_calendar`: kufizim
+  sipas shkollës (njëlloj si u bë te këshillat/testet).
 
 ---
 
-### 3.6 ❌ MUNGON: Shumëgjuhësia (Ligji 02/L-37, Ligji 04/L-032, Neni 9)
+## 5. ÇKA ËSHTË TASHMË NË PËRPUTHJE (verifikuar)
 
-- **Shqipja dhe Serbishtja** janë gjuhë zyrtare të barabarta.
-- Sipas Nenit 12 të Ligjit 04/L-032, nxënësi ka të drejtën e arsimimit në **gjuhën amtare**.
-- Komunat me popullatë **turke, boshnjake, rome** detyrohen të ofrojnë arsim në këto gjuhë.
-
-**Statusi:**
-- ❌ UI vetëm në Shqip (jo i lokalizuar)
-- ❌ Asnjë gjuhë instruksioni (`language_of_instruction`) e gjurmuar për klasë/nxënës
-- ❌ S'ka mundësi për regjistrim të nxënësve të bashkësive jo-shumicë
-
----
-
-### 3.7 ❌ MUNGON: Licencimi i Mësimdhënësve (UA 05/2017)
-
-Sipas **UA 05/2017**, çdo mësimdhënës duhet të jetë **i licencuar** për të dhënë mësim. Tre nivele:
-1. **Mësimdhënës fillestar**
-2. **Mësimdhënës i karrierës**
-3. **Mësimdhënës këshillues**
-
-Licenca rinovohet **çdo 5 vjet** përmes 100 orëve të zhvillimit profesional (ZHPM).
-
-**Statusi:**
-- ❌ Profili `mesues` nuk ka fusha: `license_number`, `license_level`, `license_expiry`, `qualification`, `subject_specialization`
-- ❌ Mungon gjurmimi i orëve të ZHPM
-- ❌ Drejtori ligjërisht nuk mund të caktojë mësues të palicencuar — sistemi nuk e kontrollon këtë
+Shkalla 1–5 me CHECK; 3 periudhat; vlerësim përshkrues 1–2; diagnostik;
+portofol; vetëvlerësim; **4 organet shkollore** me procesverbale; **NVA/PIA**
+i plotë me pëlqim prindi & akomodime; **sjellja** (5 nivele) & **disiplina**
+(5 masa me ndarje rolesh); **testet kombëtare V/IX**; **9 rolet** + hierarkia
+komunë/DKA/ministri/inspektorat me RLS sipas shkollës; **pëlqimet** (6 lloje)
+& kërkesat e fshirjes; **politika e privatësisë në 4 gjuhë**; aktivitetet
+jashtëmësimore; biblioteka; **2FA (TOTP)**; **audit log** (me actor i
+detyrueshëm pas forcimit qershor 2026); multi-shkollë.
 
 ---
 
-### 3.8 ❌ MUNGON: Testet Kombëtare (UA për Testet e Arritshmërisë)
+## 6. ROADMAP ME PRIORITETE
 
-Detyrime ligjore:
-- **Testi i Arritshmërisë i Klasës së V-të** (fundi i ciklit të dytë)
-- **Testi i Arritshmërisë i Klasës së IX-të** (fundi i shkollimit të detyrueshëm)
+### 🔴 Prioritet 1 — kritik (para përdorimit zyrtar)
+1. RLS shëndetësor: ndarje e të dhënave mjekësore + kufizim same-school te leximi i mësuesit (§2.1)
+2. Modul incidentesh/dhune (UA 13/2018) (§2.2)
+3. Rakordim i plotë migracionesh repo↔bazë (§2.3 — nisur)
+4. Gjenerim PDF + certifikatë/diplomë (§2.4)
+5. Heqja e "Fete dhe Kultura" (§2.5)
 
-**Statusi:** ❌ Asnjë strukturë për mbajtjen e rezultateve të testeve kombëtare.
+### 🟠 Prioritet 2 — i lartë
+6. Kompetencat/fushat/RNL të KKK
+7. Zbatim i licencës te caktimi i mësuesit + alarm skadimi
+8. DPO + njoftim shkeljeje + purge real fshirjeje + mbulim i plotë audit-i
+9. Kontakt i 2-të emergjent + tabelë shëndetësore + `counseling_notes`
 
----
-
-### 3.9 ❌ MUNGON: Kompetencat Kryesore të KKK
-
-Kurrikula Bërthamë (KKK) bazohet në **7 kompetenca kryesore** (jo vetëm në lëndë):
-
-1. Komunikues efektiv
-2. Mendimtar kreativ
-3. Mësues i suksesshëm
-4. Kontribues produktiv
-5. Individ i shëndoshë
-6. Qytetar i përgjegjshëm
-7. (kompetenca digjitale, e shtuar)
-
-**Statusi:**
-- ❌ Asnjë gjurmim i vlerësimit nëpër kompetenca
-- ❌ Lëndët nuk janë grupuar në **6 fushat kurrikulare** (Gjuhët dhe komunikimi; Artet; Matematika; Shkencat e natyrës; Shoqëria dhe mjedisi; Edukata fizike, sportet dhe shëndeti; Jeta dhe puna)
-- ❌ Mungon koncepti i **Rezultateve të të Nxënit** (RNL) për lëndë / shkallë
+### 🟡 Prioritet 3 — i mesëm
+10. Gjuha e mësimit për klasë
+11. Provim përfundimtar/riprovim + peer assessment
+12. Seed kalendari & festa; sinkronizim periudhash
+13. Soft-delete/ruajtje; prezenca takimesh; kufizim `USING(true)`
 
 ---
 
-### 3.10 ❌ MUNGON: Tipet e Vlerësimit (UA 06/2022, Neni 6–10)
+## 7. PËRFUNDIM
 
-Ligji përshkruan **3 tipe vlerësimi** të kombinuara:
-
-| Tipi | Përshkrimi | Statusi |
-|---|---|---|
-| **Vlerësim Diagnostikues** | Në fillim të vitit — gjendja fillestare | ❌ Mungon |
-| **Vlerësim Formues** | Gjatë gjithë vitit — proces mësimi | ⚠️ Pjesërisht (V1–V4) |
-| **Vlerësim Përmbledhës** | Në fund të periudhës | ✅ Implementuar |
-| **Portofoli i Nxënësit** | Koleksion punësh që dëshmojnë progresin | ❌ Mungon |
-| **Vetëvlerësim** | Nxënësi vlerëson veten | ❌ Mungon |
-| **Vlerësim nga bashkëmoshatari** | Peer review | ❌ Mungon |
-| **Vlerësim përmes projekteve** | Project-based | ❌ Mungon |
+Shkolla-Kos ka kaluar nga "fillim teknik" (~45%) në një sistem **kryesisht
+funksional ligjërisht (~78%)**. Për përdorim **zyrtar të plotë** mbeten
+Prioriteti 1 dhe 2 — sidomos mbrojtja e të dhënave të ndjeshme, raportimi i
+incidenteve, dhe gjenerimi i dokumenteve zyrtare (PDF, certifikata, diploma).
+Deri atëherë, sistemi përdoret mirë si platformë pune, por drejtori duhet të
+ruajë paralelisht dokumentet zyrtare që sistemi ende nuk i lëshon në format
+ligjor (dëftesë/diplomë e nënshkruar).
 
 ---
 
-### 3.11 ❌ MUNGON: Roli i Pedagogut / Psikologut Shkollor
-
-Sipas Ligjit 04/L-032 dhe UA 13/2018:
-- Çdo shkollë duhet të ketë **pedagog/psikolog** për mbështetje psiko-sociale.
-- Detyra: këshillim individual, parandalim i dhunës, ndërhyrje në krizë.
-
-**Statusi:**
-- ❌ Roli `pedagog` / `psikolog` nuk ekziston (vetëm 4 role).
-- ❌ Mungon moduli i shënimeve të këshillimit (konfidencial — i ndarë nga notat).
-- ❌ Mungon raportimi i incidenteve (bullizmi, dhuna).
-
----
-
-### 3.12 ❌ MUNGON: Kalendari Shkollor
-
-Sipas Vendimit Vjetor të MAShTI për Kalendarin Shkollor:
-- Fillimi/fundi i vitit shkollor
-- Festat zyrtare (Pavarësia, Flamuri, Dita e Mësuesit, etj.)
-- Pushimet (dimërore, pranverore)
-- Periudhat e provimeve
-- Ditët e punës së mësuesit (jo-instruksionale)
-
-**Statusi:**
-- ⚠️ Ekziston `academic_years` (vetëm start/end date)
-- ❌ Mungon strukturë për ditë jo-pune, festa, pushime
-
----
-
-### 3.13 ❌ MUNGON: Takimet me Prindër
-
-Sipas Nenit 19 të Ligjit dhe UA për Komunikimin me Prindër:
-- Çdo periudhë mësimore: të paktën **1 takim klase me prindër**
-- Takime individuale me kërkesë
-- Procesverbal i takimit
-
-**Statusi:** ❌ Mungon plotësisht (vetëm sistemi i mesazheve).
-
----
-
-### 3.14 ❌ MUNGON: Të Dhënat Shëndetësore Bazike
-
-Për sigurinë e fëmijës në shkollë (UA për Sigurinë):
-- Alergji / kushte mjekësore kritike
-- Kontakte emergjente (2+ kontakte)
-- Vaksinimi (verifikim me Ligjin për Shëndetin Publik)
-- Mjeku familjar
-
-**Statusi:** ❌ `profiles` ka vetëm `phone` — pa kontakt emergjent.
-
----
-
-### 3.15 ⚠️ PROBLEM: Të Dhënat Personale të Plota
-
-Profilet mungojnë fushat zyrtare që kërkohen për Amzën:
-
-- Numri Personal (10-shifror) — për nxënësit kosovarë
-- Datëlindja
-- Vendi i lindjes
-- Adresa e plotë
-- Nacionaliteti (vetë-deklarim)
-- Gjinia
-- Emri i prindit/kujdestarit ligjor
-- Statusi (i rregullt, transferuar, përfunduar, hequr nga shkolla)
-
-**Statusi:** ❌ Kritike — pa këto, sistemi nuk mund të lëshojë dëftesa/diploma të vlefshme.
-
----
-
-### 3.16 ⚠️ PROBLEM: Çështje në Krijimin e Përdoruesve
-
-Te `ManageTeachers.tsx`/`ManageStudents.tsx`:
-- Fjalëkalimet gjenerohen automatikisht dhe **shfaqen në UI** — sigurohuni që të mos ruhen në log.
-- Drejtori sheh fjalëkalimet — kjo është **shkelje e Ligjit 06/L-082** (drejtori nuk duhet të dijë kredencialet e prindit).
-- Duhet zëvendësuar me **link aktivizimi me email** ose **kod një-përdorimi**.
-
----
-
-### 3.17 ⚠️ PROBLEM: "Fete dhe Kultura" si Lëndë
-
-Lënda `Fete dhe Kultura` ekziston te seedi. **Vërejtje:**
-- Në Kosovë, **edukimi fetar nuk është pjesë e kurrikulës zyrtare të shkollave publike** (vendim i Qeverisë 2010).
-- Nëse synohet "Edukatë qytetare" ose "Kultura qytetare", emri duhet rishikuar.
-
----
-
-### 3.18 ⚠️ PROBLEM: Orari vetëm 5 ditë
-
-Orari ka `day_of_week` 1–5 (E hënë–E premte). **OK** për shumicën e shkollave, por:
-- Disa shkolla bëjnë aktivitete shkollore të shtundes (sport, klube).
-- Disa shkolla në komunitete me shumicë serbe punojnë me kalendar tjetër.
-
-**Sugjerim:** Lejo `day_of_week` 1–6.
-
----
-
-### 3.19 ❌ MUNGON: Backup-i & Politika e Ruajtjes
-
-Sipas Ligjit për Arkivat dhe UA për Dokumentacionin Pedagogjik:
-- **Amza:** ruajtje e përhershme
-- **Dëftesat & diplomat:** ruajtje 75 vjet
-- **Notat & frekuentimi:** 25 vjet
-- **Procesverbalet:** 25 vjet
-- **Mesazhet, njoftimet:** 2–5 vjet
-
-**Statusi:** ❌ Asnjë politikë e shkruar, asnjë mekanizëm soft-delete vs hard-delete, asnjë arkiv off-site.
-
----
-
-### 3.20 ❌ MUNGON: Aktivitetet Jashtëmësimore
-
-Sipas KKK, shkolla ofron **veprimtari jashtëmësimore**:
-- Klube (gjuhësore, shkencore, artistike, sportive)
-- Garat shkollore
-- Olimpiada
-- Ekskurzione
-
-**Statusi:** ❌ Mungon plotësisht.
-
----
-
-## 4. PROBLEME TEKNIKE TË EVIDENTUARA
-
-### 4.1 Demo Mode i hapur në production
-`AuthContext.tsx` ka rrugë demo që anashkalon DB. Kjo duhet të jetë **vetëm në zhvillim**, jo në production.
-
-### 4.2 Numri Personal mungon te Amza
-Pa numër personal, dy nxënës me të njëjtin emër janë të padallueshëm ligjërisht.
-
-### 4.3 Komunat dhe Shkollat e Shumëfishta
-Sistemi është projektuar për **1 shkollë**. Por:
-- Sipas Ligjit 03/L-068, komunat janë përgjegjëse për arsimin parauniversitar.
-- Një komunë ka 20–80 shkolla.
-- Mungon entiteti `school` (njësi shumëkatëshe), `municipality`.
-
-### 4.4 Periudha e Provimit / Provimi Përfundimtar
-Mungon koncepti i provimit përfundimtar të lëndës ose provimit korrektues (riprovim).
-
----
-
-## 5. REKOMANDIME ME PRIORITET
-
-### 🔴 PRIORITET 1 — KRITIK (duhet bërë para se sistemi të përdoret)
-
-1. **Dokumentacioni Pedagogjik** — gjenerimi i dëftesës zyrtare PDF sipas formatit MAShTI
-2. **Mbrojtja e të dhënave** — politika e privatësisë, pëlqim i prindit, audit log, fshirja sipas kërkesës
-3. **Numri Personal & të dhënat personale të plota** për nxënësit
-4. **Arsimi gjithëpërfshirës** — Plan Individual i Arsimimit (PIA)
-5. **Sjellja & masat disiplinore** — fushë e detyrueshme në dëftesë
-6. **Kontakti emergjent & informacioni shëndetësor bazik**
-7. **Heqja e fjalëkalimeve nga UI** — zëvendësim me link aktivizimi
-
-### 🟠 PRIORITET 2 — I LARTË (1–3 muaj)
-
-8. **Organet shkollore** (Këshilli Drejtues, Prindër, Nxënës, Profesional)
-9. **Licencimi i mësimdhënësve** — fusha + verifikim
-10. **Pedagog/psikolog shkollor** si rol i 5-të
-11. **Shumëgjuhësia** — UI në Serbisht; gjuha e instruksionit për klasë
-12. **Kompetencat dhe fushat kurrikulare të KKK**
-13. **Kalendari shkollor i plotë** (festa, pushime, ditët jo-pune)
-
-### 🟡 PRIORITET 3 — I MESËM (3–6 muaj)
-
-14. **Testet kombëtare** (klasa V dhe IX)
-15. **Portofoli i nxënësit** & vetëvlerësimi
-16. **Aktivitetet jashtëmësimore**
-17. **Takimet me prindër** me procesverbal
-18. **Multi-shkollë / multi-komunë** për shtrirje kombëtare
-19. **Politika e backup-it dhe e ruajtjes së të dhënave**
-
-### 🟢 PRIORITET 4 — I ULËT
-
-20. **Biblioteka shkollore** (huazim librash)
-21. **Raportet e inspektorateve**
-22. **2FA për stafin**
-23. **Eksport CSV/PDF për raporte**
-
----
-
-## 6. PËRFUNDIM
-
-Shkolla Kos është një **fillim teknikisht solid**, por **nuk është gati ligjërisht** për t'u përdorur si sistem zyrtar nga një shkollë publike e Kosovës. Bazat janë në vend (notat, frekuentimi, rolet, RLS), por **mungojnë mbi 20 komponentë ligjorë të detyrueshëm**, ndër ta:
-
-- **Dëftesa zyrtare nuk mund të lëshohet** nga ky sistem.
-- **Diploma e klasës 9-të nuk mund të lëshohet.**
-- **Të dhënat e nxënësve nuk janë të plota ligjërisht** (mungon numri personal, datëlindja, etj.).
-- **Nuk mbron nxënësit me NVA** sipas ligjit.
-- **Nuk është në përputhje me Ligjin për Mbrojtjen e të Dhënave Personale** për fëmijët e mitur.
-
-### Vlerësim përfundimtar i pajtueshmërisë: **~45%**
-
-Për ta bërë sistemin të **gatshëm për përdorim zyrtar**, duhet të zhvillohet **Prioriteti 1 dhe 2** (afërsisht 4–6 muaj pune).
-
-Për përdorim **vetëm si mjet ndihmës ndaj regjistrave të shkruar zyrtarë**, sistemi mund të përdoret menjëherë, por **drejtori i shkollës duhet të mbajë paralelisht regjistrat e shkruar zyrtarë** (Amza, Ditari, Dëftesat).
-
----
-
-*Përgatitur si pjesë e degës `claude/audit-school-laws-compliance-1C3N6`.*
+*I përgatitur më 16 Qershor 2026; zëvendëson auditin e 19 Majit 2026.*
