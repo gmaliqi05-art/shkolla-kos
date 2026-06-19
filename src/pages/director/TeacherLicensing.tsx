@@ -163,6 +163,10 @@ export default function TeacherLicensing() {
     );
   }
 
+  const expiredCount = teachers.filter(
+    (t) => t.license_expires_at && new Date(t.license_expires_at).getTime() < Date.now()
+  ).length;
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
@@ -174,6 +178,19 @@ export default function TeacherLicensing() {
           <p className="text-slate-500 text-sm">{t('tl.subtitle')}</p>
         </div>
       </div>
+
+      {expiredCount > 0 && (
+        <div className="bg-rose-50 border border-rose-200 text-rose-800 text-sm rounded-xl px-4 py-3 flex items-start gap-2">
+          <AlertTriangle className="w-5 h-5 mt-0.5 shrink-0" />
+          <div>
+            <p className="font-medium">{expiredCount} mësues me licencë të skaduar</p>
+            <p className="text-rose-700 text-xs mt-1">
+              Sipas UA 05/2017, mësuesit me licencë të skaduar nuk mund të caktohen në lëndë.
+              Sistemi e bllokon caktimin derisa licenca të rinovohet.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
         {teachers.length === 0 ? (
