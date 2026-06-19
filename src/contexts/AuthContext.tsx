@@ -30,11 +30,6 @@ const DEMO_PROFILE_DEFAULTS = {
   mother_tongue: 'shqip',
   legal_guardian_name: '',
   legal_guardian_relation: '',
-  emergency_contact_name: '',
-  emergency_contact_phone: '',
-  emergency_contact_relation: '',
-  medical_conditions: '',
-  family_doctor: '',
   enrollment_status: 'regjistruar' as const,
 };
 
