@@ -1193,6 +1193,51 @@ export interface DataDeletionRequest {
 
 export type AuditActionType = 'view' | 'create' | 'update' | 'delete' | 'export' | 'login' | 'logout' | 'password_change';
 
+// Regjistri i shkeljeve të të dhënave (Ligji 06/L-082, Neni 7)
+export type BreachSeverity = 'lehte' | 'mesatare' | 'rende';
+export type BreachStatus = 'ne_vleresim' | 'raportuar' | 'zgjidhur';
+
+export const BREACH_SEVERITY_LABELS: Record<BreachSeverity, string> = {
+  lehte: 'I lehtë',
+  mesatare: 'Mesatar',
+  rende: 'I rëndë',
+};
+
+export const BREACH_STATUS_LABELS: Record<BreachStatus, string> = {
+  ne_vleresim: 'Në vlerësim',
+  raportuar: 'Raportuar te AIP',
+  zgjidhur: 'Zgjidhur',
+};
+
+export const BREACH_DATA_TYPE_LABELS: Record<string, string> = {
+  identitet: 'Të dhëna identifikuese',
+  kontakt: 'Kontakte',
+  nota: 'Nota / vlerësime',
+  frekuentim: 'Frekuentim',
+  shendetesore: 'Të dhëna shëndetësore',
+  tjeter: 'Tjetër',
+};
+
+export interface DataBreach {
+  id: string;
+  school_id: string | null;
+  title: string;
+  description: string;
+  affected_data_types: string[];
+  num_subjects_affected: number | null;
+  severity: BreachSeverity;
+  discovered_at: string;
+  reported_to_aip: boolean;
+  aip_reported_at: string | null;
+  aip_case_number: string;
+  mitigation: string;
+  status: BreachStatus;
+  reported_by: string;
+  created_at: string;
+  updated_at: string;
+  reporter_name?: string;
+}
+
 export interface AuditLog {
   id: string;
   actor_id: string | null;

@@ -39,6 +39,7 @@ const Reports = lazyRetry(() => import('./pages/director/Reports'));
 const Announcements = lazyRetry(() => import('./pages/director/Announcements'));
 const AuditLogs = lazyRetry(() => import('./pages/director/AuditLogs'));
 const DeletionRequests = lazyRetry(() => import('./pages/director/DeletionRequests'));
+const DataBreaches = lazyRetry(() => import('./pages/director/DataBreaches'));
 const SpecialNeedsManagement = lazyRetry(() => import('./pages/director/SpecialNeedsManagement'));
 const SchoolCouncils = lazyRetry(() => import('./pages/director/SchoolCouncils'));
 const SchoolSettings = lazyRetry(() => import('./pages/director/SchoolSettings'));
@@ -130,6 +131,7 @@ const directorNav: NavItem[] = [
   { label: 'Testet Kombëtare', labelKey: 'nav.national_tests', path: '/drejtor/testet-kombetare', icon: GraduationCap },
   { label: 'Audit Log', labelKey: 'nav.audit_log', path: '/drejtor/audit', icon: Activity },
   { label: 'Kërkesat Fshirje', labelKey: 'nav.deletion_requests', path: '/drejtor/kerkesa-fshirje', icon: Trash2 },
+  { label: 'Shkeljet e të Dhënave', labelKey: 'nav.data_breaches', path: '/drejtor/shkelje-te-dhenash', icon: ShieldCheck },
   { label: 'Cilësimet', labelKey: 'nav.settings', path: '/drejtor/cilesime', icon: Building2 },
   { label: 'Komunat', labelKey: 'nav.municipalities', path: '/drejtor/komunat', icon: MapPin },
   { label: 'Kalendari', labelKey: 'nav.calendar', path: '/drejtor/kalendari', icon: Calendar },
@@ -320,6 +322,7 @@ function AppRoutes() {
             <Route path="/drejtor/testet-kombetare" element={<NationalTests />} />
             <Route path="/drejtor/audit" element={<AuditLogs />} />
             <Route path="/drejtor/kerkesa-fshirje" element={<DeletionRequests />} />
+            <Route path="/drejtor/shkelje-te-dhenash" element={<DataBreaches />} />
             <Route path="/drejtor/njoftime" element={<Announcements />} />
             <Route path="/drejtor/mesazhet" element={<MessagesPage />} />
             <Route path="/drejtor/profili" element={<ProfileSettings />} />
