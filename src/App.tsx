@@ -99,6 +99,7 @@ const MyCouncils = lazyRetry(() => import('./pages/shared/MyCouncils'));
 const MyTestResults = lazyRetry(() => import('./pages/shared/MyTestResults'));
 const ProfileSettings = lazyRetry(() => import('./pages/shared/ProfileSettings'));
 const Portfolio = lazyRetry(() => import('./pages/shared/Portfolio'));
+const IncidentReports = lazyRetry(() => import('./pages/shared/IncidentReports'));
 const SelfAssessmentPage = lazyRetry(() => import('./pages/student/SelfAssessment'));
 
 import {
@@ -121,6 +122,7 @@ const directorNav: NavItem[] = [
   { label: 'Raportet', labelKey: 'nav.reports', path: '/drejtor/raporte', icon: BarChart3 },
   { label: 'Dëftesat', labelKey: 'nav.report_cards', path: '/drejtor/deftesat', icon: FileCheck },
   { label: 'Disiplina', labelKey: 'nav.discipline', path: '/drejtor/disiplina', icon: Shield },
+  { label: 'Incidentet', labelKey: 'nav.incidents', path: '/drejtor/incidentet', icon: Shield },
   { label: 'NVA & PIA', labelKey: 'nav.iep', path: '/drejtor/nva', icon: Heart },
   { label: 'Organet Shkollore', labelKey: 'nav.councils', path: '/drejtor/keshillat', icon: Briefcase },
   { label: 'Aktivitetet', labelKey: 'nav.activities', path: '/drejtor/aktivitete', icon: Trophy },
@@ -147,6 +149,7 @@ const teacherNav: NavItem[] = [
   { label: 'Vendos Nota', labelKey: 'nav.enter_grades', path: '/mesues/nota', icon: ClipboardCheck },
   { label: 'Sjellja', labelKey: 'nav.behavior', path: '/mesues/sjellja', icon: Star },
   { label: 'Disiplina', labelKey: 'nav.discipline', path: '/mesues/disiplina', icon: Shield },
+  { label: 'Incidentet', labelKey: 'nav.incidents', path: '/mesues/incidentet', icon: Shield },
   { label: 'Akomodimet', labelKey: 'nav.accommodations', path: '/mesues/akomodimet', icon: Sparkles },
   { label: 'Këshillat e Mi', labelKey: 'nav.my_councils', path: '/mesues/keshillat', icon: Briefcase },
   { label: 'Frekuentimi', labelKey: 'nav.attendance', path: '/mesues/frekuentimi', icon: CalendarCheck },
@@ -225,6 +228,7 @@ const inspektorNav: NavItem[] = [
 const pedagogNav: NavItem[] = [
   { label: 'Paneli Kryesor', labelKey: 'nav.dashboard', path: '/pedagog', icon: LayoutDashboard },
   { label: 'NVA & PIA', labelKey: 'nav.iep', path: '/pedagog/nva', icon: Heart },
+  { label: 'Incidentet', labelKey: 'nav.incidents', path: '/pedagog/incidentet', icon: Shield },
   { label: 'Vlerësimi Diagnostikues', labelKey: 'nav.diagnostic', path: '/pedagog/diagnostik', icon: Stethoscope },
   { label: 'Portofoli', labelKey: 'nav.portfolio', path: '/pedagog/portofoli', icon: FolderOpen },
   { label: 'Organet Shkollore', labelKey: 'nav.councils', path: '/pedagog/keshillat', icon: Briefcase },
@@ -308,6 +312,7 @@ function AppRoutes() {
             <Route path="/drejtor/inspektimet" element={<InspectionsManagement />} />
             <Route path="/drejtor/inspektimet/:id" element={<InspectionDetail />} />
             <Route path="/drejtor/disiplina" element={<DisciplinePage />} />
+            <Route path="/drejtor/incidentet" element={<IncidentReports />} />
             <Route path="/drejtor/nva" element={<SpecialNeedsManagement />} />
             <Route path="/drejtor/keshillat" element={<SchoolCouncils />} />
             <Route path="/drejtor/aktivitete" element={<Activities />} />
@@ -336,6 +341,7 @@ function AppRoutes() {
             <Route path="/mesues/nota" element={<GradeEntry />} />
             <Route path="/mesues/sjellja" element={<BehaviorPage />} />
             <Route path="/mesues/disiplina" element={<DisciplinePage />} />
+            <Route path="/mesues/incidentet" element={<IncidentReports />} />
             <Route path="/mesues/akomodimet" element={<StudentAccommodations />} />
             <Route path="/mesues/keshillat" element={<MyCouncils />} />
             <Route path="/mesues/licenca" element={<MyLicense />} />
@@ -417,6 +423,7 @@ function AppRoutes() {
           <Route element={<DashboardLayout navItems={pedagogNav} role="pedagog" />}>
             <Route path="/pedagog" element={<PedagogDashboard />} />
             <Route path="/pedagog/nva" element={<SpecialNeedsManagement />} />
+            <Route path="/pedagog/incidentet" element={<IncidentReports />} />
             <Route path="/pedagog/diagnostik" element={<DiagnosticAssessments />} />
             <Route path="/pedagog/portofoli" element={<Portfolio />} />
             <Route path="/pedagog/keshillat" element={<MyCouncils />} />
