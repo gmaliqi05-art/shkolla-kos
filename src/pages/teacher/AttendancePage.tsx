@@ -150,6 +150,7 @@ export default function AttendancePage() {
         .from('attendance')
         .select('*')
         .eq('class_id', currentClassSubject.class_id)
+        .eq('subject_id', currentClassSubject.subject_id)
         .eq('date', date);
 
       if (attError) throw attError;
