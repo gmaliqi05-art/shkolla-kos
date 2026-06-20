@@ -5,7 +5,8 @@ import { useAuth } from '../../contexts/AuthContext';
 import { logAudit } from '../../lib/audit';
 import { useToast } from '../../components/ToastProvider';
 import { GENDER_LABELS, type Profile, type SchoolInfo, type ReportCardType } from '../../types/database';
-import { Loader2, Printer, ArrowLeft, FileCheck, Award } from 'lucide-react';
+import { Loader2, Printer, ArrowLeft, FileCheck, Award, FileDown } from 'lucide-react';
+import { generateCertificatePdf } from '../../lib/pdf';
 
 // Certifikatë e klasës 5 / Diplomë e klasës 9 (UA 19/2018)
 export default function CertificateView() {
@@ -106,6 +107,32 @@ export default function CertificateView() {
     ? 'Certifikohet se nxënësi/ja ka përfunduar me sukses arsimin e mesëm të ulët (klasat 1–9) dhe ka fituar të drejtën për të vazhduar arsimin e mesëm të lartë.'
     : 'Certifikohet se nxënësi/ja ka përfunduar me sukses klasën e pestë (V) të arsimit fillor.';
 
+  const downloadPdf = () => {
+    if (!student) return;
+    generateCertificatePdf({
+      school: {
+        name: school?.full_name || school?.name || 'Shkolla',
+        municipality: school?.municipality || '',
+        address: school?.address || '',
+        registrationNumber: school?.registration_number || '',
+        directorName: school?.director_name || '',
+      },
+      title,
+      body: bodyLead,
+      student: {
+        fullName: student.full_name,
+        personalNumber: student.personal_number || '',
+        dateOfBirth: student.date_of_birth || '',
+        placeOfBirth: student.place_of_birth || '',
+        gender: student.gender ? GENDER_LABELS[student.gender] : '',
+      },
+      className,
+      academicYear: academicYearName,
+      serial,
+      issuedDate: new Date().toLocaleDateString('sq-AL'),
+    });
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between print:hidden">
@@ -122,8 +149,11 @@ export default function CertificateView() {
               <FileCheck className="w-4 h-4" /> E lëshuar
             </span>
           )}
+          <button onClick={downloadPdf} className="inline-flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-medium">
+            <FileDown className="w-4 h-4" /> Shkarko PDF
+          </button>
           <button onClick={() => window.print()} className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium">
-            <Printer className="w-4 h-4" /> Printo / PDF
+            <Printer className="w-4 h-4" /> Printo
           </button>
         </div>
       </div>
