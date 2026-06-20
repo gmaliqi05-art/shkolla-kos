@@ -47,6 +47,12 @@ export interface StudentHealthRecord {
   emergency_contact_name: string;
   emergency_contact_phone: string;
   emergency_contact_relation: string;
+  emergency_contact_2_name?: string;
+  emergency_contact_2_phone?: string;
+  emergency_contact_2_relation?: string;
+  blood_type?: string;
+  allergies?: string;
+  vaccination_notes?: string;
   medical_conditions: string;
   family_doctor: string;
   updated_by?: string | null;

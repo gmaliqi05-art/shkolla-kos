@@ -34,6 +34,10 @@ interface StudentFormData {
   emergency_contact_name: string;
   emergency_contact_phone: string;
   emergency_contact_relation: string;
+  emergency_contact_2_name: string;
+  emergency_contact_2_phone: string;
+  blood_type: string;
+  allergies: string;
   medical_conditions: string;
   family_doctor: string;
   enrollment_status: EnrollmentStatus;
@@ -56,6 +60,10 @@ const emptyFormData: StudentFormData = {
   emergency_contact_name: '',
   emergency_contact_phone: '',
   emergency_contact_relation: '',
+  emergency_contact_2_name: '',
+  emergency_contact_2_phone: '',
+  blood_type: '',
+  allergies: '',
   medical_conditions: '',
   family_doctor: '',
   enrollment_status: 'regjistruar',
@@ -195,6 +203,10 @@ export default function ManageStudents() {
     emergency_contact_name: formData.emergency_contact_name,
     emergency_contact_phone: formData.emergency_contact_phone,
     emergency_contact_relation: formData.emergency_contact_relation,
+    emergency_contact_2_name: formData.emergency_contact_2_name,
+    emergency_contact_2_phone: formData.emergency_contact_2_phone,
+    blood_type: formData.blood_type,
+    allergies: formData.allergies,
     medical_conditions: formData.medical_conditions,
     family_doctor: formData.family_doctor,
     updated_by: currentProfile?.id ?? null,
@@ -364,6 +376,10 @@ export default function ManageStudents() {
       emergency_contact_name: health?.emergency_contact_name || '',
       emergency_contact_phone: health?.emergency_contact_phone || '',
       emergency_contact_relation: health?.emergency_contact_relation || '',
+      emergency_contact_2_name: health?.emergency_contact_2_name || '',
+      emergency_contact_2_phone: health?.emergency_contact_2_phone || '',
+      blood_type: health?.blood_type || '',
+      allergies: health?.allergies || '',
       medical_conditions: health?.medical_conditions || '',
       family_doctor: health?.family_doctor || '',
       enrollment_status: student.enrollment_status || 'regjistruar',
@@ -920,6 +936,27 @@ export default function ManageStudents() {
                     />
                   </div>
                 </div>
+                <p className="text-xs text-slate-500 mt-3 mb-2">Kontakti i dytë emergjent (rekomandohet)</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Emri</label>
+                    <input
+                      type="text"
+                      value={formData.emergency_contact_2_name}
+                      onChange={(e) => setFormData({ ...formData, emergency_contact_2_name: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Telefon</label>
+                    <input
+                      type="tel"
+                      value={formData.emergency_contact_2_phone}
+                      onChange={(e) => setFormData({ ...formData, emergency_contact_2_phone: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none"
+                    />
+                  </div>
+                </div>
               </section>
 
               <section>
@@ -927,15 +964,40 @@ export default function ManageStudents() {
                   <span className="w-1 h-4 bg-rose-500 rounded-full"></span>
                   Informacion shëndetësor (opsional)
                 </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Alergji</label>
+                    <input
+                      type="text"
+                      value={formData.allergies}
+                      onChange={(e) => setFormData({ ...formData, allergies: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-500 outline-none"
+                      placeholder="Polen, arra, ilaçe, ..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Grupi i gjakut</label>
+                    <select
+                      value={formData.blood_type}
+                      onChange={(e) => setFormData({ ...formData, blood_type: e.target.value })}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-500 outline-none"
+                    >
+                      <option value="">—</option>
+                      {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map((bt) => (
+                        <option key={bt} value={bt}>{bt}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
                 <div className="grid grid-cols-1 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Alergji / Kushte mjekësore</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Kushte mjekësore kronike</label>
                     <textarea
                       rows={2}
                       value={formData.medical_conditions}
                       onChange={(e) => setFormData({ ...formData, medical_conditions: e.target.value })}
                       className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-500 outline-none resize-none"
-                      placeholder="Astma, alergji ndaj polenit, etj."
+                      placeholder="Astma, diabet, etj."
                     />
                   </div>
                   <div>
