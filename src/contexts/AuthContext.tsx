@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 import { supabase } from '../lib/supabase';
 import type { User, Session } from '@supabase/supabase-js';
 import type { Profile, UserRole } from '../types/database';
+import { logAudit } from '../lib/audit';
 
 interface AuthContextType {
   user: User | null;
@@ -174,8 +175,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) return { error: error.message };
+    if (data.user) {
+      // Ligji 06/L-082: gjurmim i hyrjeve. Profili lexohet per rolin e aktorit.
+      const prof = await fetchProfile(data.user.id);
+      await logAudit({
+        actorId: data.user.id,
+        actorRole: prof?.role ?? null,
+        action: 'login',
+        resourceType: 'auth',
+      });
+    }
     return { error: null };
   };
 
@@ -186,6 +197,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(null);
       setUser(null);
       return;
+    }
+    // Gjurmim i daljes para se te pastrojme sesionin (ende kemi profilin).
+    if (profile) {
+      await logAudit({
+        actorId: profile.id,
+        actorRole: profile.role,
+        action: 'logout',
+        resourceType: 'auth',
+      });
     }
     await supabase.auth.signOut();
     setProfile(null);
