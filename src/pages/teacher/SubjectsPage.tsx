@@ -141,7 +141,7 @@ export default function SubjectsPage() {
       const [sgRes, subRes] = await Promise.all([
         supabase
           .from('subject_grades')
-          .select('id, subject_id, grade_level, hours_per_week, subjects(name, code, description)')
+          .select('id, subject_id, grade_level, hours_per_week, is_active, subjects(name, code, description)')
           .order('grade_level')
           .order('subject_id'),
         supabase.from('subjects').select('id, name, code, description').order('name'),
@@ -153,6 +153,7 @@ export default function SubjectsPage() {
       type SubjectRef = { name: string; code: string; description?: string };
       type SGRow = {
         id: string; subject_id: string; grade_level: number; hours_per_week: number;
+        is_active: boolean | null;
         subjects: SubjectRef | SubjectRef[] | null;
       };
       setSubjectGrades(
@@ -166,7 +167,7 @@ export default function SubjectsPage() {
             subject_name: subj?.name || '',
             subject_code: subj?.code || '',
             subject_description: subj?.description || '',
-            is_active: true,
+            is_active: row.is_active ?? true,
           };
         })
       );
@@ -269,10 +270,24 @@ export default function SubjectsPage() {
     await loadData();
   };
 
-  const handleToggle = (entry: SubjectGrade) => {
+  const handleToggle = async (entry: SubjectGrade) => {
+    const next = !entry.is_active;
     setSubjectGrades(prev => prev.map(sg =>
-      sg.id === entry.id ? { ...sg, is_active: !sg.is_active } : sg
+      sg.id === entry.id ? { ...sg, is_active: next } : sg
     ));
+    if (isDemo) return;
+
+    const { error } = await supabase
+      .from('subject_grades')
+      .update({ is_active: next })
+      .eq('id', entry.id);
+    if (error) {
+      // revert optimistic update on failure
+      setSubjectGrades(prev => prev.map(sg =>
+        sg.id === entry.id ? { ...sg, is_active: entry.is_active } : sg
+      ));
+      toast.error('Gabim: ' + error.message);
+    }
   };
 
   const getFilteredForGrade = (grade: number) => {
