@@ -1193,6 +1193,49 @@ export interface DataDeletionRequest {
 
 export type AuditActionType = 'view' | 'create' | 'update' | 'delete' | 'export' | 'login' | 'logout' | 'password_change';
 
+// KKK — fushat kurrikulare & kompetencat kryesore
+export interface CurricularArea {
+  id: string;
+  code: string;
+  name: string;
+  sort_order: number;
+}
+
+export interface Competency {
+  id: string;
+  code: string;
+  name: string;
+  description: string;
+  sort_order: number;
+}
+
+export type CompetencyLevel = 'fillestar' | 'ne_zhvillim' | 'i_arritur' | 'i_avancuar';
+
+export const COMPETENCY_LEVEL_LABELS: Record<CompetencyLevel, string> = {
+  fillestar: 'Fillestar',
+  ne_zhvillim: 'Në zhvillim',
+  i_arritur: 'I arritur',
+  i_avancuar: 'I avancuar',
+};
+
+export const COMPETENCY_LEVEL_COLORS: Record<CompetencyLevel, string> = {
+  fillestar: 'bg-rose-100 text-rose-700',
+  ne_zhvillim: 'bg-amber-100 text-amber-700',
+  i_arritur: 'bg-blue-100 text-blue-700',
+  i_avancuar: 'bg-emerald-100 text-emerald-700',
+};
+
+export interface StudentCompetencyAssessment {
+  id: string;
+  student_id: string;
+  competency_id: string;
+  period: number;
+  level: CompetencyLevel;
+  notes: string;
+  assessed_by: string | null;
+  assessed_at: string;
+}
+
 // Regjistri i shkeljeve të të dhënave (Ligji 06/L-082, Neni 7)
 export type BreachSeverity = 'lehte' | 'mesatare' | 'rende';
 export type BreachStatus = 'ne_vleresim' | 'raportuar' | 'zgjidhur';

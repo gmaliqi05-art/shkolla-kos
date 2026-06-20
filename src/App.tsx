@@ -82,6 +82,7 @@ const ParentMeetings = lazyRetry(() => import('./pages/teacher/ParentMeetings'))
 const ClassDiary = lazyRetry(() => import('./pages/teacher/ClassDiary'));
 const HomeworkPage = lazyRetry(() => import('./pages/teacher/HomeworkPage'));
 const DiagnosticAssessments = lazyRetry(() => import('./pages/teacher/DiagnosticAssessments'));
+const CompetencyAssessment = lazyRetry(() => import('./pages/teacher/CompetencyAssessment'));
 
 const StudentDashboard = lazyRetry(() => import('./pages/student/StudentDashboard'));
 const MyGrades = lazyRetry(() => import('./pages/student/MyGrades'));
@@ -165,6 +166,7 @@ const teacherNav: NavItem[] = [
   { label: 'Ditari i Klasës', labelKey: 'nav.class_diary', path: '/mesues/ditari', icon: NotebookPen },
   { label: 'Detyrat e Shtëpisë', labelKey: 'nav.homework', path: '/mesues/detyrat', icon: FileText },
   { label: 'Vlerësimi Diagnostikues', labelKey: 'nav.diagnostic', path: '/mesues/diagnostik', icon: Stethoscope },
+  { label: 'Kompetencat (KKK)', labelKey: 'nav.competencies', path: '/mesues/kompetencat', icon: Sparkles },
   { label: 'Portofoli', labelKey: 'nav.portfolio', path: '/mesues/portofoli', icon: FolderOpen },
 ];
 
@@ -355,6 +357,7 @@ function AppRoutes() {
             <Route path="/mesues/2fa" element={<TwoFactorSettings />} />
             <Route path="/mesues/dokumentet-ligjore" element={<LegalDocuments />} />
             <Route path="/mesues/diagnostik" element={<DiagnosticAssessments />} />
+            <Route path="/mesues/kompetencat" element={<CompetencyAssessment />} />
             <Route path="/mesues/portofoli" element={<Portfolio />} />
             <Route path="/mesues/frekuentimi" element={<AttendancePage />} />
             <Route path="/mesues/lendet" element={<SubjectsPage />} />
