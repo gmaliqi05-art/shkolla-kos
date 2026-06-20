@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
-import { Loader2, Plus, FileText, X, ChevronDown, ChevronRight, Clock } from 'lucide-react';
+import { Loader2, Plus, FileText, X, ChevronDown, ChevronRight, Clock, Check } from 'lucide-react';
+import { useToast } from '../../components/ToastProvider';
 import {
   HOMEWORK_SUBMISSION_STATUS_LABELS,
   type Homework,
@@ -21,15 +22,15 @@ interface HomeworkRow extends Homework {
 }
 
 const STATUS_COLORS: Record<HomeworkSubmissionStatus, string> = {
-  pa_dorezuar: 'bg-slate-100 text-slate-600',
+  e_pa_dorezuar: 'bg-slate-100 text-slate-600',
   dorezuar: 'bg-blue-100 text-blue-700',
   vleresuar: 'bg-emerald-100 text-emerald-700',
-  me_vonese: 'bg-amber-100 text-amber-700',
 };
 
 export default function HomeworkPage() {
   const { profile } = useAuth();
   const { t } = useI18n();
+  const toast = useToast();
   const [classes, setClasses] = useState<ClassOption[]>([]);
   const [subjects, setSubjects] = useState<SubjectOption[]>([]);
   const [homeworks, setHomeworks] = useState<HomeworkRow[]>([]);
@@ -41,6 +42,10 @@ export default function HomeworkPage() {
   const [showModal, setShowModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+
+  const [gradingId, setGradingId] = useState<string | null>(null);
+  const [gradeForm, setGradeForm] = useState({ grade: '', feedback: '' });
+  const [savingGrade, setSavingGrade] = useState(false);
 
   const [form, setForm] = useState({
     class_id: '',
@@ -174,6 +179,37 @@ export default function HomeworkPage() {
     setSubmitting(false);
   };
 
+  const openGrade = (s: HomeworkSubmission) => {
+    setGradingId(s.id);
+    setGradeForm({ grade: s.grade !== null ? String(s.grade) : '', feedback: s.teacher_feedback || '' });
+  };
+
+  const saveGrade = async (s: HomeworkSubmission) => {
+    const grade = Number(gradeForm.grade);
+    if (!gradeForm.grade || isNaN(grade) || grade < 1 || grade > 5) {
+      toast.error(t('hw.grade_invalid'));
+      return;
+    }
+    setSavingGrade(true);
+    const { error: err } = await supabase
+      .from('homework_submissions')
+      .update({
+        grade,
+        teacher_feedback: gradeForm.feedback,
+        status: 'vleresuar',
+        reviewed_at: new Date().toISOString(),
+      })
+      .eq('id', s.id);
+    setSavingGrade(false);
+    if (err) {
+      toast.error(err.message);
+      return;
+    }
+    toast.success(t('hw.grade_saved'));
+    setGradingId(null);
+    load();
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -239,17 +275,49 @@ export default function HomeworkPage() {
                     ) : (
                       <ul className="space-y-1">
                         {subs.map((s) => (
-                          <li key={s.id} className="flex items-center gap-2 bg-white rounded-lg px-3 py-2 text-sm">
-                            <span className="font-medium text-slate-900">{students.get(s.student_id) || '—'}</span>
-                            <span className={`px-2 py-0.5 rounded text-xs ${STATUS_COLORS[s.status]}`}>
-                              {HOMEWORK_SUBMISSION_STATUS_LABELS[s.status]}
-                            </span>
-                            {s.grade !== null && <span className="text-xs font-mono text-slate-700">{t('hw.grade_label')} {s.grade}</span>}
-                            {s.submitted_at && (
-                              <span className="text-xs text-slate-500 ml-auto flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
-                                {new Date(s.submitted_at).toLocaleDateString('sq-AL')}
+                          <li key={s.id} className="bg-white rounded-lg px-3 py-2 text-sm">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="font-medium text-slate-900">{students.get(s.student_id) || '—'}</span>
+                              <span className={`px-2 py-0.5 rounded text-xs ${STATUS_COLORS[s.status]}`}>
+                                {HOMEWORK_SUBMISSION_STATUS_LABELS[s.status]}
                               </span>
+                              {s.grade !== null && <span className="text-xs font-mono text-slate-700">{t('hw.grade_label')} {s.grade}</span>}
+                              {s.submitted_at && (
+                                <span className="text-xs text-slate-500 flex items-center gap-1">
+                                  <Clock className="w-3 h-3" />
+                                  {new Date(s.submitted_at).toLocaleDateString('sq-AL')}
+                                </span>
+                              )}
+                              {s.status !== 'e_pa_dorezuar' && gradingId !== s.id && (
+                                <button onClick={() => openGrade(s)} className="ml-auto text-xs font-medium text-cyan-700 hover:text-cyan-900">
+                                  {s.status === 'vleresuar' ? t('hw.edit_grade') : t('hw.grade_btn')}
+                                </button>
+                              )}
+                            </div>
+                            {s.submission_text && (
+                              <p className="text-xs text-slate-600 mt-1 whitespace-pre-wrap">{s.submission_text}</p>
+                            )}
+                            {gradingId === s.id ? (
+                              <div className="mt-2 flex items-end gap-2 flex-wrap border-t border-slate-100 pt-2">
+                                <div>
+                                  <label className="block text-[11px] text-slate-500 mb-0.5">{t('hw.grade_field')}</label>
+                                  <select value={gradeForm.grade} onChange={(e) => setGradeForm({ ...gradeForm, grade: e.target.value })} className="px-2 py-1 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-cyan-500">
+                                    <option value="">—</option>
+                                    {[1, 2, 3, 4, 5].map((n) => <option key={n} value={n}>{n}</option>)}
+                                  </select>
+                                </div>
+                                <div className="flex-1 min-w-[160px]">
+                                  <label className="block text-[11px] text-slate-500 mb-0.5">{t('hw.feedback_field')}</label>
+                                  <input type="text" value={gradeForm.feedback} onChange={(e) => setGradeForm({ ...gradeForm, feedback: e.target.value })} className="w-full px-2 py-1 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-cyan-500" />
+                                </div>
+                                <button onClick={() => saveGrade(s)} disabled={savingGrade} className="inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-medium disabled:opacity-50">
+                                  {savingGrade ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}
+                                  {t('common.save')}
+                                </button>
+                                <button onClick={() => setGradingId(null)} className="px-3 py-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs hover:bg-slate-50">{t('common.cancel')}</button>
+                              </div>
+                            ) : (
+                              s.teacher_feedback && <p className="text-xs text-emerald-700 mt-1 italic">{t('hw.feedback_field')}: {s.teacher_feedback}</p>
                             )}
                           </li>
                         ))}
