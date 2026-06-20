@@ -17,6 +17,9 @@ export default defineConfig({
         // per shkak te rendit te inicializimit.
         manualChunks: {
           supabase: ['@supabase/supabase-js'],
+          // jsPDF + autotable jane te renda dhe perdoren vetem te dokumentet
+          // zyrtare (deftesa/certifikata) — i mbajme ne nje chunk te vecante.
+          pdf: ['jspdf', 'jspdf-autotable'],
         },
       },
     },

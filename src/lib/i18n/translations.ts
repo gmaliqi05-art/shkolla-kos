@@ -1347,6 +1347,7 @@ export const translations = {
   // ReportCardView
   'rcv.title': { sq: 'Pamja e Dëftesës', sr: 'Pregled svedočanstva', tr: 'Karne Görünümü', bs: 'Pregled svjedočanstva', en: 'Report Card View' },
   'rcv.print': { sq: 'Printo', sr: 'Štampaj', tr: 'Yazdır', bs: 'Štampaj', en: 'Print' },
+  'rcv.download_pdf': { sq: 'Shkarko PDF', sr: 'Preuzmi PDF', tr: 'PDF indir', bs: 'Preuzmi PDF', en: 'Download PDF' },
   'rcv.back': { sq: 'Kthehu te lista', sr: 'Nazad na listu', tr: 'Listeye dön', bs: 'Nazad na listu', en: 'Back to list' },
 
   // ManageClasses

@@ -17,8 +17,9 @@ import {
   type BehaviorLevel,
   type DescriptiveLevel,
 } from '../../types/database';
-import { Loader2, Printer, ArrowLeft, FileCheck } from 'lucide-react';
+import { Loader2, Printer, ArrowLeft, FileCheck, FileDown } from 'lucide-react';
 import { useI18n } from '../../lib/i18n/I18nProvider';
+import { generateReportCardPdf } from '../../lib/pdf';
 
 interface GradeRow {
   subject_id: string;
@@ -215,6 +216,53 @@ export default function ReportCardView() {
     setIssuing(false);
   };
 
+  const downloadPdf = () => {
+    if (!student) return;
+    const isDesc = gradeLevel >= 1 && gradeLevel <= 2;
+    const gradeHead = isDesc
+      ? ['Lënda', 'Niveli i Arritjes']
+      : ['Lënda', 'V1', 'V2', 'V3', 'V4', 'Përfund.'];
+    const gradeRows = grades.map((g) => isDesc
+      ? [g.subject_name, g.descriptive ? DESCRIPTIVE_LEVEL_LABELS[g.descriptive] : '—']
+      : [
+          g.subject_name,
+          g.v1 ? String(g.v1) : '—',
+          g.v2 ? String(g.v2) : '—',
+          g.v3 ? String(g.v3) : '—',
+          g.v4 ? String(g.v4) : '—',
+          g.perfundimtare ? `${g.perfundimtare} (${GRADE_LABELS[g.perfundimtare]})` : '—',
+        ]);
+    generateReportCardPdf({
+      school: {
+        name: school?.full_name || school?.name || 'Shkolla',
+        municipality: school?.municipality || '',
+        address: school?.address || '',
+        registrationNumber: school?.registration_number || '',
+        directorName: school?.director_name || '',
+      },
+      title: REPORT_CARD_TYPE_LABELS[cardType],
+      periodLabel: period ? PERIOD_LABELS[period] : '',
+      academicYear: academicYearName,
+      student: {
+        fullName: student.full_name,
+        personalNumber: student.personal_number || '',
+        dateOfBirth: student.date_of_birth || '',
+        placeOfBirth: student.place_of_birth || '',
+        gender: student.gender ? GENDER_LABELS[student.gender] : '',
+        guardian: student.legal_guardian_name || '',
+      },
+      className,
+      isDescriptive: isDesc,
+      gradeHead,
+      gradeRows,
+      average: average !== null ? average.toFixed(2) : null,
+      behavior: behavior ? BEHAVIOR_LEVEL_LABELS[behavior] : null,
+      attendance,
+      serial: '',
+      issuedDate: new Date().toLocaleDateString('sq-AL'),
+    });
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -263,11 +311,18 @@ export default function ReportCardView() {
             </span>
           )}
           <button
+            onClick={downloadPdf}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-medium"
+          >
+            <FileDown className="w-4 h-4" />
+            {t('rcv.download_pdf')}
+          </button>
+          <button
             onClick={() => window.print()}
             className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium"
           >
             <Printer className="w-4 h-4" />
-            {t('rcv.print')} / PDF
+            {t('rcv.print')}
           </button>
         </div>
       </div>
