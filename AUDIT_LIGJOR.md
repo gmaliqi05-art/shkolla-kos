@@ -104,8 +104,8 @@ disa konfigurime/hardening.
   (Authentication → Policies), s'mund të bëhet me migracion SQL.
 
 ### 🟡 Prioritet 3
-- **Provim përfundimtar/riprovim** dhe **vlerësim nga bashkëmoshatari**
-  (UA 06/2022).
+- **Riprovimi / provimi i klasës** — ✅ moduli `retake_exams` + UI te mësuesi
+  (UA 06/2022). Mbetet **vlerësimi nga bashkëmoshatari** (peer assessment).
 - **Soft-delete & politika ruajtjeje** (Amza 75 vjet, nota 25 vjet) — pa
   trigger arkivimi/afate.
 - **Rakordim periodik repo↔bazë** (proces, jo defekt i njohur aktual).
@@ -139,7 +139,7 @@ politika e privatësisë në 4 gjuhë; aktivitetet; biblioteka; **2FA (TOTP)**;
 3. Hardening DB (revoke EXECUTE te triggers) + mbrojtja e fjalëkalimeve.
 
 ### 🟡 Prioritet 3 — i mesëm
-4. Provim përfundimtar/riprovim + peer assessment.
+4. ✅ Riprovim/provim i klasës (krye). Mbetet peer assessment.
 5. Soft-delete/ruajtje me afate; prezenca takimesh; feedback akomodimesh.
 6. Rakordim periodik repo↔bazë.
 
