@@ -356,13 +356,12 @@ export interface Homework {
   created_at: string;
 }
 
-export type HomeworkSubmissionStatus = 'pa_dorezuar' | 'dorezuar' | 'vleresuar' | 'me_vonese';
+export type HomeworkSubmissionStatus = 'e_pa_dorezuar' | 'dorezuar' | 'vleresuar';
 
 export const HOMEWORK_SUBMISSION_STATUS_LABELS: Record<HomeworkSubmissionStatus, string> = {
-  pa_dorezuar: 'Pa dorëzuar',
+  e_pa_dorezuar: 'Pa dorëzuar',
   dorezuar: 'Dorëzuar',
   vleresuar: 'Vlerësuar',
-  me_vonese: 'Me vonesë',
 };
 
 export interface HomeworkSubmission {

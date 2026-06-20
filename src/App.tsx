@@ -88,6 +88,7 @@ const StudentDashboard = lazyRetry(() => import('./pages/student/StudentDashboar
 const MyGrades = lazyRetry(() => import('./pages/student/MyGrades'));
 const MySchedule = lazyRetry(() => import('./pages/student/MySchedule'));
 const MyAttendance = lazyRetry(() => import('./pages/student/MyAttendance'));
+const MyHomework = lazyRetry(() => import('./pages/student/MyHomework'));
 
 const ParentDashboard = lazyRetry(() => import('./pages/parent/ParentDashboard'));
 const ChildGrades = lazyRetry(() => import('./pages/parent/ChildGrades'));
@@ -175,6 +176,7 @@ const studentNav: NavItem[] = [
   { label: 'Notat e Mia', labelKey: 'nav.my_grades', path: '/nxenes/nota', icon: Award },
   { label: 'Orari Im', labelKey: 'nav.my_schedule', path: '/nxenes/orari', icon: Clock },
   { label: 'Frekuentimi', labelKey: 'nav.attendance', path: '/nxenes/frekuentimi', icon: Calendar },
+  { label: 'Detyrat e Shtëpisë', labelKey: 'nav.homework', path: '/nxenes/detyrat', icon: FileText },
   { label: 'Mesazhet', labelKey: 'nav.messages', path: '/nxenes/mesazhet', icon: MessageSquare },
   { label: 'Këshillat e Mi', labelKey: 'nav.my_councils', path: '/nxenes/keshillat', icon: Briefcase },
   { label: 'Testet Kombëtare', labelKey: 'nav.national_tests', path: '/nxenes/testet-kombetare', icon: GraduationCap },
@@ -381,6 +383,7 @@ function AppRoutes() {
             <Route path="/nxenes/nota" element={<MyGrades />} />
             <Route path="/nxenes/orari" element={<MySchedule />} />
             <Route path="/nxenes/frekuentimi" element={<MyAttendance />} />
+            <Route path="/nxenes/detyrat" element={<MyHomework />} />
             <Route path="/nxenes/mesazhet" element={<MessagesPage />} />
             <Route path="/nxenes/profili" element={<ProfileSettings />} />
             <Route path="/nxenes/keshillat" element={<MyCouncils />} />

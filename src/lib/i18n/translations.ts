@@ -1084,6 +1084,28 @@ export const translations = {
   'hw.field_title': { sq: 'Titulli *', sr: 'Naslov *', tr: 'Başlık *', bs: 'Naslov *', en: 'Title *' },
   'hw.field_desc': { sq: 'Përshkrimi i detyrës', sr: 'Opis zadatka', tr: 'Ödev açıklaması', bs: 'Opis zadaće', en: 'Homework description' },
   'hw.field_assigned_date': { sq: 'Data e caktimit *', sr: 'Datum dodele *', tr: 'Verme tarihi *', bs: 'Datum dodjele *', en: 'Assignment date *' },
+  // Teacher grading
+  'hw.grade_btn': { sq: 'Vlerëso', sr: 'Oceni', tr: 'Değerlendir', bs: 'Ocijeni', en: 'Grade' },
+  'hw.edit_grade': { sq: 'Ndrysho notën', sr: 'Izmeni ocenu', tr: 'Notu düzenle', bs: 'Izmijeni ocjenu', en: 'Edit grade' },
+  'hw.grade_field': { sq: 'Nota (1–5)', sr: 'Ocena (1–5)', tr: 'Not (1–5)', bs: 'Ocjena (1–5)', en: 'Grade (1–5)' },
+  'hw.feedback_field': { sq: 'Koment', sr: 'Komentar', tr: 'Geri bildirim', bs: 'Komentar', en: 'Feedback' },
+  'hw.grade_invalid': { sq: 'Nota duhet të jetë 1–5.', sr: 'Ocena mora biti 1–5.', tr: 'Not 1–5 olmalı.', bs: 'Ocjena mora biti 1–5.', en: 'Grade must be 1–5.' },
+  'hw.grade_saved': { sq: 'Nota u ruajt.', sr: 'Ocena je sačuvana.', tr: 'Not kaydedildi.', bs: 'Ocjena je sačuvana.', en: 'Grade saved.' },
+  // Student homework
+  'hw.student_title': { sq: 'Detyrat e Mia', sr: 'Moji zadaci', tr: 'Ödevlerim', bs: 'Moje zadaće', en: 'My Homework' },
+  'hw.student_subtitle': { sq: 'Detyrat e caktuara dhe dorëzimet tuaja', sr: 'Dodeljeni zadaci i vaše predaje', tr: 'Verilen ödevler ve teslimleriniz', bs: 'Dodijeljene zadaće i vaše predaje', en: 'Assigned homework and your submissions' },
+  'hw.student_none': { sq: 'Asnjë detyrë e caktuar ende.', sr: 'Još nema dodeljenih zadataka.', tr: 'Henüz ödev verilmedi.', bs: 'Još nema dodijeljenih zadaća.', en: 'No homework assigned yet.' },
+  'hw.status_graded': { sq: 'Vlerësuar', sr: 'Ocenjeno', tr: 'Değerlendirildi', bs: 'Ocijenjeno', en: 'Graded' },
+  'hw.status_submitted': { sq: 'Dorëzuar', sr: 'Predato', tr: 'Teslim edildi', bs: 'Predato', en: 'Submitted' },
+  'hw.status_pending': { sq: 'Pa dorëzuar', sr: 'Nije predato', tr: 'Teslim edilmedi', bs: 'Nije predato', en: 'Not submitted' },
+  'hw.late': { sq: 'Me vonesë', sr: 'Sa zakašnjenjem', tr: 'Gecikmeli', bs: 'Sa zakašnjenjem', en: 'Late' },
+  'hw.submitted_at': { sq: 'Dorëzuar më:', sr: 'Predato:', tr: 'Teslim:', bs: 'Predato:', en: 'Submitted:' },
+  'hw.submit_btn': { sq: 'Dorëzo', sr: 'Predaj', tr: 'Teslim et', bs: 'Predaj', en: 'Submit' },
+  'hw.resubmit': { sq: 'Ridorëzo', sr: 'Ponovo predaj', tr: 'Yeniden teslim et', bs: 'Ponovo predaj', en: 'Resubmit' },
+  'hw.your_work': { sq: 'Puna jote', sr: 'Tvoj rad', tr: 'Çalışmanız', bs: 'Tvoj rad', en: 'Your work' },
+  'hw.your_work_placeholder': { sq: 'Shkruani përgjigjen ose përmbledhjen e detyrës...', sr: 'Napišite odgovor ili sažetak zadatka...', tr: 'Cevabınızı veya ödev özetini yazın...', bs: 'Napišite odgovor ili sažetak zadaće...', en: 'Write your answer or a summary of the work...' },
+  'hw.submit_empty': { sq: 'Shkruani diçka para se ta dorëzoni.', sr: 'Napišite nešto pre predaje.', tr: 'Teslim etmeden önce bir şeyler yazın.', bs: 'Napišite nešto prije predaje.', en: 'Write something before submitting.' },
+  'hw.submit_done': { sq: 'Detyra u dorëzua.', sr: 'Zadatak je predat.', tr: 'Ödev teslim edildi.', bs: 'Zadaća je predata.', en: 'Homework submitted.' },
 
   // === PARENT MEETINGS (teacher) ===
   'pm.title': { sq: 'Takimet me Prindër', sr: 'Sastanci sa roditeljima', tr: 'Veli Toplantıları', bs: 'Sastanci sa roditeljima', en: 'Parent Meetings' },
