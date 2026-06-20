@@ -93,13 +93,15 @@ disa konfigurime/hardening.
   dokument të nënshkruar/arkivuar ligjërisht.
 
 ### 🟠 Prioritet 2
-- **Mbulim i plotë audit-i** — leximet e ndjeshme shpesh pa log; `ip_address`
-  i pambushur; login/logout jo automatik.
-- **Hardening i bazës:** revoko `EXECUTE` te funksionet trigger
-  (`enforce_teacher_license`) nga `anon`/`authenticated`; (helperët e tjerë
-  `SECURITY DEFINER` janë self-scoped — pa rrezik real).
+- **Mbulim i audit-it** — ✅ login/logout tani gjurmohen automatikisht
+  (AuthContext). Mbeten: log i leximeve të ndjeshme dhe `ip_address` (i
+  pambushur — i pakapshëm në mënyrë të besueshme nga klienti).
+- **Hardening i bazës:** ✅ `EXECUTE` te `enforce_teacher_license` u revokua
+  nga `anon`/`authenticated`/`public`. Helperët e tjerë `SECURITY DEFINER`
+  përdoren brenda RLS dhe lihen qëllimisht të ekzekutueshëm.
 - **Auth:** aktivizo mbrojtjen ndaj fjalëkalimeve të komprometuara
-  (HaveIBeenPwned) — aktualisht e çaktivizuar.
+  (HaveIBeenPwned) — ⚠️ ende e çaktivizuar; **hap manual** te paneli Supabase
+  (Authentication → Policies), s'mund të bëhet me migracion SQL.
 
 ### 🟡 Prioritet 3
 - **Provim përfundimtar/riprovim** dhe **vlerësim nga bashkëmoshatari**
