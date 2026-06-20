@@ -125,6 +125,7 @@ export const translations = {
   'nav.settings': { sq: 'Cilësimet', sr: 'Podešavanja', tr: 'Ayarlar', bs: 'Postavke', en: 'Settings' },
   'nav.incidents': { sq: 'Incidentet', sr: 'Incidenti', tr: 'Olaylar', bs: 'Incidenti', en: 'Incidents' },
   'nav.data_breaches': { sq: 'Shkeljet e të Dhënave', sr: 'Povrede podataka', tr: 'Veri İhlalleri', bs: 'Povrede podataka', en: 'Data Breaches' },
+  'nav.competencies': { sq: 'Kompetencat (KKK)', sr: 'Kompetencije', tr: 'Yetkinlikler', bs: 'Kompetencije', en: 'Competencies' },
   'nav.admin_content': { sq: 'Përmbajtja Homepage', sr: 'Sadržaj početne', tr: 'Ana sayfa içeriği', bs: 'Sadržaj početne', en: 'Homepage Content' },
   'nav.admin_policies': { sq: 'Politikat', sr: 'Politike', tr: 'Politikalar', bs: 'Politike', en: 'Policies' },
   'nav.admin_logs': { sq: 'Logs & Monitorim', sr: 'Logovi i praćenje', tr: 'Günlükler ve İzleme', bs: 'Logovi i praćenje', en: 'Logs & Monitoring' },
