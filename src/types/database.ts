@@ -694,7 +694,31 @@ export interface Class {
   academic_year_id: string;
   homeroom_teacher_id: string | null;
   max_students: number;
+  language_of_instruction: string | null;
   created_at: string;
+}
+
+export type CounselingCategory = 'keshillim' | 'sjellje' | 'akademik' | 'emocional' | 'familjar' | 'tjeter';
+
+export const COUNSELING_CATEGORY_LABELS: Record<CounselingCategory, string> = {
+  keshillim: 'Këshillim',
+  sjellje: 'Sjellje',
+  akademik: 'Akademik',
+  emocional: 'Emocional',
+  familjar: 'Familjar',
+  tjeter: 'Tjetër',
+};
+
+export interface CounselingNote {
+  id: string;
+  student_id: string;
+  pedagog_id: string;
+  category: CounselingCategory;
+  title: string;
+  note: string;
+  is_confidential: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Subject {

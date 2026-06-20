@@ -124,6 +124,7 @@ export const translations = {
   'nav.privacy': { sq: 'Privatësia', sr: 'Privatnost', tr: 'Gizlilik', bs: 'Privatnost', en: 'Privacy' },
   'nav.settings': { sq: 'Cilësimet', sr: 'Podešavanja', tr: 'Ayarlar', bs: 'Postavke', en: 'Settings' },
   'nav.incidents': { sq: 'Incidentet', sr: 'Incidenti', tr: 'Olaylar', bs: 'Incidenti', en: 'Incidents' },
+  'nav.counseling': { sq: 'Shënime Këshillimi', sr: 'Beleške savetovanja', tr: 'Danışmanlık Notları', bs: 'Bilješke savjetovanja', en: 'Counseling Notes' },
   'nav.data_breaches': { sq: 'Shkeljet e të Dhënave', sr: 'Povrede podataka', tr: 'Veri İhlalleri', bs: 'Povrede podataka', en: 'Data Breaches' },
   'nav.competencies': { sq: 'Kompetencat (KKK)', sr: 'Kompetencije', tr: 'Yetkinlikler', bs: 'Kompetencije', en: 'Competencies' },
   'nav.admin_content': { sq: 'Përmbajtja Homepage', sr: 'Sadržaj početne', tr: 'Ana sayfa içeriği', bs: 'Sadržaj početne', en: 'Homepage Content' },
@@ -1106,6 +1107,23 @@ export const translations = {
   'hw.your_work_placeholder': { sq: 'Shkruani përgjigjen ose përmbledhjen e detyrës...', sr: 'Napišite odgovor ili sažetak zadatka...', tr: 'Cevabınızı veya ödev özetini yazın...', bs: 'Napišite odgovor ili sažetak zadaće...', en: 'Write your answer or a summary of the work...' },
   'hw.submit_empty': { sq: 'Shkruani diçka para se ta dorëzoni.', sr: 'Napišite nešto pre predaje.', tr: 'Teslim etmeden önce bir şeyler yazın.', bs: 'Napišite nešto prije predaje.', en: 'Write something before submitting.' },
   'hw.submit_done': { sq: 'Detyra u dorëzua.', sr: 'Zadatak je predat.', tr: 'Ödev teslim edildi.', bs: 'Zadaća je predata.', en: 'Homework submitted.' },
+
+  // === COUNSELING NOTES (pedagog) ===
+  'cn.title': { sq: 'Shënime Këshillimi', sr: 'Beleške savetovanja', tr: 'Danışmanlık Notları', bs: 'Bilješke savjetovanja', en: 'Counseling Notes' },
+  'cn.subtitle': { sq: 'Shënime konfidenciale për nxënësit (vetëm pedagogu dhe drejtori)', sr: 'Poverljive beleške o učenicima (samo pedagog i direktor)', tr: 'Öğrenciler hakkında gizli notlar (yalnızca rehber ve müdür)', bs: 'Povjerljive bilješke o učenicima (samo pedagog i direktor)', en: 'Confidential notes about students (pedagogue and director only)' },
+  'cn.new': { sq: 'Shënim i Ri', sr: 'Nova beleška', tr: 'Yeni Not', bs: 'Nova bilješka', en: 'New Note' },
+  'cn.none': { sq: 'Asnjë shënim ende.', sr: 'Još nema beleški.', tr: 'Henüz not yok.', bs: 'Još nema bilješki.', en: 'No notes yet.' },
+  'cn.confidential_notice': { sq: 'Të dhëna konfidenciale — të mbrojtura sipas Ligjit 06/L-082. Qasje vetëm pedagogu autor dhe drejtori i shkollës.', sr: 'Poverljivi podaci — zaštićeni Zakonom 06/L-082. Pristup samo pedagog-autor i direktor škole.', tr: 'Gizli veriler — 06/L-082 sayılı Kanunla korunur. Yalnızca yazar rehber ve okul müdürü erişebilir.', bs: 'Povjerljivi podaci — zaštićeni Zakonom 06/L-082. Pristup samo pedagog-autor i direktor škole.', en: 'Confidential data — protected under Law 06/L-082. Access only by the authoring pedagogue and the school director.' },
+  'cn.student': { sq: 'Nxënësi', sr: 'Učenik', tr: 'Öğrenci', bs: 'Učenik', en: 'Student' },
+  'cn.pick_student': { sq: 'Zgjidh nxënësin', sr: 'Izaberi učenika', tr: 'Öğrenci seçin', bs: 'Izaberi učenika', en: 'Select student' },
+  'cn.category': { sq: 'Kategoria', sr: 'Kategorija', tr: 'Kategori', bs: 'Kategorija', en: 'Category' },
+  'cn.note_title': { sq: 'Titulli', sr: 'Naslov', tr: 'Başlık', bs: 'Naslov', en: 'Title' },
+  'cn.note_body': { sq: 'Shënimi', sr: 'Beleška', tr: 'Not', bs: 'Bilješka', en: 'Note' },
+  'cn.title_required': { sq: 'Shkruani një titull.', sr: 'Unesite naslov.', tr: 'Bir başlık girin.', bs: 'Unesite naslov.', en: 'Enter a title.' },
+  'cn.saved': { sq: 'Shënimi u ruajt.', sr: 'Beleška je sačuvana.', tr: 'Not kaydedildi.', bs: 'Bilješka je sačuvana.', en: 'Note saved.' },
+  'cn.delete': { sq: 'Fshi', sr: 'Obriši', tr: 'Sil', bs: 'Obriši', en: 'Delete' },
+  'cn.delete_confirm': { sq: 'Të fshihet ky shënim?', sr: 'Obrisati ovu belešku?', tr: 'Bu not silinsin mi?', bs: 'Obrisati ovu bilješku?', en: 'Delete this note?' },
+  'cn.deleted': { sq: 'Shënimi u fshi.', sr: 'Beleška je obrisana.', tr: 'Not silindi.', bs: 'Bilješka je obrisana.', en: 'Note deleted.' },
 
   // === PARENT MEETINGS (teacher) ===
   'pm.title': { sq: 'Takimet me Prindër', sr: 'Sastanci sa roditeljima', tr: 'Veli Toplantıları', bs: 'Sastanci sa roditeljima', en: 'Parent Meetings' },

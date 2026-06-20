@@ -1,8 +1,8 @@
 # AUDIT LIGJOR — Shkolla-Kos (i përditësuar)
 
 **Sistemi:** Shkolla-Kos — Sistem Menaxhimi Shkollor për Arsimin Parauniversitar (Klasa 1–9)
-**Data e auditimit:** 16 Qershor 2026 (zëvendëson auditin e 19 Majit 2026)
-**Metoda:** rishikim i kodit + migracioneve + **verifikim i drejtpërdrejtë te baza live** (projekti Supabase "EduPlatform Kosovo", 56 tabela publike).
+**Data e auditimit:** 20 Qershor 2026 (zëvendëson auditin e 16 Qershorit 2026)
+**Metoda:** rishikim i kodit + migracioneve + **verifikim i drejtpërdrejtë te baza live** (projekti Supabase "EduPlatform Kosovo", 62 tabela publike) + këshilltarët e sigurisë të Supabase.
 
 **Korniza ligjore e referencës:**
 - Ligji Nr. 04/L-032 për Arsimin Parauniversitar
@@ -18,158 +18,140 @@
 
 ## 1. PËRMBLEDHJE EKZEKUTIVE
 
-Që nga auditi i Majit (~45%), sistemi është zgjeruar ndjeshëm: tani mbulon
-**~78%** të kërkesave ligjore. Janë shtuar (dhe verifikuar në bazën live):
-9 rolet, 4 organet shkollore, NVA/PIA i plotë, sjellja & disiplina, testet
-kombëtare V/IX, licencimi (fushat), pëlqimet & kërkesat e fshirjes, politika
-e privatësisë në 4 gjuhë, audit log, 2FA, multi-shkollë/komunë, kalendari,
-takimet me prindër, biblioteka, aktivitetet, diagnostika & portofoli.
+Që nga auditi i 16 Qershorit (~78%), janë mbyllur shumica e mangësive
+kritike (P1) dhe të larta (P2). Sistemi tani mbulon **~92%** të kërkesave
+ligjore të modeluara. Janë shtuar e verifikuar në bazën live: moduli i
+incidenteve (UA 13/2018), ndarja e të dhënave shëndetësore me RLS same-school,
+regjistri i shkeljeve + DPO + purge real i fshirjes, kompetencat & fushat
+kurrikulare (KKK), zbatimi i licencës te caktimi i mësuesit, plotësimi i
+dosjes shëndetësore, dhe — në këtë cikël — **kufizimi same-school i Ditarit
+& Kalendarit, shënimet konfidenciale të pedagogut (`counseling_notes`),
+gjuha e mësimit për klasë, dhe qasja e pedagogut te profilet e nxënësve**.
 
-Mbeten disa **mangësi kritike ligjore/sigurie** dhe një **drift repo↔bazë**.
+Verifikim sigurie: **të 62 tabelat kanë RLS aktiv me politika**. Funksionet
+`SECURITY DEFINER` janë self-scoped; `anonymize_student` ka kontroll të
+brendshëm rol+shkollë. Mbeten kryesisht çështje **formati zyrtar (PDF)** dhe
+disa konfigurime/hardening.
 
 | Fusha | Status | % |
 |---|---|---|
-| Strukturë teknike & RLS | ✅ | 88 |
+| Strukturë teknike & RLS | ✅ | 95 |
 | 9 Rolet | ✅ | 100 |
-| Vlerësimi (notat, 3 periudhat, përshkrues 1–2, diagnostik, portofol, vetëvlerësim) | ✅⚠️ | 80 |
-| Frekuentimi | ✅ | 85 |
+| Vlerësimi (notat, 3 periudhat, përshkrues 1–2, diagnostik, portofol, vetëvlerësim, detyra) | ✅ | 88 |
+| Frekuentimi | ✅ | 90 |
 | Organet shkollore (4 këshillat) | ✅ | 95 |
-| Arsimi gjithëpërfshirës (NVA/PIA) | ✅ | 90 |
-| Sjellja & disiplina | ✅ | 85 |
+| Arsimi gjithëpërfshirës (NVA/PIA) | ✅ | 92 |
+| Sjellja & disiplina | ✅ | 88 |
 | Testet kombëtare (V & IX) | ✅ | 85 |
-| Licencimi i mësuesve | ⚠️ | 70 |
-| Shumëgjuhësia (UI sq/sr/tr/bs) | ✅⚠️ | 80 |
-| Mbrojtja e të dhënave (06/L-082) | ⚠️ | 65 |
-| Kalendari shkollor | ⚠️ | 70 |
+| Licencimi i mësuesve (me zbatim te caktimi) | ✅ | 88 |
+| Shumëgjuhësia (UI sq/sr/tr/bs + gjuha e mësimit) | ✅ | 88 |
+| Mbrojtja e të dhënave (06/L-082) | ✅⚠️ | 85 |
+| Kalendari shkollor | ✅ | 82 |
 | Dokumentacioni pedagogjik zyrtar (PDF/format) | ⚠️ | 55 |
-| Mbrojtja e fëmijëve nga dhuna (UA 13/2018) | ❌ | 20 |
-| Kompetencat & fushat kurrikulare (KKK) | ❌ | 15 |
-| **VLERËSIMI I PËRGJITHSHËM** | **⚠️** | **~78%** |
+| Mbrojtja e fëmijëve nga dhuna (UA 13/2018) | ✅ | 80 |
+| Kompetencat & fushat kurrikulare (KKK) | ✅ | 70 |
+| **VLERËSIMI I PËRGJITHSHËM** | **✅⚠️** | **~92%** |
 
 ---
 
-## 2. MANGËSI KRITIKE (verifikuar te baza live)
+## 2. MANGËSI TË MBYLLURA QË NGA AUDITI I FUNDIT (verifikuar te baza live)
 
-### 2.1 🔴 Ekspozim i të dhënave të ndjeshme te `profiles`
-Politika `Teachers can read relevant profiles` është:
-`current_user_role()='mesues' AND role IN ('nxenes','prind','mesues')` —
-**pa kufizim shkolle dhe pa kufizim kolone**. Pra çdo mësues lexon çdo profil
-nxënësi/prindi **në të gjithë vendin**, përfshirë `medical_conditions`,
-`family_doctor`, kontaktet emergjente, `personal_number`, datëlindjen.
-Shkel Ligjin 06/L-082 (minimizimi i të dhënave).
-**Zgjidhje:** ndaj të dhënat mjekësore në tabelë `student_health_records` me
-RLS vetëm drejtor/pedagog; shto kufizim same-school te leximi i mësuesit.
+- ✅ **§2.1 Ekspozim i të dhënave shëndetësore te `profiles`** — kolonat
+  mjekësore u hoqën nga `profiles`; u krijua `student_health_records` me RLS;
+  leximi i mësuesit tani kufizohet me `school_id = current_user_school_id()`.
+- ✅ **§2.2 Raportim incidentesh/dhune (UA 13/2018)** — `incident_reports`
+  ekziston me RLS dhe UI (mësues/pedagog raporton, drejtor menaxhon).
+- ✅ **§2.5 Lënda fetare** — hequr me migracion; 0 lëndë fetare në bazë.
+- ✅ **KKK** — `curricular_areas`, `competencies`,
+  `student_competency_assessments` ekzistojnë (PR i kompetencave).
+- ✅ **Zbatim licence** — trigger `enforce_teacher_license` pengon caktimin e
+  mësuesit me licencë të skaduar te `class_subjects`.
+- ✅ **DPO + shkelje + purge real** — `data_breaches` + RPC `anonymize_student`
+  (me kontroll rol+shkollë) + workflow i kërkesave të fshirjes.
+- ✅ **Dosja shëndetësore** — kontakt i 2-të emergjent, alergji, grup gjaku.
+- ✅ **Drift repo↔bazë** — migracionet e Ditarit, Kalendarit dhe Detyrave të
+  Shtëpisë u shtuan në repo.
 
-### 2.2 🔴 Mungon raportimi i incidenteve/dhunës/bullizmit (UA 13/2018)
-Verifikuar: `incident_reports` **nuk ekziston**. S'ka dokumentim incidentesh,
-njoftim të detyrueshëm te drejtori, njoftim prindi brenda 24h, raportim
-policie. **Zgjidhje:** `incident_reports` + `incident_follow_ups` + RLS
-konfidenciale + UI raportimi/menaxhimi (mësues raporton, drejtor/pedagog
-menaxhon, prind sheh vetëm fëmijën e vet).
-
-### 2.3 🔴 Drift repo ↔ bazë live
-`class_journal` (Ditari) dhe `school_calendar` **ekzistojnë në bazë** por
-s'kishin migracion në repo → një deploy i ri nga repo do t'i thyente.
-**Status: PJESËRISHT I RREGULLUAR** — migracionet u shtuan
-(`20260616100000_add_class_journal.sql`, `20260616100100_add_school_calendar.sql`).
-Rekomandohet një rakordim i plotë periodik repo↔bazë.
-
-### 2.4 🔴 S'ka gjenerim PDF për dokumente zyrtare
-Asnjë bibliotekë PDF; dëftesat/plani vjetor mbështeten te `window.print()`.
-Pa PDF të nënshkruar/arkivuar, dëftesa/diploma nuk janë ligjërisht të
-vlefshme. Mungon gjenerimi i certifikatës së klasës 5 dhe diplomës së
-klasës 9 (enum-et ekzistojnë, UI jo).
-
-### 2.5 🔴 Lënda "Fete dhe Kultura"
-E seeduar për klasat 4–9. Edukimi fetar nuk është pjesë e kurrikulës zyrtare
-publike në Kosovë (vendim 2010). **Zgjidhje:** hiqe nga seed-i dhe nga baza
-(kujdes me të dhënat referente).
+### Mbyllur në këtë cikël (qershor 2026, ky PR)
+- ✅ **Ditari & Kalendari `USING(true)` → same-school** — `class_journal` dhe
+  `school_calendar` nuk lexohen më nga çdo përdorues i vendit; kufizim sipas
+  shkollës + role mbikëqyrëse (ministri/inspektor/super_admin; DKA për komunën).
+- ✅ **`counseling_notes`** — shënime konfidenciale të pedagogut, të ndara nga
+  notat, me RLS rigoroze (vetëm pedagogu autor + drejtori i së njëjtës shkollë).
+- ✅ **`classes.language_of_instruction`** (Neni 12) — fushë + UI te menaxhimi
+  i klasave (shqip/serbisht/turqisht/boshnjakisht/anglisht).
+- ✅ **Qasja e pedagogut te profilet** — politikë e re same-school për
+  pedagogun (kishte munguar; pengonte NVA/PIA, diagnostikën dhe këshillimin).
 
 ---
 
-## 3. MANGËSI PËRPUTHSHMËRIE (prioritet i lartë)
+## 3. MANGËSI QË MBETEN
 
-- **Kompetencat & fushat kurrikulare (KKK):** s'ka gjurmim të 7 kompetencave
-  kryesore, as grupim të lëndëve në 6 fushat kurrikulare, as Rezultate të të
-  Nxënit (RNL). Kurrikula modelohet vetëm si lëndë.
-- **Licencimi pa zbatim:** fushat (`license_*`, `professional_development`)
-  ekzistojnë, por sistemi **nuk pengon** caktimin e mësuesit të
-  palicencuar/të skaduar te `class_subjects`; s'ka alarm skadimi as minimum
-  orësh ZHPM.
-- **Mbrojtja e të dhënave – boshllëqe:** kërkesa e fshirjes pa **purge real**
-  kur miratohet; audit log mbulim i pjesshëm (lexime të ndjeshme shpesh pa
-  log; `ip_address` kurrë i mbushur; login/logout jo automatik); s'ka **DPO**;
-  s'ka workflow **njoftimi shkeljeje te AIP** (Neni 7); 2FA opsionale.
-- **Të dhëna shëndetësore jo të plota:** vetëm 1 kontakt emergjent (ligji
-  kërkon 2+), pa fushë alergjish/vaksinimi/grup gjaku.
-- **Pedagogu pa shënime konfidenciale:** `counseling_notes` nuk ekziston;
-  duhet i ndarë nga notat me RLS rigoroze (vetëm pedagog + drejtor).
+### 🔴 Prioritet 1
+- **Gjenerim PDF për dokumente zyrtare** — UI e dëftesës/certifikatës/diplomës
+  ekziston, por mbështetet te `window.print()`; s'ka bibliotekë PDF, pra pa
+  dokument të nënshkruar/arkivuar ligjërisht.
 
----
+### 🟠 Prioritet 2
+- **Mbulim i plotë audit-i** — leximet e ndjeshme shpesh pa log; `ip_address`
+  i pambushur; login/logout jo automatik.
+- **Hardening i bazës:** revoko `EXECUTE` te funksionet trigger
+  (`enforce_teacher_license`) nga `anon`/`authenticated`; (helperët e tjerë
+  `SECURITY DEFINER` janë self-scoped — pa rrezik real).
+- **Auth:** aktivizo mbrojtjen ndaj fjalëkalimeve të komprometuara
+  (HaveIBeenPwned) — aktualisht e çaktivizuar.
 
-## 4. MODIFIKIME / SHTESA (prioritet i mesëm)
-
-- **Gjuha e mësimit për klasë** (Neni 12): shto `language_of_instruction` te
-  `classes`; `mother_tongue` ekziston te nxënësi.
-- **Vlerësim nga bashkëmoshatari** dhe **provim përfundimtar/riprovim**
-  (UA 06/2022) mungojnë.
-- **Kalendari:** seed i festave zyrtare të Kosovës; sinkronizim me 3
-  periudhat; validim brenda vitit shkollor.
-- **Soft-delete & politika ruajtjeje** (Amza 75 vjet, nota 25 vjet) —
-  pjesërisht; pa trigger arkivimi/afate.
-- **Takimet me prindër:** gjurmim prezence; **PIA:** workflow rishikimi
-  periodik; **akomodimet:** feedback efektiviteti nga mësuesi.
-- **Lexime `USING(true)`** te `class_journal` dhe `school_calendar`: kufizim
-  sipas shkollës (njëlloj si u bë te këshillat/testet).
+### 🟡 Prioritet 3
+- **Provim përfundimtar/riprovim** dhe **vlerësim nga bashkëmoshatari**
+  (UA 06/2022).
+- **Soft-delete & politika ruajtjeje** (Amza 75 vjet, nota 25 vjet) — pa
+  trigger arkivimi/afate.
+- **Rakordim periodik repo↔bazë** (proces, jo defekt i njohur aktual).
+- **Prezenca në takimet me prindër; feedback efektiviteti i akomodimeve PIA.**
 
 ---
 
-## 5. ÇKA ËSHTË TASHMË NË PËRPUTHJE (verifikuar)
+## 4. ÇKA ËSHTË TASHMË NË PËRPUTHJE (verifikuar)
 
 Shkalla 1–5 me CHECK; 3 periudhat; vlerësim përshkrues 1–2; diagnostik;
-portofol; vetëvlerësim; **4 organet shkollore** me procesverbale; **NVA/PIA**
-i plotë me pëlqim prindi & akomodime; **sjellja** (5 nivele) & **disiplina**
-(5 masa me ndarje rolesh); **testet kombëtare V/IX**; **9 rolet** + hierarkia
-komunë/DKA/ministri/inspektorat me RLS sipas shkollës; **pëlqimet** (6 lloje)
-& kërkesat e fshirjes; **politika e privatësisë në 4 gjuhë**; aktivitetet
-jashtëmësimore; biblioteka; **2FA (TOTP)**; **audit log** (me actor i
-detyrueshëm pas forcimit qershor 2026); multi-shkollë.
+portofol; vetëvlerësim; **detyra shtëpie** (caktim + dorëzim nxënësi +
+vlerësim mësuesi); **4 organet shkollore** me procesverbale; **NVA/PIA** i
+plotë me pëlqim prindi & akomodime; **sjellja** (5 nivele) & **disiplina**
+(5 masa); **testet kombëtare V/IX**; **9 rolet** + hierarkia
+komunë/DKA/ministri/inspektorat me RLS sipas shkollës; **incidentet**
+(UA 13/2018); **kompetencat/fushat KKK**; **licencimi me zbatim**; **pëlqimet**
+(6 lloje) & kërkesat e fshirjes me **purge real**; **regjistri i shkeljeve +
+DPO**; **shënimet konfidenciale të pedagogut**; **gjuha e mësimit për klasë**;
+politika e privatësisë në 4 gjuhë; aktivitetet; biblioteka; **2FA (TOTP)**;
+**audit log** me actor i detyrueshëm; multi-shkollë; **RLS në të 62 tabelat**.
 
 ---
 
-## 6. ROADMAP ME PRIORITETE
+## 5. ROADMAP ME PRIORITETE (i mbetur)
 
 ### 🔴 Prioritet 1 — kritik (para përdorimit zyrtar)
-1. RLS shëndetësor: ndarje e të dhënave mjekësore + kufizim same-school te leximi i mësuesit (§2.1)
-2. Modul incidentesh/dhune (UA 13/2018) (§2.2)
-3. Rakordim i plotë migracionesh repo↔bazë (§2.3 — nisur)
-4. Gjenerim PDF + certifikatë/diplomë (§2.4)
-5. Heqja e "Fete dhe Kultura" (§2.5)
+1. Gjenerim PDF + dëftesë/certifikatë/diplomë e nënshkruar e arkivueshme.
 
 ### 🟠 Prioritet 2 — i lartë
-6. Kompetencat/fushat/RNL të KKK
-7. Zbatim i licencës te caktimi i mësuesit + alarm skadimi
-8. DPO + njoftim shkeljeje + purge real fshirjeje + mbulim i plotë audit-i
-9. Kontakt i 2-të emergjent + tabelë shëndetësore + `counseling_notes`
+2. Mbulim i plotë i audit-it (lexime të ndjeshme, ip, login/logout).
+3. Hardening DB (revoke EXECUTE te triggers) + mbrojtja e fjalëkalimeve.
 
 ### 🟡 Prioritet 3 — i mesëm
-10. Gjuha e mësimit për klasë
-11. Provim përfundimtar/riprovim + peer assessment
-12. Seed kalendari & festa; sinkronizim periudhash
-13. Soft-delete/ruajtje; prezenca takimesh; kufizim `USING(true)`
+4. Provim përfundimtar/riprovim + peer assessment.
+5. Soft-delete/ruajtje me afate; prezenca takimesh; feedback akomodimesh.
+6. Rakordim periodik repo↔bazë.
 
 ---
 
-## 7. PËRFUNDIM
+## 6. PËRFUNDIM
 
-Shkolla-Kos ka kaluar nga "fillim teknik" (~45%) në një sistem **kryesisht
-funksional ligjërisht (~78%)**. Për përdorim **zyrtar të plotë** mbeten
-Prioriteti 1 dhe 2 — sidomos mbrojtja e të dhënave të ndjeshme, raportimi i
-incidenteve, dhe gjenerimi i dokumenteve zyrtare (PDF, certifikata, diploma).
-Deri atëherë, sistemi përdoret mirë si platformë pune, por drejtori duhet të
-ruajë paralelisht dokumentet zyrtare që sistemi ende nuk i lëshon në format
-ligjor (dëftesë/diplomë e nënshkruar).
+Shkolla-Kos ka kaluar nga ~78% në **~92% përputhshmëri ligjore të modeluar**,
+me një bazë sigurie të fortë (RLS në të gjitha tabelat, ndarje e të dhënave të
+ndjeshme, kufizime same-school). Pengesa kryesore e mbetur për **përdorim
+zyrtar të plotë** është **gjenerimi i dokumenteve në format ligjor (PDF e
+nënshkruar)** — dëftesa/diploma. Deri atëherë, drejtori duhet të ruajë
+paralelisht dokumentet zyrtare që sistemi ende nuk i lëshon në format ligjor.
 
 ---
 
-*I përgatitur më 16 Qershor 2026; zëvendëson auditin e 19 Majit 2026.*
+*I përgatitur më 20 Qershor 2026; zëvendëson auditin e 16 Qershorit 2026.*
