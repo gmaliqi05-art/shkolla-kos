@@ -10,7 +10,16 @@ interface ClassFormData {
   grade_level: number;
   section: string;
   max_students: number;
+  language_of_instruction: string;
 }
+
+const LANGUAGE_OPTIONS: { value: string; label: string }[] = [
+  { value: 'shqip', label: 'Shqip' },
+  { value: 'serbisht', label: 'Serbisht' },
+  { value: 'turqisht', label: 'Turqisht' },
+  { value: 'boshnjakisht', label: 'Boshnjakisht' },
+  { value: 'anglisht', label: 'Anglisht' },
+];
 
 export default function ManageClasses() {
   const toast = useToast();
@@ -26,6 +35,7 @@ export default function ManageClasses() {
     grade_level: 1,
     section: 'A',
     max_students: 30,
+    language_of_instruction: 'shqip',
   });
   const [submitting, setSubmitting] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -59,6 +69,7 @@ export default function ManageClasses() {
       grade_level: formData.grade_level,
       section: formData.section,
       max_students: formData.max_students,
+      language_of_instruction: formData.language_of_instruction,
       academic_year_id: activeYear?.id ?? null,
     });
 
@@ -67,7 +78,7 @@ export default function ManageClasses() {
     } else {
       toast.success('Klasa u krijua me sukses!');
       setShowAddModal(false);
-      setFormData({ name: '', grade_level: 1, section: 'A', max_students: 30 });
+      setFormData({ name: '', grade_level: 1, section: 'A', max_students: 30, language_of_instruction: 'shqip' });
       loadClasses();
     }
 
@@ -87,6 +98,7 @@ export default function ManageClasses() {
         grade_level: formData.grade_level,
         section: formData.section,
         max_students: formData.max_students,
+        language_of_instruction: formData.language_of_instruction,
       })
       .eq('id', selectedClass.id);
 
@@ -96,7 +108,7 @@ export default function ManageClasses() {
       toast.success('Klasa u përditësua me sukses!');
       setShowEditModal(false);
       setSelectedClass(null);
-      setFormData({ name: '', grade_level: 1, section: 'A', max_students: 30 });
+      setFormData({ name: '', grade_level: 1, section: 'A', max_students: 30, language_of_instruction: 'shqip' });
       loadClasses();
     }
 
@@ -138,6 +150,7 @@ export default function ManageClasses() {
       grade_level: cls.grade_level,
       section: cls.section,
       max_students: cls.max_students,
+      language_of_instruction: cls.language_of_instruction ?? 'shqip',
     });
     setShowEditModal(true);
     setActiveDropdown(null);
@@ -374,6 +387,21 @@ export default function ManageClasses() {
                 />
               </div>
 
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">
+                  Gjuha e mësimit
+                </label>
+                <select
+                  value={formData.language_of_instruction}
+                  onChange={(e) => setFormData({ ...formData, language_of_instruction: e.target.value })}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none"
+                >
+                  {LANGUAGE_OPTIONS.map((l) => (
+                    <option key={l.value} value={l.value}>{l.label}</option>
+                  ))}
+                </select>
+              </div>
+
               <div className="flex gap-3 pt-4">
                 <button
                   type="button"
@@ -472,6 +500,21 @@ export default function ManageClasses() {
                   onChange={(e) => setFormData({ ...formData, max_students: Number(e.target.value) })}
                   className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none"
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">
+                  Gjuha e mësimit
+                </label>
+                <select
+                  value={formData.language_of_instruction}
+                  onChange={(e) => setFormData({ ...formData, language_of_instruction: e.target.value })}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none"
+                >
+                  {LANGUAGE_OPTIONS.map((l) => (
+                    <option key={l.value} value={l.value}>{l.label}</option>
+                  ))}
+                </select>
               </div>
 
               <div className="flex gap-3 pt-4">

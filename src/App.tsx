@@ -65,6 +65,7 @@ const InspectionsManagement = lazyRetry(() => import('./pages/inspektor/Inspecti
 const InspectionDetail = lazyRetry(() => import('./pages/inspektor/InspectionDetail'));
 const InspectorDashboard = lazyRetry(() => import('./pages/inspektor/InspectorDashboard'));
 const PedagogDashboard = lazyRetry(() => import('./pages/pedagog/PedagogDashboard'));
+const CounselingNotes = lazyRetry(() => import('./pages/pedagog/CounselingNotes'));
 const SuperAdminDashboard = lazyRetry(() => import('./pages/admin/SuperAdminDashboard'));
 const UserManual = lazyRetry(() => import('./pages/admin/UserManual'));
 
@@ -234,6 +235,7 @@ const inspektorNav: NavItem[] = [
 const pedagogNav: NavItem[] = [
   { label: 'Paneli Kryesor', labelKey: 'nav.dashboard', path: '/pedagog', icon: LayoutDashboard },
   { label: 'NVA & PIA', labelKey: 'nav.iep', path: '/pedagog/nva', icon: Heart },
+  { label: 'Shënime Këshillimi', labelKey: 'nav.counseling', path: '/pedagog/keshillimet', icon: NotebookPen },
   { label: 'Incidentet', labelKey: 'nav.incidents', path: '/pedagog/incidentet', icon: Shield },
   { label: 'Vlerësimi Diagnostikues', labelKey: 'nav.diagnostic', path: '/pedagog/diagnostik', icon: Stethoscope },
   { label: 'Portofoli', labelKey: 'nav.portfolio', path: '/pedagog/portofoli', icon: FolderOpen },
@@ -432,6 +434,7 @@ function AppRoutes() {
           <Route element={<DashboardLayout navItems={pedagogNav} role="pedagog" />}>
             <Route path="/pedagog" element={<PedagogDashboard />} />
             <Route path="/pedagog/nva" element={<SpecialNeedsManagement />} />
+            <Route path="/pedagog/keshillimet" element={<CounselingNotes />} />
             <Route path="/pedagog/incidentet" element={<IncidentReports />} />
             <Route path="/pedagog/diagnostik" element={<DiagnosticAssessments />} />
             <Route path="/pedagog/portofoli" element={<Portfolio />} />
