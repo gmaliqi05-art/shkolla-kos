@@ -721,6 +721,35 @@ export interface CounselingNote {
   updated_at: string;
 }
 
+export type RetakeExamType = 'riprovim' | 'provim_klases';
+export type RetakeResult = 'kaloi' | 'ngeli';
+
+export const RETAKE_EXAM_TYPE_LABELS: Record<RetakeExamType, string> = {
+  riprovim: 'Riprovim',
+  provim_klases: 'Provim i klasës',
+};
+
+export const RETAKE_RESULT_LABELS: Record<RetakeResult, string> = {
+  kaloi: 'Kaloi',
+  ngeli: 'Ngeli',
+};
+
+export interface RetakeExam {
+  id: string;
+  student_id: string;
+  subject_id: string;
+  class_id: string;
+  academic_year_id: string | null;
+  exam_type: RetakeExamType;
+  annual_grade: number | null;
+  exam_date: string;
+  exam_grade: number;
+  result: RetakeResult;
+  examiner_id: string;
+  notes: string;
+  created_at: string;
+}
+
 export interface Subject {
   id: string;
   name: string;

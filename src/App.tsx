@@ -72,6 +72,7 @@ const UserManual = lazyRetry(() => import('./pages/admin/UserManual'));
 const TeacherDashboard = lazyRetry(() => import('./pages/teacher/TeacherDashboard'));
 const MyClasses = lazyRetry(() => import('./pages/teacher/MyClasses'));
 const GradeEntry = lazyRetry(() => import('./pages/teacher/GradeEntry'));
+const RetakeExams = lazyRetry(() => import('./pages/teacher/RetakeExams'));
 const AttendancePage = lazyRetry(() => import('./pages/teacher/AttendancePage'));
 const TeacherSchedule = lazyRetry(() => import('./pages/teacher/TeacherSchedule'));
 const SubjectsPage = lazyRetry(() => import('./pages/teacher/SubjectsPage'));
@@ -152,6 +153,7 @@ const teacherNav: NavItem[] = [
   { label: 'Klasat e Mia', labelKey: 'nav.my_classes', path: '/mesues/klasa', icon: BookOpen },
   { label: 'Lëndët Mësimore', labelKey: 'nav.my_lessons', path: '/mesues/lendet', icon: Library },
   { label: 'Vendos Nota', labelKey: 'nav.enter_grades', path: '/mesues/nota', icon: ClipboardCheck },
+  { label: 'Riprovimet', labelKey: 'nav.retake_exams', path: '/mesues/riprovimet', icon: GraduationCap },
   { label: 'Sjellja', labelKey: 'nav.behavior', path: '/mesues/sjellja', icon: Star },
   { label: 'Disiplina', labelKey: 'nav.discipline', path: '/mesues/disiplina', icon: Shield },
   { label: 'Incidentet', labelKey: 'nav.incidents', path: '/mesues/incidentet', icon: Shield },
@@ -348,6 +350,7 @@ function AppRoutes() {
             <Route path="/mesues" element={<TeacherDashboard />} />
             <Route path="/mesues/klasa" element={<MyClasses />} />
             <Route path="/mesues/nota" element={<GradeEntry />} />
+            <Route path="/mesues/riprovimet" element={<RetakeExams />} />
             <Route path="/mesues/sjellja" element={<BehaviorPage />} />
             <Route path="/mesues/disiplina" element={<DisciplinePage />} />
             <Route path="/mesues/incidentet" element={<IncidentReports />} />
