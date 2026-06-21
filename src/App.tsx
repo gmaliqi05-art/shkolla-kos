@@ -73,6 +73,7 @@ const TeacherDashboard = lazyRetry(() => import('./pages/teacher/TeacherDashboar
 const MyClasses = lazyRetry(() => import('./pages/teacher/MyClasses'));
 const GradeEntry = lazyRetry(() => import('./pages/teacher/GradeEntry'));
 const RetakeExams = lazyRetry(() => import('./pages/teacher/RetakeExams'));
+const PeerAssessment = lazyRetry(() => import('./pages/teacher/PeerAssessment'));
 const AttendancePage = lazyRetry(() => import('./pages/teacher/AttendancePage'));
 const TeacherSchedule = lazyRetry(() => import('./pages/teacher/TeacherSchedule'));
 const SubjectsPage = lazyRetry(() => import('./pages/teacher/SubjectsPage'));
@@ -91,6 +92,7 @@ const MyGrades = lazyRetry(() => import('./pages/student/MyGrades'));
 const MySchedule = lazyRetry(() => import('./pages/student/MySchedule'));
 const MyAttendance = lazyRetry(() => import('./pages/student/MyAttendance'));
 const MyHomework = lazyRetry(() => import('./pages/student/MyHomework'));
+const PeerAssessmentStudent = lazyRetry(() => import('./pages/student/PeerAssessmentStudent'));
 
 const ParentDashboard = lazyRetry(() => import('./pages/parent/ParentDashboard'));
 const ChildGrades = lazyRetry(() => import('./pages/parent/ChildGrades'));
@@ -154,6 +156,7 @@ const teacherNav: NavItem[] = [
   { label: 'Lëndët Mësimore', labelKey: 'nav.my_lessons', path: '/mesues/lendet', icon: Library },
   { label: 'Vendos Nota', labelKey: 'nav.enter_grades', path: '/mesues/nota', icon: ClipboardCheck },
   { label: 'Riprovimet', labelKey: 'nav.retake_exams', path: '/mesues/riprovimet', icon: GraduationCap },
+  { label: 'Vlerësim Bashkëmoshatar', labelKey: 'nav.peer_assessment', path: '/mesues/vleresimi-bashkemoshatar', icon: Users },
   { label: 'Sjellja', labelKey: 'nav.behavior', path: '/mesues/sjellja', icon: Star },
   { label: 'Disiplina', labelKey: 'nav.discipline', path: '/mesues/disiplina', icon: Shield },
   { label: 'Incidentet', labelKey: 'nav.incidents', path: '/mesues/incidentet', icon: Shield },
@@ -185,6 +188,7 @@ const studentNav: NavItem[] = [
   { label: 'Testet Kombëtare', labelKey: 'nav.national_tests', path: '/nxenes/testet-kombetare', icon: GraduationCap },
   { label: 'Portofoli Im', labelKey: 'nav.my_portfolio', path: '/nxenes/portofoli', icon: FolderOpen },
   { label: 'Vetëvlerësimi', labelKey: 'nav.self_assessment', path: '/nxenes/vetevleresimi', icon: Heart },
+  { label: 'Vlerësim Bashkëmoshatar', labelKey: 'nav.peer_assessment', path: '/nxenes/vleresimi-bashkemoshatar', icon: Users },
   { label: 'Dokumentet Ligjore', labelKey: 'nav.legal_documents', path: '/nxenes/dokumentet-ligjore', icon: Scale },
 ];
 
@@ -351,6 +355,7 @@ function AppRoutes() {
             <Route path="/mesues/klasa" element={<MyClasses />} />
             <Route path="/mesues/nota" element={<GradeEntry />} />
             <Route path="/mesues/riprovimet" element={<RetakeExams />} />
+            <Route path="/mesues/vleresimi-bashkemoshatar" element={<PeerAssessment />} />
             <Route path="/mesues/sjellja" element={<BehaviorPage />} />
             <Route path="/mesues/disiplina" element={<DisciplinePage />} />
             <Route path="/mesues/incidentet" element={<IncidentReports />} />
@@ -395,6 +400,7 @@ function AppRoutes() {
             <Route path="/nxenes/testet-kombetare" element={<MyTestResults />} />
             <Route path="/nxenes/portofoli" element={<Portfolio />} />
             <Route path="/nxenes/vetevleresimi" element={<SelfAssessmentPage />} />
+            <Route path="/nxenes/vleresimi-bashkemoshatar" element={<PeerAssessmentStudent />} />
             <Route path="/nxenes/dokumentet-ligjore" element={<LegalDocuments />} />
           </Route>
           <Route path="*" element={<Navigate to="/nxenes" replace />} />
