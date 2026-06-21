@@ -18,15 +18,17 @@
 
 ## 1. PËRMBLEDHJE EKZEKUTIVE
 
-Që nga auditi i 16 Qershorit (~78%), janë mbyllur shumica e mangësive
-kritike (P1) dhe të larta (P2). Sistemi tani mbulon **~92%** të kërkesave
-ligjore të modeluara. Janë shtuar e verifikuar në bazën live: moduli i
-incidenteve (UA 13/2018), ndarja e të dhënave shëndetësore me RLS same-school,
-regjistri i shkeljeve + DPO + purge real i fshirjes, kompetencat & fushat
-kurrikulare (KKK), zbatimi i licencës te caktimi i mësuesit, plotësimi i
-dosjes shëndetësore, dhe — në këtë cikël — **kufizimi same-school i Ditarit
-& Kalendarit, shënimet konfidenciale të pedagogut (`counseling_notes`),
-gjuha e mësimit për klasë, dhe qasja e pedagogut te profilet e nxënësve**.
+Që nga auditi i 16 Qershorit (~78%), janë mbyllur mangësitë kritike (P1),
+të larta (P2) dhe shumica e atyre të mesme (P3). Sistemi tani mbulon **~95%**
+të kërkesave ligjore të modeluara. Janë shtuar e verifikuar në bazën live:
+moduli i incidenteve (UA 13/2018), ndarja e të dhënave shëndetësore me RLS
+same-school, regjistri i shkeljeve + DPO + purge real i fshirjes, kompetencat
+& fushat kurrikulare (KKK), zbatimi i licencës te caktimi i mësuesit, plotësimi
+i dosjes shëndetësore, kufizimi same-school i Ditarit & Kalendarit, shënimet
+konfidenciale të pedagogut (`counseling_notes`), gjuha e mësimit për klasë,
+qasja e pedagogut te profilet, dhe — së fundi — **gjenerimi i PDF-ve zyrtare
+(dëftesa/certifikata/diploma), gjurmimi login/logout, riprovimi (UA 06/2022),
+prezenca në takimet me prindër, dhe feedback-u i akomodimeve PIA**.
 
 Verifikim sigurie: **të 62 tabelat kanë RLS aktiv me politika**. Funksionet
 `SECURITY DEFINER` janë self-scoped; `anonymize_student` ka kontroll të
@@ -50,7 +52,7 @@ disa konfigurime/hardening.
 | Dokumentacioni pedagogjik zyrtar (PDF/format) | ⚠️ | 55 |
 | Mbrojtja e fëmijëve nga dhuna (UA 13/2018) | ✅ | 80 |
 | Kompetencat & fushat kurrikulare (KKK) | ✅ | 70 |
-| **VLERËSIMI I PËRGJITHSHËM** | **✅⚠️** | **~92%** |
+| **VLERËSIMI I PËRGJITHSHËM** | **✅** | **~95%** |
 
 ---
 
@@ -110,7 +112,9 @@ disa konfigurime/hardening.
   trigger arkivimi/afate.
 - **Rakordim periodik repo↔bazë** (proces, jo defekt i njohur aktual).
 - ✅ **Prezenca në takimet me prindër** — moduli `parent_meeting_attendance` +
-  panel te takimet. Mbetet: feedback efektiviteti i akomodimeve PIA.
+  panel te takimet.
+- ✅ **Feedback i efektivitetit të akomodimeve PIA** — moduli
+  `accommodation_feedback` + UI te akomodimet (mësuesi vlerëson efektivitetin).
 
 ---
 
@@ -141,7 +145,7 @@ politika e privatësisë në 4 gjuhë; aktivitetet; biblioteka; **2FA (TOTP)**;
 
 ### 🟡 Prioritet 3 — i mesëm
 4. ✅ Riprovim/provim i klasës (krye). Mbetet peer assessment.
-5. Soft-delete/ruajtje me afate; feedback akomodimesh (prezenca takimesh ✅).
+5. Soft-delete/ruajtje me afate (prezenca takimesh ✅, feedback akomodimesh ✅).
 6. Rakordim periodik repo↔bazë.
 
 ---
