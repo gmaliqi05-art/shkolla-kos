@@ -4,12 +4,23 @@ import { useAuth } from '../../contexts/AuthContext';
 import {
   IEP_ACCOMMODATION_LABELS,
   SPECIAL_NEED_LABELS,
+  ACCOMMODATION_EFFECTIVENESS_LABELS,
   type IEPAccommodation,
   type SpecialNeed,
   type IndividualEducationPlan,
+  type AccommodationEffectiveness,
+  type AccommodationFeedback,
 } from '../../types/database';
 import { Loader2, Sparkles, Heart, Info } from 'lucide-react';
 import { useI18n } from '../../lib/i18n/I18nProvider';
+import { useToast } from '../../components/ToastProvider';
+
+const EFFECTIVENESS_COLORS: Record<AccommodationEffectiveness, string> = {
+  efektiv: 'bg-emerald-600 text-white border-emerald-600',
+  pjeserisht: 'bg-amber-500 text-white border-amber-500',
+  joefektiv: 'bg-rose-600 text-white border-rose-600',
+};
+const EFFECTIVENESS_ORDER: AccommodationEffectiveness[] = ['efektiv', 'pjeserisht', 'joefektiv'];
 
 interface StudentInfo {
   id: string;
@@ -21,8 +32,10 @@ interface StudentInfo {
 export default function StudentAccommodations() {
   const { profile } = useAuth();
   const { t } = useI18n();
+  const toast = useToast();
   const [students, setStudents] = useState<StudentInfo[]>([]);
   const [loading, setLoading] = useState(true);
+  const [feedback, setFeedback] = useState<Map<string, { effectiveness: AccommodationEffectiveness; comment: string }>>(new Map());
 
   useEffect(() => {
     if (profile?.id) loadData();
@@ -101,7 +114,44 @@ export default function StudentAccommodations() {
       .sort((a, b) => a.full_name.localeCompare(b.full_name));
 
     setStudents(filteredStudents);
+
+    const accIds = accommodations.map((a) => a.id);
+    if (accIds.length > 0) {
+      const { data: fbData } = await supabase
+        .from('accommodation_feedback')
+        .select('accommodation_id, effectiveness, comment')
+        .in('accommodation_id', accIds)
+        .eq('teacher_id', profile.id);
+      const fbMap = new Map<string, { effectiveness: AccommodationEffectiveness; comment: string }>();
+      (fbData as Pick<AccommodationFeedback, 'accommodation_id' | 'effectiveness' | 'comment'>[] | null)?.forEach((f) =>
+        fbMap.set(f.accommodation_id, { effectiveness: f.effectiveness, comment: f.comment || '' }));
+      setFeedback(fbMap);
+    }
+
     setLoading(false);
+  };
+
+  const saveFeedback = async (accId: string, effectiveness: AccommodationEffectiveness, comment: string) => {
+    if (!profile) return;
+    const prev = feedback.get(accId);
+    setFeedback((m) => new Map(m).set(accId, { effectiveness, comment }));
+    const { error } = await supabase.from('accommodation_feedback').upsert({
+      accommodation_id: accId,
+      teacher_id: profile.id,
+      effectiveness,
+      comment,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'accommodation_id,teacher_id' });
+    if (error) {
+      setFeedback((m) => {
+        const next = new Map(m);
+        if (prev) next.set(accId, prev); else next.delete(accId);
+        return next;
+      });
+      toast.error(error.message);
+    } else {
+      toast.success(t('sa.feedback_saved'));
+    }
   };
 
   if (loading) {
@@ -166,12 +216,36 @@ export default function StudentAccommodations() {
                       {t('sa.accommodations_label')}
                     </h4>
                     <ul className="space-y-1.5">
-                      {s.accommodations.map((a) => (
-                        <li key={a.id} className="bg-purple-50 rounded-lg px-3 py-2 text-sm">
-                          <span className="font-medium text-purple-900">{IEP_ACCOMMODATION_LABELS[a.accommodation_type]}:</span>
-                          <span className="text-slate-700 ml-1">{a.description}</span>
-                        </li>
-                      ))}
+                      {s.accommodations.map((a) => {
+                        const fb = feedback.get(a.id);
+                        return (
+                          <li key={a.id} className="bg-purple-50 rounded-lg px-3 py-2 text-sm">
+                            <span className="font-medium text-purple-900">{IEP_ACCOMMODATION_LABELS[a.accommodation_type]}:</span>
+                            <span className="text-slate-700 ml-1">{a.description}</span>
+                            <div className="mt-2 flex items-center gap-2 flex-wrap">
+                              <span className="text-xs text-slate-500">{t('sa.effectiveness')}:</span>
+                              {EFFECTIVENESS_ORDER.map((eff) => (
+                                <button
+                                  key={eff}
+                                  onClick={() => saveFeedback(a.id, eff, fb?.comment || '')}
+                                  className={`px-2 py-0.5 rounded text-xs font-medium border transition-colors ${fb?.effectiveness === eff ? EFFECTIVENESS_COLORS[eff] : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
+                                >
+                                  {ACCOMMODATION_EFFECTIVENESS_LABELS[eff]}
+                                </button>
+                              ))}
+                            </div>
+                            {fb && (
+                              <input
+                                type="text"
+                                defaultValue={fb.comment}
+                                placeholder={t('sa.feedback_comment')}
+                                onBlur={(e) => { if (e.target.value !== fb.comment) saveFeedback(a.id, fb.effectiveness, e.target.value); }}
+                                className="mt-2 w-full px-2 py-1 border border-slate-200 rounded-lg text-xs outline-none focus:ring-2 focus:ring-purple-400 bg-white"
+                              />
+                            )}
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
                 )}
