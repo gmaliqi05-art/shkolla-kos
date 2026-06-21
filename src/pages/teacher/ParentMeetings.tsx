@@ -8,8 +8,9 @@ import {
   type ParentMeeting,
   type MeetingStatus,
 } from '../../types/database';
-import { Loader2, Plus, X, Users, Calendar, MapPin, Edit2, FileText } from 'lucide-react';
+import { Loader2, Plus, X, Users, Calendar, MapPin, Edit2, FileText, CheckSquare, Square, ClipboardList } from 'lucide-react';
 import { useI18n } from '../../lib/i18n/I18nProvider';
+import { useToast } from '../../components/ToastProvider';
 
 interface MeetingRow extends ParentMeeting {
   class_name?: string;
@@ -26,8 +27,14 @@ const STATUS_COLORS: Record<MeetingStatus, string> = {
 export default function ParentMeetings() {
   const { profile } = useAuth();
   const { t } = useI18n();
+  const toast = useToast();
   const isParent = profile?.role === 'prind';
   const canManage = profile?.role === 'drejtor' || profile?.role === 'mesues';
+
+  const [attMeeting, setAttMeeting] = useState<string | null>(null);
+  const [attStudents, setAttStudents] = useState<{ id: string; full_name: string }[]>([]);
+  const [attMap, setAttMap] = useState<Map<string, boolean>>(new Map());
+  const [attLoading, setAttLoading] = useState(false);
 
   const [meetings, setMeetings] = useState<MeetingRow[]>([]);
   const [classes, setClasses] = useState<{ id: string; name: string }[]>([]);
@@ -156,6 +163,39 @@ export default function ParentMeetings() {
     setSubmitting(false);
   };
 
+  const openAttendance = async (m: MeetingRow) => {
+    if (attMeeting === m.id) { setAttMeeting(null); return; }
+    setAttMeeting(m.id);
+    setAttLoading(true);
+    let studs: { id: string; full_name: string }[] = [];
+    if (m.meeting_type === 'individuale' && m.student_id) {
+      studs = [{ id: m.student_id, full_name: m.student_name || '—' }];
+    } else if (m.meeting_type === 'klase' && m.class_id) {
+      const { data: enrolls } = await supabase.from('student_classes').select('student_id').eq('class_id', m.class_id);
+      const ids = (enrolls || []).map((e: { student_id: string }) => e.student_id);
+      if (ids.length > 0) {
+        const { data: profs } = await supabase.from('profiles').select('id, full_name').in('id', ids).is('deleted_at', null).order('full_name');
+        studs = (profs || []).map((p) => ({ id: p.id, full_name: p.full_name }));
+      }
+    }
+    setAttStudents(studs);
+    const { data: att } = await supabase.from('parent_meeting_attendance').select('student_id, attended').eq('meeting_id', m.id);
+    setAttMap(new Map((att || []).map((a: { student_id: string; attended: boolean }) => [a.student_id, a.attended])));
+    setAttLoading(false);
+  };
+
+  const toggleAtt = async (m: MeetingRow, studentId: string) => {
+    const next = !attMap.get(studentId);
+    setAttMap((prev) => new Map(prev).set(studentId, next));
+    const { error: err } = await supabase.from('parent_meeting_attendance').upsert({
+      meeting_id: m.id, student_id: studentId, attended: next, recorded_by: profile?.id,
+    }, { onConflict: 'meeting_id,student_id' });
+    if (err) {
+      setAttMap((prev) => new Map(prev).set(studentId, !next));
+      toast.error(err.message);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -232,11 +272,49 @@ export default function ParentMeetings() {
                   )}
                 </div>
                 {canManage && (
-                  <button onClick={() => openEdit(m)} className="p-1.5 text-slate-400 hover:text-slate-700 rounded shrink-0">
-                    <Edit2 className="w-4 h-4" />
-                  </button>
+                  <div className="flex items-center gap-1 shrink-0">
+                    {m.meeting_type !== 'pergjithshme' && (
+                      <button onClick={() => openAttendance(m)} className={`p-1.5 rounded ${attMeeting === m.id ? 'text-teal-700 bg-teal-50' : 'text-slate-400 hover:text-slate-700'}`} title={t('pm.attendance')}>
+                        <ClipboardList className="w-4 h-4" />
+                      </button>
+                    )}
+                    <button onClick={() => openEdit(m)} className="p-1.5 text-slate-400 hover:text-slate-700 rounded">
+                      <Edit2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 )}
               </div>
+
+              {canManage && attMeeting === m.id && (
+                <div className="mt-3 border-t border-slate-100 pt-3">
+                  <p className="text-xs font-semibold text-slate-700 mb-2 flex items-center gap-1">
+                    <ClipboardList className="w-3.5 h-3.5" />
+                    {t('pm.attendance')}
+                    {!attLoading && attStudents.length > 0 && (
+                      <span className="text-slate-400 font-normal">
+                        · {Array.from(attMap.values()).filter(Boolean).length}/{attStudents.length} {t('pm.attendance_present')}
+                      </span>
+                    )}
+                  </p>
+                  {attLoading ? (
+                    <Loader2 className="w-4 h-4 text-teal-500 animate-spin" />
+                  ) : attStudents.length === 0 ? (
+                    <p className="text-xs text-slate-400 italic">{t('pm.attendance_no_students')}</p>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                      {attStudents.map((s) => {
+                        const present = !!attMap.get(s.id);
+                        return (
+                          <button key={s.id} onClick={() => toggleAtt(m, s.id)} className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm text-left border ${present ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}`}>
+                            {present ? <CheckSquare className="w-4 h-4 text-emerald-600 shrink-0" /> : <Square className="w-4 h-4 text-slate-300 shrink-0" />}
+                            <span className="truncate">{s.full_name}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           ))
         )}
