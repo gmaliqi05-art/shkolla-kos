@@ -109,7 +109,8 @@ disa konfigurime/hardening.
 - **Soft-delete & politika ruajtjeje** (Amza 75 vjet, nota 25 vjet) — pa
   trigger arkivimi/afate.
 - **Rakordim periodik repo↔bazë** (proces, jo defekt i njohur aktual).
-- **Prezenca në takimet me prindër; feedback efektiviteti i akomodimeve PIA.**
+- ✅ **Prezenca në takimet me prindër** — moduli `parent_meeting_attendance` +
+  panel te takimet. Mbetet: feedback efektiviteti i akomodimeve PIA.
 
 ---
 
@@ -140,7 +141,7 @@ politika e privatësisë në 4 gjuhë; aktivitetet; biblioteka; **2FA (TOTP)**;
 
 ### 🟡 Prioritet 3 — i mesëm
 4. ✅ Riprovim/provim i klasës (krye). Mbetet peer assessment.
-5. Soft-delete/ruajtje me afate; prezenca takimesh; feedback akomodimesh.
+5. Soft-delete/ruajtje me afate; feedback akomodimesh (prezenca takimesh ✅).
 6. Rakordim periodik repo↔bazë.
 
 ---
