@@ -994,6 +994,9 @@ export const translations = {
   'sa.no_sen_students': { sq: 'Asnjë nxënës me NVA ose PIA në klasat tuaja.', sr: 'Nema učenika sa PIO ili IOP u vašim razredima.', tr: 'Sınıflarınızda özel eğitim veya BEP olan öğrenci yok.', bs: 'Nema učenika sa PIO ili IOP u vašim razredima.', en: 'No SEN or IEP students in your classes.' },
   'sa.needs_label': { sq: 'Nevojat', sr: 'Potrebe', tr: 'İhtiyaçlar', bs: 'Potrebe', en: 'Needs' },
   'sa.accommodations_label': { sq: 'Akomodimet', sr: 'Prilagođavanja', tr: 'Düzenlemeler', bs: 'Prilagođavanja', en: 'Accommodations' },
+  'sa.effectiveness': { sq: 'Efektiviteti', sr: 'Efikasnost', tr: 'Etkililik', bs: 'Efikasnost', en: 'Effectiveness' },
+  'sa.feedback_comment': { sq: 'Koment (opsional)…', sr: 'Komentar (opciono)…', tr: 'Yorum (isteğe bağlı)…', bs: 'Komentar (opcionalno)…', en: 'Comment (optional)…' },
+  'sa.feedback_saved': { sq: 'Feedback-u u ruajt.', sr: 'Povratna informacija je sačuvana.', tr: 'Geri bildirim kaydedildi.', bs: 'Povratna informacija je sačuvana.', en: 'Feedback saved.' },
 
   // === DIAGNOSTIC ASSESSMENTS ===
   'diag.title': { sq: 'Vlerësimi Diagnostikues', sr: 'Dijagnostička procena', tr: 'Tanı Değerlendirmesi', bs: 'Dijagnostička procjena', en: 'Diagnostic Assessment' },

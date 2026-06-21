@@ -750,6 +750,24 @@ export interface RetakeExam {
   created_at: string;
 }
 
+export type AccommodationEffectiveness = 'efektiv' | 'pjeserisht' | 'joefektiv';
+
+export const ACCOMMODATION_EFFECTIVENESS_LABELS: Record<AccommodationEffectiveness, string> = {
+  efektiv: 'Efektiv',
+  pjeserisht: 'Pjesërisht',
+  joefektiv: 'Joefektiv',
+};
+
+export interface AccommodationFeedback {
+  id: string;
+  accommodation_id: string;
+  teacher_id: string;
+  effectiveness: AccommodationEffectiveness;
+  comment: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Subject {
   id: string;
   name: string;
