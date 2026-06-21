@@ -768,6 +768,28 @@ export interface AccommodationFeedback {
   updated_at: string;
 }
 
+export interface PeerAssessmentSession {
+  id: string;
+  class_id: string;
+  subject_id: string;
+  teacher_id: string;
+  title: string;
+  description: string;
+  is_open: boolean;
+  created_at: string;
+}
+
+export interface PeerAssessment {
+  id: string;
+  session_id: string;
+  assessor_id: string;
+  assessed_id: string;
+  score: number;
+  comment: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Subject {
   id: string;
   name: string;

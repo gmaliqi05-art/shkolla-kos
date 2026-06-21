@@ -107,7 +107,10 @@ disa konfigurime/hardening.
 
 ### 🟡 Prioritet 3
 - **Riprovimi / provimi i klasës** — ✅ moduli `retake_exams` + UI te mësuesi
-  (UA 06/2022). Mbetet **vlerësimi nga bashkëmoshatari** (peer assessment).
+  (UA 06/2022).
+- **Vlerësimi nga bashkëmoshatari (peer assessment)** — ✅ modulet
+  `peer_assessment_sessions` + `peer_assessments` (mësuesi hap sesion,
+  nxënësit vlerësojnë anonimisht bashkëmoshatarët; UA 06/2022).
 - **Soft-delete & politika ruajtjeje** (Amza 75 vjet, nota 25 vjet) — pa
   trigger arkivimi/afate.
 - **Rakordim periodik repo↔bazë** (proces, jo defekt i njohur aktual).
@@ -144,7 +147,7 @@ politika e privatësisë në 4 gjuhë; aktivitetet; biblioteka; **2FA (TOTP)**;
 3. Hardening DB (revoke EXECUTE te triggers) + mbrojtja e fjalëkalimeve.
 
 ### 🟡 Prioritet 3 — i mesëm
-4. ✅ Riprovim/provim i klasës (krye). Mbetet peer assessment.
+4. ✅ Riprovim/provim i klasës + peer assessment (krye).
 5. Soft-delete/ruajtje me afate (prezenca takimesh ✅, feedback akomodimesh ✅).
 6. Rakordim periodik repo↔bazë.
 
